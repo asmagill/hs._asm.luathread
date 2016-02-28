@@ -1,6 +1,8 @@
 // +  Move this to it's own repo -- getting large enough that it would be annoying for someone who
 // +      wanted to clone repo for something else, but didn't care about/want this...
 //
+//    LST_getRefTable and LST_setRefTable should either both take a variable name as an argument or
+//        both have a hard coded refTable. Decide which and fix them.
 //    removeRefTable should iterate through and release lua refs as well (see LuaSkinThread.m)
 //    update hs._asm.extras, hs._asm.notificationcenter (use nc approach in hs.fs.volume)
 //    rethink hs._asm.luaskinpokeytool now that we can link thread to skin and vice-versa
