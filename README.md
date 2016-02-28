@@ -463,7 +463,7 @@ Returns:
 Notes:
  * this differs from the built in lua `os.time` function in that it returns fractions of a second as the decimal portion of the number.
  * this is used when generating the `_sharedTable._results.start` and `_sharedTable._results.stop` values
- * the time values returned by this method can be used to calculate execution times in terms of clock time (i.e. other activity on the computer can cause wide fluctuations in the actual time a specific process takes).  To get a better idea of actual cpu time used by a process, check out the lua builtin `os.clock`.
+ * the time values returned by this method can be used to calculate execution times in terms of wall-clock time (i.e. other activity on the computer can cause wide fluctuations in the actual time a specific process takes).  To get a better idea of actual cpu time used by a process, check out the lua builtin `os.clock`.
 
 ### LICENSE
 
