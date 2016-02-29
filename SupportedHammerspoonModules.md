@@ -42,6 +42,7 @@ hs.json            | yes      | as of v0.2
 hs.logger          | yes      |
 hs.pathwatcher     | yes      | as of v0.2
 hs.settings        | yes      | as of v0.6
+hs.spaces          | yes      |
 hs.timer           | yes      | as of v0.6
 hs.usb             | yes      | as of v0.2
 hs.utf8            | yes      |
@@ -83,7 +84,6 @@ hs.pasteboard      | no       | requires styledtext, drawing.color, image, sound
 hs.redshift        | no       |
 hs.screen          | no       | uses `dispatch_get_main_queue`, no simple workaround yet
 hs.sound           | no       | required for pasteboard, uses `dispatch_get_main_queue`, no simple workaround yet
-hs.spaces          | no       |
 hs.speech          | no       |
 hs.spotify         | no       | requires alert, applescript, application
 hs.styledtext      | no       | required for pasteboard
@@ -98,17 +98,20 @@ hs.window          | no       |
 
 Function                        | Status   | Notes
 --------------------------------|----------|------
+hs._notify                      | yes      | if you have the `hs._luathreadcoreadditions` module, used by showError
 hs.cleanUTF8forConsole          | yes      | if you have the `hs._luathreadcoreadditions` module
 hs.configdir                    | yes      | just copied from Hammerspoon
 hs.docstrings_json_file         | yes      | just copied from Hammerspoon
 hs.execute                      | yes      | included in module `_threadinit.lua`
+hs.focus                        | yes      | if you have the `hs._luathreadcoreadditions` module, used by showError
 hs.getObjectMetatable           | yes      | if you have the `hs._luathreadcoreadditions` module
 hs.help                         | yes      | not included by default; add `hs.help = require("hs.doc")` to `~/.hammerspoon/_init.lua`
+hs.openConsole                  | yes      | if you have the `hs._luathreadcoreadditions` module, used by showError
 hs.printf                       | yes      | included in module `_threadinit.lua`
 hs.processInfo                  | yes      | just copied from Hammerspoon
 hs.rawprint                     | yes      | included in module `_threadinit.lua`
 hs.reload                       | yes      | included in module `_threadinit.lua`
-hs.showError                    | no       | maybe
+hs.showError                    | yes      | if you have the `hs._luathreadcoreadditions` module
 
 The following are unlikely to be added unless there is interest, as they concern visible aspects of Hammerspoon and don't directly apply to a background thread process.
 
@@ -121,10 +124,8 @@ hs.checkForUpdates              | no       |
 hs.completionsForInputString    | no       | no need in non-console thread
 hs.consoleOnTop                 | no       |
 hs.dockIcon                     | no       |
-hs.focus                        | no       |
 hs.menuIcon                     | no       |
 hs.openAbout                    | no       |
-hs.openConsole                  | no       |
 hs.openPreferences              | no       |
 hs.shutdownCallback             | no       |
 hs.toggleConsole                | no       |

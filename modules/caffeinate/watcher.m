@@ -89,8 +89,8 @@ typedef enum _event_t {
 } event_t;
 
 @interface LST_CaffeinateWatcher : NSObject
-@property caffeinatewatcher_t* object;
-@property NSThread           *myMainThread ;
+@property        caffeinatewatcher_t* object;
+@property (weak) NSThread           *myMainThread ;
 
 - (id)initWithObject:(caffeinatewatcher_t*)object;
 @end

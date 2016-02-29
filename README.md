@@ -407,6 +407,25 @@ Returns:
 
 Notes:
  * this method is used to replace the lua built-in function `print` and mimics its behavior as closely as possible -- objects with a `__tostring` meta method are honored, arguments separated by comma's are concatenated with a tab in between them, the output line terminates with a `\\n`, etc.
+ * this method just appends output to the queue which will be delivered to the Hammerspoon for callback or retrieval with [hs._asm.luathread:getOutput](#getOutput) method when execution of the current Lua code completes.  You can force immediate delivery by chaing the `flush` command like: `_instance:print(...):flush()`
+
+- - -
+
+<a name="printToConsole"></a>
+~~~lua
+_instance:printToConsole(...) -> threadObject
+~~~
+Prints the specified output to the Hammerspoon console immediately
+
+Parameters:
+ * ... - zero or more values to be printed in the Hammerspoon console
+
+Returns:
+ * the thread object
+
+Notes:
+ * this method mimics the behavior of `print` as closely as possible -- objects with a `__tostring` meta method are honored, arguments separated by comma's are concatenated with a tab in between them, the output line terminates with a `\\n`, etc.
+ * this method *only* outputs to the console -- it does not affect data cached in the output queue in any way.
 
 - - -
 

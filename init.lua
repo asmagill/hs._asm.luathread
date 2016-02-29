@@ -99,6 +99,15 @@ internal.sharedTable = function(self)
     })
 end
 
+internal.reload = function(self, cancel)
+    if cancel then
+        self:cancel()
+    elseif not self:isIdle() then
+        error("instance is not idle")
+    end
+    return self:submit([[ hs.reload() ]])
+end
+
 -- Return Module Object --------------------------------------------------
 
 return module

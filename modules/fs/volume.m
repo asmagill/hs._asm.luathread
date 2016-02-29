@@ -50,8 +50,8 @@ typedef enum _event_t {
 } event_t;
 
 @interface LST_VolumeWatcher : NSObject
-@property VolumeWatcher_t* object;
-@property NSThread       *myMainThread ;
+@property        VolumeWatcher_t* object;
+@property (weak) NSThread       *myMainThread ;
 
 - (id)initWithObject:(VolumeWatcher_t*)object;
 @end

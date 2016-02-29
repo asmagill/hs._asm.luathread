@@ -4,6 +4,15 @@
 local USERDATA_TAG = "hs._luathreadcoreadditions"
 local module       = require(USERDATA_TAG..".internal")
 
+function module.showError(err)
+    module._notify("hs._asm.luathread error") -- undecided on this line
+    --  print(debug.traceback())
+    _instance:printToConsole("*** hs._asm.luathread showERROR: "..err)
+    module.focus()
+    module.openConsole()
+--     hs._TERMINATED=true
+end
+
 if not hs then hs = {} end -- shouldn't be necessary, but lets be safe
 for i,v in pairs(module) do
     if hs[i] then

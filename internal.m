@@ -2,8 +2,9 @@
 //
 //    rethink hs._asm.luaskinpokeytool now that we can link thread to skin and vice-versa
 //
-//    hs._asm.luathread:reload()?  Should check if isExecuting and fail if YES.  Take argument to
+// -  hs._asm.luathread:reload()?  Should check if isExecuting and fail if YES.  Take argument to
 //        cancel and then restart?
+//    add method for thread that prints to console for immediate error notifications, etc.
 //
 // +  Document LuaSkinThread, what it does, why, and how
 //

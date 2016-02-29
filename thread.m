@@ -396,6 +396,7 @@ static int cancelThread(lua_State *L) {
 ///
 /// Notes:
 ///  * this method is used to replace the lua built-in function `print` and mimics its behavior as closely as possible -- objects with a `__tostring` meta method are honored, arguments separated by comma's are concatenated with a tab in between them, the output line terminates with a `\\n`, etc.
+///  * this method just appends output to the queue which will be delivered to the Hammerspoon for callback or retrieval with [hs._asm.luathread:getOutput](#getOutput) when method when execution of the current Lua code completes.  You can force immediate delivery by chaing the `flush` command like: `_instance:print(...):flush()`
 static int printOutput(lua_State *L) {
     HSASMLuaThread *luaThread = toHSASMLuaThreadFromLua(L, 1) ;
     NSMutableData  *output = [[NSMutableData alloc] init] ;
@@ -409,6 +410,47 @@ static int printOutput(lua_State *L) {
     }
     [output appendBytes:"\n" length:1] ;
     [luaThread.cachedOutput addObject:output] ;
+    lua_pushvalue(L, 1) ;
+    return 1 ;
+}
+
+/// hs._asm.luathread._instance:printToConsole(...) -> threadObject
+/// Method
+/// Prints the specified output to the Hammerspoon console immediately
+///
+/// Parameters:
+///  * ... - zero or more values to be printed in the Hammerspoon console
+///
+/// Returns:
+///  * the thread object
+///
+/// Notes:
+///  * this method mimics the behavior of `print` as closely as possible -- objects with a `__tostring` meta method are honored, arguments separated by comma's are concatenated with a tab in between them, the output line terminates with a `\\n`, etc.
+///  * this method *only* outputs to the console -- it does not affect data cached in the output queue in any way.
+static int printOutputToConsole(lua_State *L) {
+    __unused HSASMLuaThread *luaThread = toHSASMLuaThreadFromLua(L, 1) ;
+    NSMutableData  *output = [[NSMutableData alloc] init] ;
+    int            n       = lua_gettop(L);
+    size_t         size ;
+    for (int i = 2 ; i <= n ; i++) {
+        const void *junk = luaL_tolstring(L, i, &size) ;
+        if (i > 2) [output appendBytes:"\t" length:1] ;
+        [output appendBytes:junk length:size] ;
+        lua_pop(L, 1) ;
+    }
+    [output appendBytes:"\n" length:1] ;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        LuaSkin   *mainSkin = [LuaSkin shared] ;
+        lua_State *mainL    = [mainSkin L] ;
+        lua_getglobal(mainL, "print") ;
+        lua_pushlstring(mainL, [output bytes], [output length]) ;
+        if (lua_pcall(mainL, 1, 0,0 ) != LUA_OK) {
+            [LuaSkin logError:[NSString stringWithFormat:@"%s:printToConsole error - %s",
+                                                         THREAD_UD_TAG,
+                                                         lua_tostring(mainL, -1)]] ;
+            lua_pop(mainL, 1) ;
+        }
+    }) ;
     lua_pushvalue(L, 1) ;
     return 1 ;
 }
@@ -537,21 +579,22 @@ static int userdata_gc(lua_State* L) {
 
 // Metatable for userdata objects
 static const luaL_Reg thread_userdata_metaLib[] = {
-    {"cancel",      cancelThread},
-    {"name",        threadName},
-    {"isCancelled", threadIsCancelled},
-    {"timestamp",   timestamp},
-    {"get",         getItemFromDictionary},
-    {"set",         setItemInDictionary},
-    {"keys",        itemDictionaryKeys},
-    {"print",       printOutput},
-    {"flush",       flushOutput},
-    {"reload",      reloadLuaThread},
+    {"cancel",         cancelThread},
+    {"name",           threadName},
+    {"isCancelled",    threadIsCancelled},
+    {"timestamp",      timestamp},
+    {"get",            getItemFromDictionary},
+    {"set",            setItemInDictionary},
+    {"keys",           itemDictionaryKeys},
+    {"print",          printOutput},
+    {"printToConsole", printOutputToConsole},
+    {"flush",          flushOutput},
+    {"reload",         reloadLuaThread},
 
-    {"__tostring",  userdata_tostring},
-    {"__eq",        userdata_eq},
-    {"__gc",        userdata_gc},
-    {NULL,          NULL}
+    {"__tostring",     userdata_tostring},
+    {"__eq",           userdata_eq},
+    {"__gc",           userdata_gc},
+    {NULL,             NULL}
 };
 
 static void pushHSASMLuaThreadMetatable(lua_State *L) {

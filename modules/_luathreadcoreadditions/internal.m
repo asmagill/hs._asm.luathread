@@ -4,6 +4,26 @@
 
 #pragma mark - Support Functions and Classes
 
+@interface MJUserNotificationManager : NSObject
+
++ (MJUserNotificationManager*) sharedManager;
+
+- (void) sendNotification:(NSString*)title handler:(dispatch_block_t)handler;
+
+@end
+
+@interface MJConsoleWindowController : NSWindowController
+
++ (instancetype) singleton;
+- (void) setup;
+
+BOOL MJConsoleWindowAlwaysOnTop(void);
+void MJConsoleWindowSetAlwaysOnTop(BOOL alwaysOnTop);
+
+#pragma mark - NSTextFieldDelegate
+- (BOOL)control:(NSControl *)control textView:(NSTextView *)textView doCommandBySelector:(SEL)command;
+@end
+
 #pragma mark - Module Functions
 
 static int core_getObjectMetatable(lua_State *L) {
@@ -20,6 +40,27 @@ static int core_cleanUTF8(__unused lua_State *L) {
     return 1 ;
 }
 
+static int core_openconsole(lua_State* L) {
+    if (!(lua_isboolean(L,1) && !lua_toboolean(L, 1)))
+        [[NSApplication sharedApplication] activateIgnoringOtherApps:YES];
+    [[MJConsoleWindowController singleton] showWindow: nil];
+    return 0;
+}
+
+static int core_focus(__unused lua_State* L) {
+    [[NSApplication sharedApplication] activateIgnoringOtherApps:YES];
+    return 0;
+}
+
+static int core_notify(lua_State* L) {
+    size_t len;
+    const char* s = lua_tolstring(L, 1, &len);
+    NSString* str = [[NSString alloc] initWithData:[NSData dataWithBytes:s length:len] encoding:NSUTF8StringEncoding];
+    [[MJUserNotificationManager sharedManager] sendNotification:str handler:^{
+        [[MJConsoleWindowController singleton] showWindow: nil];
+    }];
+    return 0;
+}
 
 #pragma mark - Module Methods
 
@@ -27,7 +68,7 @@ static int core_cleanUTF8(__unused lua_State *L) {
 
 // Functions for returned object when module loads
 static luaL_Reg moduleLib[] = {
-//     {"openConsole",                  core_openconsole},
+    {"openConsole",                  core_openconsole},
 //     {"consoleOnTop",                 core_consoleontop},
 //     {"openAbout",                    core_openabout},
 //     {"menuIcon",                     core_menuicon},
@@ -36,13 +77,13 @@ static luaL_Reg moduleLib[] = {
 //     {"automaticallyCheckForUpdates", automaticallyChecksForUpdates},
 //     {"checkForUpdates",              checkForUpdates},
 //     {"reload",                    // handled by _instance:reload()
-//     {"focus",                        core_focus},
+    {"focus",                        core_focus},
 //     {"accessibilityState",           core_accessibilityState},
     {"getObjectMetatable",           core_getObjectMetatable},
     {"cleanUTF8forConsole",          core_cleanUTF8},
 //     {"_exit",                     // handled by _instance:cancel()
 //     {"_logmessage",               // not needed for luathread implementation of print
-//     {"_notify",                      core_notify},
+    {"_notify",                      core_notify},
     {NULL, NULL}
 };
 

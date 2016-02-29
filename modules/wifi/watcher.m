@@ -17,10 +17,10 @@ int refTable;
 // Not so common code
 
 @interface LST_HSWiFiWatcher : NSObject
-@property lua_State* L;
-@property int fn;
+@property          lua_State*  L;
+@property          int         fn;
 @property (strong) CWInterface *interface;
-@property NSThread *myMainThread ;
+@property (weak)   NSThread    *myMainThread ;
 @end
 
 @implementation LST_HSWiFiWatcher
