@@ -1,4 +1,4 @@
-PREFIX ?= ~/.config/hammerspoon
+PREFIX ?= ~/.hammerspoon
 HS_APPLICATION ?= /Applications
 VERSION ?= 0.0
 
