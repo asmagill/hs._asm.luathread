@@ -1,15 +1,13 @@
 hs._asm.luathread
 =================
 
-> 2/28/2016 Note:  I am in the process of moving this to its own repository, so things may be a little out of sync for a bit.  In addition, this latest version supports proper locking on the threadDictionary so deadlocks *shouldn't* be possible anymore (hope hope hope!) even though it was pretty unlikely in the past anyways.  Integrating Hammerspoon modules will always require some code tweaking, either when writing it to be universal (see `hs._asm.notificationcenter`, though I still need to update it to use the latest macro shortcuts), or when creating a "LuaSkinThread safe version" (see the modules in the `modules/` subdirectory.  Proper documentation of the `LuaSkinThread` extensions to `LuaSkin` will be added at a later date as well.
-
 Launch an independant lua thread from within Hammerspoon to execute non-blocking lua code.
 
 At present, any Hammerspoon module which uses LuaSkin (i.e. most of them) will not work within the background thread without modification, so background processing is limited to strictly Lua, LuaRock modules, and the few modules which have been modified in the `modules/` sub-directory.  Attempting to load a Hammerspoon module which is incompatible will result in an error, but will not terminate Hammerspoon or the background thread.  For a list of what is currently supported, check `SupportedHammerspoonModules.md`.
 
 ### Installation
 
-A compiled version of this module can (usually) be found in this folder named `luathread-vX.Y.tar.gz` .  You can download the release and install it by expanding it in your `~/.hammerspoon/` directory (or any other directory in your `package.path` and `package.cpath` search paths):
+A compiled version of this module can be found in the releases for this repository.  The releases will usually contain all of the modules which have been ported at the time of the release -- check the release notes.  You can download a release and install it by expanding it in your `~/.hammerspoon/` directory (or any other directory in your `package.path` and `package.cpath` search paths):
 
 ~~~bash
 cd ~/.hammerspoon
