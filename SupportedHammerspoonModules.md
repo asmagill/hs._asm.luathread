@@ -42,7 +42,7 @@ hs.json            | yes      | as of v0.2
 hs.logger          | yes      |
 hs.pathwatcher     | yes      | as of v0.2
 hs.settings        | yes      | as of v0.6
-hs.spaces          | yes      |
+hs.spaces          | yes      | as of v0.7
 hs.timer           | yes      | as of v0.6
 hs.usb             | yes      | as of v0.2
 hs.utf8            | yes      |
@@ -98,20 +98,20 @@ hs.window          | no       |
 
 Function                        | Status   | Notes
 --------------------------------|----------|------
-hs._notify                      | yes      | if you have the `hs._luathreadcoreadditions` module, used by showError
+hs._notify                      | yes      | as of v0.7, if you have the `hs._luathreadcoreadditions` module, used by showError
 hs.cleanUTF8forConsole          | yes      | if you have the `hs._luathreadcoreadditions` module
 hs.configdir                    | yes      | just copied from Hammerspoon
 hs.docstrings_json_file         | yes      | just copied from Hammerspoon
 hs.execute                      | yes      | included in module `_threadinit.lua`
-hs.focus                        | yes      | if you have the `hs._luathreadcoreadditions` module, used by showError
+hs.focus                        | yes      | as of v0.7, if you have the `hs._luathreadcoreadditions` module, used by showError
 hs.getObjectMetatable           | yes      | if you have the `hs._luathreadcoreadditions` module
 hs.help                         | yes      | not included by default; add `hs.help = require("hs.doc")` to `~/.hammerspoon/_init.lua`
-hs.openConsole                  | yes      | if you have the `hs._luathreadcoreadditions` module, used by showError
+hs.openConsole                  | yes      | as of v0.7, if you have the `hs._luathreadcoreadditions` module, used by showError
 hs.printf                       | yes      | included in module `_threadinit.lua`
 hs.processInfo                  | yes      | just copied from Hammerspoon
 hs.rawprint                     | yes      | included in module `_threadinit.lua`
 hs.reload                       | yes      | included in module `_threadinit.lua`
-hs.showError                    | yes      | if you have the `hs._luathreadcoreadditions` module
+hs.showError                    | yes      | as of v0.7, if you have the `hs._luathreadcoreadditions` module
 
 The following are unlikely to be added unless there is interest, as they concern visible aspects of Hammerspoon and don't directly apply to a background thread process.
 
