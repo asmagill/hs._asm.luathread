@@ -49,15 +49,18 @@ typedef enum _event_t {
     didRename,
 } event_t;
 
-@interface VolumeWatcher : NSObject
+@interface LST_VolumeWatcher : NSObject
 @property VolumeWatcher_t* object;
+@property NSThread       *myMainThread ;
+
 - (id)initWithObject:(VolumeWatcher_t*)object;
 @end
 
-@implementation VolumeWatcher
+@implementation LST_VolumeWatcher
 - (id)initWithObject:(VolumeWatcher_t*)object {
     if (self = [super init]) {
-        self.object = object;
+        _object = object;
+        _myMainThread = [NSThread currentThread] ;
     }
     return self;
 }
@@ -67,7 +70,7 @@ typedef enum _event_t {
     LuaSkin *skin = LST_getLuaSkin(); //[LuaSkin shared] ;
     lua_State *L = skin.L;
 
-    [skin pushLuaRef:LST_getRefTable(skin, USERDATA_TAG) ref:self.object->fn];
+    [skin pushLuaRef:LST_getRefTable(skin, USERDATA_TAG, refTable) ref:self.object->fn];
     lua_pushinteger(L, event); // Parameter 1: the event type
 
     NSMutableDictionary *tableArg = [[NSMutableDictionary alloc] init];
@@ -98,20 +101,53 @@ typedef enum _event_t {
     }
 }
 
+- (void)onProperThread:(NSDictionary *)arguments {
+    [self callback:[arguments  objectForKey:@"dict"]
+         withEvent:[[arguments objectForKey:@"event"] unsignedIntValue]];
+}
+
 - (void)volumeDidMount:(NSNotification*)notification {
-    [self callback:[notification userInfo] withEvent:didMount];
+    [self performSelector:@selector(onProperThread:)
+                 onThread:_myMainThread
+               withObject:@{
+                              @"dict"  : [notification userInfo] ? [notification userInfo] : [NSNull null],
+                              @"event" : @(didMount)
+                          }
+            waitUntilDone:YES];
+//     [self callback:[notification userInfo] withEvent:didMount];
 }
 
 - (void)volumeDidUnmount:(NSNotification*)notification {
-    [self callback:[notification userInfo] withEvent:didUnmount];
+    [self performSelector:@selector(onProperThread:)
+                 onThread:_myMainThread
+               withObject:@{
+                              @"dict"  : [notification userInfo] ? [notification userInfo] : [NSNull null],
+                              @"event" : @(didUnmount)
+                          }
+            waitUntilDone:YES];
+//     [self callback:[notification userInfo] withEvent:didUnmount];
 }
 
 - (void)volumeWillUnmount:(NSNotification*)notification {
-    [self callback:[notification userInfo]  withEvent:willUnmount];
+    [self performSelector:@selector(onProperThread:)
+                 onThread:_myMainThread
+               withObject:@{
+                              @"dict"  : [notification userInfo] ? [notification userInfo] : [NSNull null],
+                              @"event" : @(willUnmount)
+                          }
+            waitUntilDone:YES];
+//     [self callback:[notification userInfo]  withEvent:willUnmount];
 }
 
 - (void)volumeDidRename:(NSNotification*)notification {
-    [self callback:[notification userInfo] withEvent:didRename];
+    [self performSelector:@selector(onProperThread:)
+                 onThread:_myMainThread
+               withObject:@{
+                              @"dict"  : [notification userInfo] ? [notification userInfo] : [NSNull null],
+                              @"event" : @(didRename)
+                          }
+            waitUntilDone:YES];
+//     [self callback:[notification userInfo] withEvent:didRename];
 }
 
 @end
@@ -155,9 +191,9 @@ static int volume_watcher_new(lua_State* L) {
     memset(watcher, 0, sizeof(VolumeWatcher_t));
 
     lua_pushvalue(L, 1);
-    watcher->fn = [skin luaRef:LST_getRefTable(skin, USERDATA_TAG)];
+    watcher->fn = [skin luaRef:LST_getRefTable(skin, USERDATA_TAG, refTable)];
     watcher->running = NO;
-    watcher->obj = (__bridge_retained void*) [[VolumeWatcher alloc] initWithObject:watcher];
+    watcher->obj = (__bridge_retained void*) [[LST_VolumeWatcher alloc] initWithObject:watcher];
 
     luaL_getmetatable(L, USERDATA_TAG);
     lua_setmetatable(L, -2);
@@ -165,7 +201,7 @@ static int volume_watcher_new(lua_State* L) {
 }
 
 // Register the VolumeWatcher as observer for application specific events.
-static void register_observer(VolumeWatcher* observer) {
+static void register_observer(LST_VolumeWatcher* observer) {
     // It is crucial to use the shared workspace notification center here.
     // Otherwise the will not receive the events we are interested in.
     NSNotificationCenter* center = [[NSWorkspace sharedWorkspace] notificationCenter];
@@ -188,7 +224,7 @@ static void register_observer(VolumeWatcher* observer) {
 }
 
 // Unregister the VolumeWatcher as observer for all events.
-static void unregister_observer(VolumeWatcher* observer) {
+static void unregister_observer(LST_VolumeWatcher* observer) {
     NSNotificationCenter* center = [[NSWorkspace sharedWorkspace] notificationCenter];
     [center removeObserver:observer name:NSWorkspaceDidMountNotification object:nil];
     [center removeObserver:observer name:NSWorkspaceDidUnmountNotification object:nil];
@@ -216,7 +252,7 @@ static int volume_watcher_start(lua_State* L) {
         return 1;
 
     watcher->running = YES;
-    register_observer((__bridge VolumeWatcher*)watcher->obj);
+    register_observer((__bridge LST_VolumeWatcher*)watcher->obj);
     return 1;
 }
 
@@ -252,9 +288,9 @@ static int volume_watcher_gc(lua_State* L) {
 
     volume_watcher_stop(L);
 
-    watcher->fn = [skin luaUnref:LST_getRefTable(skin, USERDATA_TAG) ref:watcher->fn];
+    watcher->fn = [skin luaUnref:LST_getRefTable(skin, USERDATA_TAG, refTable) ref:watcher->fn];
 
-    VolumeWatcher* object = (__bridge_transfer VolumeWatcher*)watcher->obj;
+    LST_VolumeWatcher* object = (__bridge_transfer LST_VolumeWatcher*)watcher->obj;
     object = nil;
     return 0;
 }

@@ -34,12 +34,14 @@
 @property (weak) HSASMLuaThread      *threadForThisSkin ;
 
 -(int)getRefTableForModule:(const char *)module inThread:(NSThread *)thread ;
+-(int)getRefForLabel:(const char *)label inModule:(const char *)module inThread:(NSThread *)thread ;
+-(BOOL)setRefTable:(int)refTable forModule:(const char *)module inThread:(NSThread *)thread ;
+-(BOOL)setRef:(int)refNumber forLabel:(const char *)label inModule:(const char *)module inThread:(NSThread *)thread ;
 @end
+
 // Since the overridden methods reference these, we need the interface available here as well,
-// since it isn't included in the stock LuaSkin.h
-
+// as they aren't included in the stock LuaSkin.h
 @interface LuaSkin (conversionSupport)
-
 // internal methods for pushNSObject
 - (int)pushNSObject:(id)obj     withOptions:(LS_NSConversionOptions)options alreadySeenObjects:(NSMutableDictionary *)alreadySeen ;
 - (int)pushNSNumber:(id)obj     withOptions:(LS_NSConversionOptions)options ;
@@ -47,7 +49,6 @@
 - (int)pushNSSet:(id)obj        withOptions:(LS_NSConversionOptions)options alreadySeenObjects:(NSMutableDictionary *)alreadySeen ;
 - (int)pushNSDictionary:(id)obj withOptions:(LS_NSConversionOptions)options alreadySeenObjects:(NSMutableDictionary *)alreadySeen ;
 - (int)pushNSValue:(id)obj withOptions:(LS_NSConversionOptions)options ;
-
 // internal methods for toNSObjectAtIndex
 - (id)toNSObjectAtIndex:(int)idx withOptions:(LS_NSConversionOptions)options alreadySeenObjects:(NSMutableDictionary *)alreadySeen ;
 - (id)tableAtIndex:(int)idx      withOptions:(LS_NSConversionOptions)options alreadySeenObjects:(NSMutableDictionary *)alreadySeen;
@@ -93,7 +94,6 @@
     if ([NSThread isMainThread]) return [LuaSkin shared] ;
 
     // otherwise, we're storing the LuaSkin instance in the thread's dictionary
-//     NSThread      *thisThread = [NSThread currentThread] ;
     HSASMLuaThread  *thisThread = (HSASMLuaThread *)[NSThread currentThread] ;
 
     LuaSkinThread *thisSkin ;
@@ -111,64 +111,75 @@
     return thisSkin ;
 }
 
+// Methods useful in compatibile Hammerspoon modules
+
 -(BOOL)setRefTable:(int)refTable forModule:(const char *)module {
+    return [self setRef:refTable forLabel:"_refTable" inModule:module inThread:[NSThread currentThread]] ;
+}
+
+-(BOOL)setRefTable:(int)refTable forModule:(const char *)module inThread:(NSThread *)thread {
+    return [self setRef:refTable forLabel:"_refTable" inModule:module inThread:thread] ;
+}
+
+-(BOOL)setRef:(int)refNumber forLabel:(const char *)label inModule:(const char *)module {
+    return [self setRef:refNumber forLabel:label inModule:module inThread:[NSThread currentThread]] ;
+}
+
+-(BOOL)setRef:(int)refNumber forLabel:(const char *)label inModule:(const char *)module inThread:(NSThread *)thread {
     BOOL result = NO ;
-    NSThread *thread = [NSThread currentThread] ;
     if ([thread isKindOfClass:[HSASMLuaThread class]]) {
         HSASMLuaThread *luaThread  = (HSASMLuaThread *)thread ;
         NSString       *moduleName = [NSString stringWithFormat:@"%s", module] ;
+        NSString       *labelName  = [NSString stringWithFormat:@"%s", label] ;
+
         if ([luaThread.dictionaryLock lockBeforeDate:[NSDate dateWithTimeIntervalSinceNow:LOCK_TIMEOUT]]) {
-            [[luaThread.threadDictionary objectForKey:@"_refTables"] setObject:@(refTable)
-                                                                        forKey:moduleName] ;
+            if (![[luaThread.threadDictionary objectForKey:@"_internalReferences"] objectForKey:moduleName]) {
+                [[luaThread.threadDictionary objectForKey:@"_internalReferences"] setObject:[[NSMutableDictionary alloc] init]
+                                                                                forKey:moduleName] ;
+            }
+            [[[luaThread.threadDictionary objectForKey:@"_internalReferences"] objectForKey:moduleName] setObject:@(refNumber)
+                                                                                                     forKey:labelName] ;
             result = YES ;
             [luaThread.dictionaryLock unlock] ;
         } else {
-            ERROR(@"[LuaSkinThread setRefTable:forModule:] unable to obtain dictionary lock") ;
+            ERROR(@"[LuaSkinThread setRef:forLabel:inModule:inThread:] unable to obtain dictionary lock") ;
         }
     } else {
-        ERROR(@"[LuaSkinThread setRefTable:forModule:] thread is not an hs._asm.luathread") ;
+        ERROR(@"[LuaSkinThread setRef:forLabel:inModule:inThread:] thread is not an hs._asm.luathread") ;
     }
     return result ;
 }
 
--(BOOL)removeRefTableForModule:(const char *)module {
-    BOOL result = NO ;
-    NSThread *thread = [NSThread currentThread] ;
-    if ([thread isKindOfClass:[HSASMLuaThread class]]) {
-        HSASMLuaThread *luaThread  = (HSASMLuaThread *)thread ;
-        NSString       *moduleName = [NSString stringWithFormat:@"%s", module] ;
-        if ([luaThread.dictionaryLock lockBeforeDate:[NSDate dateWithTimeIntervalSinceNow:LOCK_TIMEOUT]]) {
-// FIXME: we really should release the refs in the refTable from Lua before deleting the only way to get at it...
-            [[luaThread.threadDictionary objectForKey:@"_refTables"] removeObjectForKey:moduleName] ;
-            result = YES ;
-            [luaThread.dictionaryLock unlock] ;
-        } else {
-            ERROR(@"[LuaSkinThread removeRefTableForModule:] unable to obtain dictionary lock") ;
-        }
-    } else {
-        ERROR(@"[LuaSkinThread removeRefTableForModule:] thread is not an hs._asm.luathread") ;
-    }
-    return result ;
+-(int)getRefTableForModule:(const char *)module {
+    return [self getRefForLabel:"_refTable" inModule:module inThread:[NSThread currentThread]] ;
 }
-
--(int)getRefTableForModule:(const char *)module { return [self getRefTableForModule:module inThread:[NSThread currentThread]] ; }
-
-// These may move to a private category... outside of self, they should really only
-// be used in `hs._asm.luaskinpokeytool`, if even that...
 
 -(int)getRefTableForModule:(const char *)module inThread:(NSThread *)thread {
+    return [self getRefForLabel:"_refTable" inModule:module inThread:thread] ;
+}
+
+-(int)getRefForLabel:(const char *)label inModule:(const char *)module {
+    return [self getRefForLabel:label inModule:module inThread:[NSThread currentThread]] ;
+}
+
+-(int)getRefForLabel:(const char *)label inModule:(const char *)module inThread:(NSThread *)thread {
     int result = LUA_REFNIL ;
     if ([thread isKindOfClass:[HSASMLuaThread class]]) {
         HSASMLuaThread *luaThread  = (HSASMLuaThread *)thread ;
         NSString       *moduleName = [NSString stringWithFormat:@"%s", module] ;
+        NSString       *labelName  = [NSString stringWithFormat:@"%s", label] ;
+
         if ([luaThread.dictionaryLock lockBeforeDate:[NSDate dateWithTimeIntervalSinceNow:LOCK_TIMEOUT]]) {
-            result = [[[luaThread.threadDictionary objectForKey:@"_refTables"] objectForKey:moduleName] intValue] ;
+            NSNumber *holder = [[[luaThread.threadDictionary objectForKey:@"_internalReferences"]
+                                                             objectForKey:moduleName]
+                                                             objectForKey:labelName] ;
+            result = holder ? [holder intValue] : LUA_NOREF ;
             [luaThread.dictionaryLock unlock] ;
         } else {
-            ERROR(@"[LuaSkinThread getRefTableForModule:inThread:] unable to obtain dictionary lock") ;
+            ERROR(@"[LuaSkinThread getRefForLabel:inModule:inThread:] unable to obtain dictionary lock") ;
         }
     } else {
-        ERROR(@"[LuaSkinThread getRefTableForModule:inThread:] thread is not an hs._asm.luathread") ;
+        ERROR(@"[LuaSkinThread getRefForLabel:inModule:inThread:] thread is not an hs._asm.luathread") ;
     }
     return result ;
 }
@@ -189,7 +200,7 @@
 
         if ([_threadForThisSkin.dictionaryLock lockBeforeDate:[NSDate dateWithTimeIntervalSinceNow:LOCK_TIMEOUT]]) {
             [_threadForThisSkin.threadDictionary setObject:self                               forKey:@"_LuaSkin"];
-            [_threadForThisSkin.threadDictionary setObject:[[NSMutableDictionary alloc] init] forKey:@"_refTables"] ;
+            [_threadForThisSkin.threadDictionary setObject:[[NSMutableDictionary alloc] init] forKey:@"_internalReferences"] ;
             [_threadForThisSkin.dictionaryLock unlock] ;
         } else {
             ERROR(@"[LuaSkinThread init] unable to obtain dictionary lock") ;
@@ -208,11 +219,11 @@
         [_registeredLuaObjectHelperFunctions removeAllObjects] ;
         [_registeredLuaObjectHelperLocations removeAllObjects] ;
         [_registeredLuaObjectHelperUserdataMappings removeAllObjects];
-//         NSThread      *thisThread = [NSThread currentThread] ;
+
         HSASMLuaThread  *thisThread = (HSASMLuaThread *)[NSThread currentThread] ;
         if ([thisThread.dictionaryLock lockBeforeDate:[NSDate dateWithTimeIntervalSinceNow:LOCK_TIMEOUT]]) {
             [thisThread.threadDictionary removeObjectForKey:@"_LuaSkin"] ;
-            [thisThread.threadDictionary removeObjectForKey:@"_refTables"] ;
+            [thisThread.threadDictionary removeObjectForKey:@"_internalReferences"] ;
             [thisThread.dictionaryLock unlock] ;
         } else {
             ERROR(@"[LuaSkinThread destroyLuaState] unable to obtain dictionary lock") ;

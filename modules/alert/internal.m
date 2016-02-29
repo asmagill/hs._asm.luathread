@@ -8,10 +8,10 @@
 
 static NSMutableArray* visibleAlerts;
 
-@interface HSAlert : NSWindowController <NSWindowDelegate>
+@interface LST_HSAlert : NSWindowController <NSWindowDelegate>
 @end
 
-@interface HSAlert ()
+@interface LST_HSAlert ()
 
 @property NSWindow* win;
 @property NSTextField* textField;
@@ -19,7 +19,7 @@ static NSMutableArray* visibleAlerts;
 
 @end
 
-@implementation HSAlert
+@implementation LST_HSAlert
 
 void HSShowAlert(NSString* oneLineMsg, CGFloat duration) {
     if (!visibleAlerts)
@@ -34,14 +34,14 @@ void HSShowAlert(NSString* oneLineMsg, CGFloat duration) {
         absoluteTop = screenRect.size.height / 1.55; // pretty good spot
     }
     else {
-        HSAlert* ctrl = [visibleAlerts lastObject];
+        LST_HSAlert* ctrl = [visibleAlerts lastObject];
         absoluteTop = NSMinY([[ctrl window] frame]) - 3.0;
     }
 
     if (absoluteTop <= 0)
         absoluteTop = NSMaxY([currentScreen visibleFrame]);
 
-    HSAlert* alert = [[HSAlert alloc] init];
+    LST_HSAlert* alert = [[LST_HSAlert alloc] init];
     [alert loadWindow];
     [alert show:oneLineMsg duration:duration pushDownBy:absoluteTop];
     [visibleAlerts addObject:alert];
@@ -224,7 +224,7 @@ static int alert_closeAll(lua_State* L) {
 }
 
 static int alert_gc(lua_State* L __unused) {
-    for (HSAlert* alert in visibleAlerts)
+    for (LST_HSAlert* alert in visibleAlerts)
         [alert emergencyCancel];
 
     visibleAlerts = nil;

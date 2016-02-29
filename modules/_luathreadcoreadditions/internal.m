@@ -13,7 +13,7 @@ static int core_getObjectMetatable(lua_State *L) {
     return 1;
 }
 
-static int core_cleanUTF8(lua_State *L) {
+static int core_cleanUTF8(__unused lua_State *L) {
     LuaSkin *skin = LST_getLuaSkin(); //[LuaSkin shared] ;
     [skin checkArgs:LS_TANY, LS_TBREAK] ;
     [skin pushNSObject:[skin getValidUTF8AtIndex:1]] ;

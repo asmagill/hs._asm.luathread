@@ -7,7 +7,7 @@
 --- This module is produced by the Kepler Project under the name "Lua File System"
 
 local module = require("hs.fs.internal")
--- module.volume = require("hs.fs.volume")
+module.volume = require("hs.fs.volume")
 
 --- hs.fs.volume.allVolumes([showHidden]) -> table
 --- Function
@@ -39,6 +39,6 @@ local module = require("hs.fs.internal")
 ---   * NSURLVolumeLocalizedFormatDescriptionKey - Localized description of the volume
 --- * Not all keys will be present for all volumes
 local host = require("hs.host")
--- module.volume.allVolumes = host.volumeInformation
+module.volume.allVolumes = host.volumeInformation
 
 return module

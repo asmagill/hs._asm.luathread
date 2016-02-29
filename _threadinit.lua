@@ -129,6 +129,13 @@ if _instance then
         return str
     end
 
+    -- Because LuaSkin uses the stack trace to identify object conversion function source lines
+    --    to help identify duplicates, we need to keep parity with the fact that Hammerspoon
+    --    wraps require for crashlogs and Mjolnir module detection or the stack trace numbers will
+    --    differ.
+    rawrequire = require
+    require = function(modulename) return rawrequire(modulename) end
+
     print("-- ".._VERSION..", Hammerspoon instance "..instanceName)
 
     local custominit = assignments.configdir.."/_init."..instanceName..".lua"

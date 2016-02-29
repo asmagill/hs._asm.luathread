@@ -1,28 +1,33 @@
-// +  Move this to it's own repo -- getting large enough that it would be annoying for someone who
-// +      wanted to clone repo for something else, but didn't care about/want this...
+// +  Move this to it's own repo -- now switch to submodule in wip
 //
-//    LST_getRefTable and LST_setRefTable should either both take a variable name as an argument or
-//        both have a hard coded refTable. Decide which and fix them.
-//    removeRefTable should iterate through and release lua refs as well (see LuaSkinThread.m)
-//    update hs._asm.extras, hs._asm.notificationcenter (use nc approach in hs.fs.volume)
 //    rethink hs._asm.luaskinpokeytool now that we can link thread to skin and vice-versa
-//    do we still need to copy dictionary on cancel since HSASMLuaThread *is* an NSThread?  I seem
-//       to recall the dictionary persisting even after the thread was done before, but this really
-//       needs to be tested again.
 //
-// *  locks need timeout/fallback (reset?) (dictionary lock is only one still in use) -- use NSLock?
-// *      sub-class NSThread and add NSLock for threadDictionary?  Would have to modify thread.m back
-// *      to doing most of it's setup in main... what does that change?
-// -      update modules and examples where needed -- extra header file and methods in LuaSkinThread?
+//    hs._asm.luathread:reload()?  Should check if isExecuting and fail if YES.  Take argument to
+//        cancel and then restart?
 //
 // +  Document LuaSkinThread, what it does, why, and how
 //
-// *  LuaSkin support now possible -- does require change to modules, but no change to core Application or LuaSkin framework
-// *  Need to work out proper delegate for threaded LuaSkin's to allow log messages to go somewhere useful
+//    Name should be used for choosing startup file, but thread name should be made always unique
+//    Add args to new, or other constructors, to indicate whether hammerspoon niceties should be included
+//        (module auto load, etc.) or it should be raw lua, or somewhere in-between
+//
 // +  Module conversion in progress for modules I care about... may take requests afterwards...
-//        module changes require [LuaSkin performSelector:@selector(thread)] instead of [LuaSkin shared],
-//        store refTable in threadDictionary, and making sure that they don't explicitly schedule anything on
-//        main loop, etc.
+//        To ensure proper object is used, prepend custom objects with LST_; otherwise, console reports:
+//            2/28/16 6:20:33.345 PM Hammerspoon[35609]: objc[35609]: Class XXX is implemented in both blah.so \
+//                and otherblah.so. One of the two will be used. Which one is undefined.
+//        Copy/link to LuaSkinThread.h and import into objc files
+//        use macros in LuaSkinThread.h (prefixed with LST) where needed to replace:
+//            [LuaSkin shared], refTable, and initial assignment to refTable in luaopen function declaration
+//        any place which specifies MainThread or RunLoopMain, change to current or store current in
+//            object during creation and use in callback
+//            *note: no workaround for `dispatch_get_main_queue` yet...
+//        other?
+//
+//    _threadinit.lua should include list of modules known to fail/not-ported so they can be
+//        rejected w/out actually throwing exception... will aid if autoloader functionality added
+//    record of diffs between ported modules and current in HS to generate report indicating
+//        when they need to be reviewed for possible new changes/updates
+//
 // -  Modify thread.m to use thread supported LuaSkin for argument checking, etc. -- started
 // +  Modify get/set to use LuaSkin? gives us easier userdata support, but have to think how this affects
 //        refs within the object...
@@ -36,13 +41,6 @@
 //            the entire module over...
 //
 // +  check if thread is running in some (all?) methods
-//
-// *  No -- add support for thread to initiate lua on main thread (i.e. core Hammerspoon) other than through
-//       properly (and intentionally) created callback function?  would allow hand-off for things which
-//       may not be possible/easy on the threaded side (hs.drawing, etc.) but at risk of thread blocking
-//       Hammerspoon (the reason for this in the first place) or even worse -- a deadlock between the two
-//    At least not directly... `hs._asm.luaskinpokeytool` may be able to do this, but it's an even bigger
-//       hack than this is...
 
 #import "luathread.h"
 #import "LuaSkinThread.h"
@@ -63,13 +61,9 @@ static int refTable = LUA_NOREF;
         _inPort         = [NSMachPort port] ;
         [_inPort setDelegate:self] ;
         [[NSRunLoop currentRunLoop] addPort:_inPort forMode:NSDefaultRunLoopMode] ;
-//         _threadObj      = [[HSASMLuaThread alloc] initWithPort:_inPort] ;
         _threadObj      = [[HSASMLuaThread alloc] initWithPort:_inPort andName:name] ;
         _outPort        = _threadObj.inPort ;
 
-//         [NSThread detachNewThreadSelector:@selector(launchThreadWithName:)
-//                                  toTarget:_threadObj
-//                                withObject:name] ;
         [_threadObj start] ;
     }
     return self ;
@@ -163,7 +157,6 @@ static int threadIsExecuting(lua_State *L) {
     LuaSkin *skin = [LuaSkin shared] ;
     [skin checkArgs:LS_TUSERDATA, USERDATA_TAG, LS_TBREAK] ;
     HSASMLuaThreadManager *luaThread = [skin toNSObjectAtIndex:1] ;
-//     lua_pushboolean(L, luaThread.threadObj.thread.executing) ;
     lua_pushboolean(L, luaThread.threadObj.executing) ;
     return 1 ;
 }
@@ -246,15 +239,8 @@ static int getItemFromDictionary(lua_State *L) {
                                                    LS_NSDescribeUnknownTypes         |
                                                    LS_NSPreserveLuaStringExactly     |
                                                    LS_NSAllowsSelfReference] ;
-//     if (luaThread.threadObj.thread.executing) {
     if (luaThread.threadObj.executing) {
-//         while(luaThread.threadObj.dictionaryLock) {} ;
-//         luaThread.threadObj.dictionaryLock = YES ;
         if ([luaThread.threadObj.dictionaryLock lockBeforeDate:[NSDate dateWithTimeIntervalSinceNow:LOCK_TIMEOUT]]) {
-//         NSDictionary *holding = luaThread.threadObj.thread.threadDictionary ;
-//             NSDictionary *holding = luaThread.threadObj.threadDictionary ;
-//             luaThread.threadObj.dictionaryLock = NO ;
-//             id obj = (lua_gettop(L) == 1) ? holding : [holding objectForKey:key] ;
             id obj = (lua_gettop(L) == 1) ? luaThread.threadObj.threadDictionary
                                           : [luaThread.threadObj.threadDictionary objectForKey:key] ;
             [skin pushNSObject:obj withOptions:LS_NSUnsignedLongLongPreserveBits |
@@ -296,7 +282,6 @@ static int setItemInDictionary(lua_State *L) {
     LuaSkin *skin = [LuaSkin shared] ;
     [skin checkArgs:LS_TUSERDATA, USERDATA_TAG, LS_TANY, LS_TANY, LS_TBREAK] ;
     HSASMLuaThreadManager *luaThread = [skin toNSObjectAtIndex:1] ;
-//     if (luaThread.threadObj.thread.executing) {
     if (luaThread.threadObj.executing) {
         id key = [skin toNSObjectAtIndex:2 withOptions:LS_NSUnsignedLongLongPreserveBits |
                                                        LS_NSDescribeUnknownTypes         |
@@ -307,15 +292,11 @@ static int setItemInDictionary(lua_State *L) {
                                                        LS_NSPreserveLuaStringExactly     |
                                                        LS_NSAllowsSelfReference] ;
         if ([key isKindOfClass:[NSString class]] && ([key isEqualToString:@"_LuaSkin"] ||
-                                                     [key isEqualToString:@"_refTables"])) {
+                                                     [key isEqualToString:@"_internalReferences"])) {
             return luaL_error(L, "you cannot modify an internally managed variable") ;
         }
-//         while(luaThread.threadObj.dictionaryLock) {} ;
-//         luaThread.threadObj.dictionaryLock = YES ;
         if ([luaThread.threadObj.dictionaryLock lockBeforeDate:[NSDate dateWithTimeIntervalSinceNow:LOCK_TIMEOUT]]) {
-//         [luaThread.threadObj.thread.threadDictionary setValue:obj forKey:key] ;
             [luaThread.threadObj.threadDictionary setValue:obj forKey:key] ;
-//             luaThread.threadObj.dictionaryLock = NO ;
             [luaThread.threadObj.dictionaryLock unlock] ;
             lua_pushvalue(L, 1) ;
         } else {
@@ -344,12 +325,8 @@ static int itemDictionaryKeys(__unused lua_State *L) {
     [skin checkArgs:LS_TUSERDATA, USERDATA_TAG, LS_TANY | LS_TOPTIONAL, LS_TBREAK] ;
     HSASMLuaThreadManager *luaThread = [skin toNSObjectAtIndex:1] ;
     if (luaThread.threadObj.executing) {
-    //     while(luaThread.threadObj.dictionaryLock) {} ;
-    //     luaThread.threadObj.dictionaryLock = YES ;
         if ([luaThread.threadObj.dictionaryLock lockBeforeDate:[NSDate dateWithTimeIntervalSinceNow:LOCK_TIMEOUT]]) {
-    //     NSArray *theKeys = [luaThread.threadObj.thread.threadDictionary allKeys] ;
             NSArray *theKeys = [luaThread.threadObj.threadDictionary allKeys] ;
-    //         luaThread.threadObj.dictionaryLock = NO ;
             [luaThread.threadObj.dictionaryLock unlock] ;
             [skin pushNSObject:theKeys withOptions:LS_NSUnsignedLongLongPreserveBits |
                                                    LS_NSDescribeUnknownTypes         |
@@ -388,12 +365,10 @@ static int cancelThread(lua_State *L) {
     LuaSkin *skin = [LuaSkin shared] ;
     [skin checkArgs:LS_TUSERDATA, USERDATA_TAG, LS_TANY | LS_TOPTIONAL, LS_TANY | LS_TOPTIONAL, LS_TBREAK] ;
     HSASMLuaThreadManager *luaThread = [skin toNSObjectAtIndex:1] ;
-//     if (luaThread.threadObj.thread.executing) {
     if (luaThread.threadObj.executing) {
         if (lua_type(L, 3) != LUA_TNONE) {
             luaThread.threadObj.performLuaClose = (BOOL)lua_toboolean(L, 3) ;
         }
-//         [luaThread.threadObj.thread cancel] ;
         [luaThread.threadObj cancel] ;
         NSPortMessage* messageObj = [[NSPortMessage alloc] initWithSendPort:luaThread.outPort
                                                         receivePort:luaThread.inPort
@@ -444,7 +419,6 @@ static int getOutput(__unused lua_State *L) {
 
     NSMutableData *outputCopy = [[NSMutableData alloc] init] ;
 
-//     if ((lua_gettop(L) == 2) && lua_toboolean(L, 2) && luaThread.threadObj.thread.executing) {
     if ((lua_gettop(L) == 2) && lua_toboolean(L, 2) && luaThread.threadObj.executing) {
         for (NSData *obj in luaThread.threadObj.cachedOutput) [outputCopy appendData:obj] ;
     } else if ((lua_gettop(L) == 2) && lua_toboolean(L, 2)) {
@@ -480,7 +454,6 @@ static int dumpDictionary(__unused lua_State *L) {
     LuaSkin *skin = [LuaSkin shared] ;
     [skin checkArgs:LS_TUSERDATA, USERDATA_TAG, LS_TBREAK] ;
     HSASMLuaThreadManager *luaThread = [skin toNSObjectAtIndex:1] ;
-//     [skin pushNSObject:luaThread.threadObj.thread.threadDictionary
     [skin pushNSObject:luaThread.threadObj.threadDictionary
            withOptions:LS_NSUnsignedLongLongPreserveBits |
                        LS_NSLuaStringAsDataOnly |
@@ -503,7 +476,6 @@ static int submitInput(lua_State *L) {
     [skin checkArgs:LS_TUSERDATA, USERDATA_TAG, LS_TSTRING, LS_TBREAK] ;
     HSASMLuaThreadManager *luaThread = [skin toNSObjectAtIndex:1] ;
 
-//     if (luaThread.threadObj.thread.executing) {
     if (luaThread.threadObj.executing) {
         NSData *input = [skin toNSObjectAtIndex:2 withOptions:LS_NSLuaStringAsDataOnly] ;
 
@@ -562,7 +534,6 @@ static id toHSASMLuaThreadManagerFromLua(lua_State *L, int idx) {
 static int userdata_tostring(lua_State* L) {
     HSASMLuaThreadManager *obj = get_objectFromUserdata(__bridge HSASMLuaThreadManager, L, 1, USERDATA_TAG) ;
     NSString *title = @"** unavailable" ;
-//     if (obj.threadObj && obj.threadObj.thread) title = obj.threadObj.thread.name ;
     if (obj.threadObj) title = obj.threadObj.name ;
     lua_pushstring(L, [[NSString stringWithFormat:@"%s: %@ (%p)",
                                                   USERDATA_TAG,
@@ -587,14 +558,12 @@ static int userdata_eq(lua_State* L) {
 static int userdata_gc(lua_State* L) {
     LuaSkin *skin = [LuaSkin shared];
     HSASMLuaThreadManager *obj = get_objectFromUserdata(__bridge_transfer HSASMLuaThreadManager, L, 1, USERDATA_TAG) ;
-//     [skin logVerbose:[NSString stringWithFormat:@"__gc for thread manager:%@", obj.threadObj.thread.name]] ;
     [skin logVerbose:[NSString stringWithFormat:@"__gc for thread manager:%@", obj.threadObj.name]] ;
     if (obj) {
         LuaSkin *skin   = [LuaSkin shared] ;
         obj.callbackRef = [skin luaUnref:refTable ref:obj.callbackRef] ;
         obj.selfRef     = [skin luaUnref:refTable ref:obj.selfRef] ;
         [obj removeCommunicationPorts] ;
-//         [obj.threadObj.thread cancel] ;
         [obj.threadObj cancel] ;
         obj             = nil ;
     }

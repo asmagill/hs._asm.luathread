@@ -14,7 +14,6 @@ static id toHSASMLuaThreadFromLua(lua_State *L, int idx) ;
         _runStringRef    = LUA_NOREF ;
         _outPort         = outPort ;
         _performLuaClose = YES ;
-//         _dictionaryLock  = NO ;
         _dictionaryLock  = [[NSLock alloc] init] ;
         _idle            = NO ;
         _resetLuaState   = NO ;
@@ -51,7 +50,6 @@ static id toHSASMLuaThreadFromLua(lua_State *L, int idx) ;
             ERROR(message) ;
             return NO ;
         }
-//         lua_pushstring(_L, [_thread.name UTF8String]) ;
         lua_pushstring(_L, [[self name] UTF8String]) ;
         [_skin pushNSObject:assignmentsFromParent] ;
         if (lua_pcall(_L, 2, 1, 0) != LUA_OK) {
@@ -78,15 +76,11 @@ static id toHSASMLuaThreadFromLua(lua_State *L, int idx) ;
     return YES ;
 }
 
-// -(void)launchThreadWithName:(id)name {
 -(void)main {
     @autoreleasepool {
-//         _thread = [NSThread currentThread] ;
-//         _thread.name = name ;
         [[NSRunLoop currentRunLoop] addPort:_inPort forMode:NSDefaultRunLoopMode] ;
 
         if ([self startLuaInstance]) {
-//             while (![_thread isCancelled]) {
             while (![self isCancelled]) {
                 _idle = YES ;
                 [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
@@ -100,7 +94,6 @@ static id toHSASMLuaThreadFromLua(lua_State *L, int idx) ;
             }
             _runStringRef = LUA_NOREF ;
         }
-//         _finalDictionary = [_thread threadDictionary] ;
         _finalDictionary = [self threadDictionary] ;
 
     // in case lua_close isn't called...
@@ -122,7 +115,6 @@ static id toHSASMLuaThreadFromLua(lua_State *L, int idx) ;
     if (![self startLuaInstance]) {
         ERROR(@"exiting thread; error during reload") ;
         _performLuaClose = NO ;
-//         [_thread cancel] ;
         [self cancel] ;
     }
 }
@@ -149,7 +141,6 @@ static id toHSASMLuaThreadFromLua(lua_State *L, int idx) ;
                         NSString *error = [NSString stringWithFormat:@"exiting thread; error in runstring:%s",
                                                                      lua_tostring(_L, -1)] ;
                         ERROR(error) ;
-//                         [_thread cancel] ;
                         [self cancel] ;
                     } else {
                         size_t size ;
@@ -173,7 +164,6 @@ static id toHSASMLuaThreadFromLua(lua_State *L, int idx) ;
                 }
             } else {
                 ERROR(@"exiting thread; missing runstring function") ;
-//                 [_thread cancel] ;
                 [self cancel] ;
             }
         }   break ;
@@ -189,8 +179,8 @@ static id toHSASMLuaThreadFromLua(lua_State *L, int idx) ;
 
 - (void) logForLuaSkinAtLevel:(int)level withMessage:(NSString *)theMessage {
     // Send logs to the appropriate location, depending on their level
-    // Note that hs.handleLogMessage also does this kind of filtering. We are special casing here for LS_LOG_BREADCRUMB to entirely bypass calling into Lua
-    // (because such logs don't need to be shown to the user, just stored in our crashlog in case we crash)
+    // Note that hs.handleLogMessage also does this kind of filtering. We are special casing here for LS_LOG_BREADCRUMB to entirely
+    // bypass calling into Lua (because such logs don't need to be shown to the user, just stored in our crashlog in case we crash)
     switch (level) {
         case LS_LOG_BREADCRUMB:
             NSLog(@"%@", theMessage);
@@ -250,7 +240,6 @@ static int timestamp(lua_State *L) {
 ///  * this method is used by a handler set with `debug.sethook` to determine if lua code execution should be terminated so that the thread can be formally closed.
 static int threadIsCancelled(lua_State *L) {
     HSASMLuaThread *luaThread = toHSASMLuaThreadFromLua(L, 1) ;
-//     lua_pushboolean(L, luaThread.thread.cancelled) ;
     lua_pushboolean(L, luaThread.cancelled) ;
     return 1 ;
 }
@@ -266,7 +255,6 @@ static int threadIsCancelled(lua_State *L) {
 ///  * the name specified or dynamically assigned at the time of the thread's creation.
 static int threadName(lua_State *L) {
     HSASMLuaThread *luaThread = toHSASMLuaThreadFromLua(L, 1) ;
-//     lua_pushstring(L, [luaThread.thread.name UTF8String]) ;
     lua_pushstring(L, [luaThread.name UTF8String]) ;
     return 1 ;
 }
@@ -292,13 +280,7 @@ static int getItemFromDictionary(lua_State *L) {
                                                    LS_NSDescribeUnknownTypes         |
                                                    LS_NSPreserveLuaStringExactly     |
                                                    LS_NSAllowsSelfReference] ;
-//     while(luaThread.dictionaryLock) {} ;
-//     luaThread.dictionaryLock = YES ;
     if ([luaThread.dictionaryLock lockBeforeDate:[NSDate dateWithTimeIntervalSinceNow:LOCK_TIMEOUT]]) {
-//     NSDictionary *holding = luaThread.thread.threadDictionary ;
-//         NSDictionary *holding = luaThread.threadDictionary ;
-//         luaThread.dictionaryLock = NO ;
-//         id obj = (lua_gettop(L) == 1) ? holding : [holding objectForKey:key] ;
         id obj = (lua_gettop(L) == 1) ? luaThread.threadDictionary
                                       : [luaThread.threadDictionary objectForKey:key] ;
         [skin pushNSObject:obj withOptions:LS_NSUnsignedLongLongPreserveBits |
@@ -338,15 +320,11 @@ static int setItemInDictionary(lua_State *L) {
                                                    LS_NSPreserveLuaStringExactly     |
                                                    LS_NSAllowsSelfReference] ;
     if ([key isKindOfClass:[NSString class]] && ([key isEqualToString:@"_LuaSkin"] ||
-                                                 [key isEqualToString:@"_refTables"])) {
+                                                 [key isEqualToString:@"_internalReferences"])) {
         return luaL_error(L, "you cannot modify an internally managed variable") ;
     }
-//     while(luaThread.dictionaryLock) {} ;
-//     luaThread.dictionaryLock = YES ;
     if ([luaThread.dictionaryLock lockBeforeDate:[NSDate dateWithTimeIntervalSinceNow:LOCK_TIMEOUT]]) {
-//     [luaThread.thread.threadDictionary setValue:obj forKey:key] ;
         [luaThread.threadDictionary setValue:obj forKey:key] ;
-//         luaThread.dictionaryLock = NO ;
         [luaThread.dictionaryLock unlock] ;
         lua_pushvalue(L, 1) ;
     } else {
@@ -370,12 +348,8 @@ static int setItemInDictionary(lua_State *L) {
 static int itemDictionaryKeys(lua_State *L) {
     LuaSkin *skin = [LuaSkin performSelector:@selector(thread)]; //[LuaSkin shared];
     HSASMLuaThread *luaThread = toHSASMLuaThreadFromLua(L, 1) ;
-//     while(luaThread.dictionaryLock) {} ;
-//     luaThread.dictionaryLock = YES ;
     if ([luaThread.dictionaryLock lockBeforeDate:[NSDate dateWithTimeIntervalSinceNow:LOCK_TIMEOUT]]) {
-//     NSArray *theKeys = [luaThread.thread.threadDictionary allKeys] ;
         NSArray *theKeys = [luaThread.threadDictionary allKeys] ;
-//         luaThread.dictionaryLock = NO ;
         [luaThread.dictionaryLock unlock] ;
         [skin pushNSObject:theKeys withOptions:LS_NSUnsignedLongLongPreserveBits |
                                                LS_NSDescribeUnknownTypes         |
@@ -405,7 +379,6 @@ static int cancelThread(lua_State *L) {
     if (lua_type(L, 3) != LUA_TNONE) {
         luaThread.performLuaClose = (BOOL)lua_toboolean(L, 3) ;
     }
-//     [luaThread.thread cancel] ;
     [luaThread cancel] ;
     lua_pushvalue(L, 1) ;
     return 1 ;
@@ -516,8 +489,6 @@ static id toHSASMLuaThreadFromLua(lua_State *L, int idx) {
 
 static int userdata_tostring(lua_State* L) {
     HSASMLuaThread *obj = get_objectFromUserdata(__bridge HSASMLuaThread, L, 1, THREAD_UD_TAG) ;
-//     NSString *title = @"** unavailable" ;
-//     if (obj.thread) title = obj.thread.name ;
     NSString *title = obj.name ;
     lua_pushstring(L, [[NSString stringWithFormat:@"%s: %@ (%p)",
                                                   THREAD_UD_TAG,
@@ -542,7 +513,6 @@ static int userdata_eq(lua_State* L) {
 static int userdata_gc(lua_State* L) {
     LuaSkin *skin = [LuaSkin performSelector:@selector(thread)]; //[LuaSkin shared];
     HSASMLuaThread *obj = get_objectFromUserdata(__bridge_transfer HSASMLuaThread, L, 1, THREAD_UD_TAG) ;
-//     NSString *msg = [NSString stringWithFormat:@"__gc for thread:%@", obj.thread.name] ;
     NSString *msg = [NSString stringWithFormat:@"__gc for thread:%@", obj.name] ;
     [skin logVerbose:msg] ; // log in thread
     VERBOSE(msg) ;          // log in main
@@ -551,9 +521,8 @@ static int userdata_gc(lua_State* L) {
             VERBOSE(@"__gc for thread:reload, skipping teardown") ;
         } else {
             [obj removeCommunicationPorts] ;
-//             [obj.thread cancel] ;
             [obj cancel] ;
-            obj         = nil ;
+            obj = nil ;
         }
     }
     // Remove the Metatable so future use of the variable in Lua won't think its valid

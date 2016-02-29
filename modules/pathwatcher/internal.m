@@ -26,12 +26,12 @@ void event_callback(ConstFSEventStreamRef __unused streamRef, void *clientCallBa
 
     const char** changedFiles = eventPaths;
 
-    [skin pushLuaRef:LST_getRefTable(skin, USERDATA_TAG) ref:pw->closureref];
+    [skin pushLuaRef:LST_getRefTable(skin, USERDATA_TAG, refTable) ref:pw->closureref];
 
     lua_newtable(L);
     for(size_t i = 0 ; i < numEvents; i++) {
         lua_pushstring(L, changedFiles[i]);
-        lua_rawseti(L, -2, i + 1);
+        lua_rawseti(L, -2, (lua_Integer)(i + 1));
     }
 
     if (![skin protectedCallAndTraceback:1 nresults:0]) {
@@ -56,7 +56,7 @@ static int watcher_path_new(lua_State* L) {
     lua_setmetatable(L, -2);
 
     lua_pushvalue(L, 2);
-    watcher_path->closureref = [skin luaRef:LST_getRefTable(skin, USERDATA_TAG)];
+    watcher_path->closureref = [skin luaRef:LST_getRefTable(skin, USERDATA_TAG, refTable)];
 
     FSEventStreamContext context;
     context.info = watcher_path;
@@ -117,7 +117,7 @@ static int watcher_path_gc(lua_State* L) {
     FSEventStreamInvalidate(watcher_path->stream);
     FSEventStreamRelease(watcher_path->stream);
 
-    watcher_path->closureref = [skin luaUnref:LST_getRefTable(skin, USERDATA_TAG) ref:watcher_path->closureref];
+    watcher_path->closureref = [skin luaUnref:LST_getRefTable(skin, USERDATA_TAG, refTable) ref:watcher_path->closureref];
 
     return 0;
 }

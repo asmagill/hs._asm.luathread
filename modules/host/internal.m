@@ -162,32 +162,32 @@ static int hs_vmstat(lua_State *L) {
     }
 
     lua_newtable(L) ;
-        lua_pushinteger(L, (uint64_t) (vm_stat.free_count - vm_stat.speculative_count)) ; lua_setfield(L, -2, "pagesFree") ;
-        lua_pushinteger(L, (uint64_t) (vm_stat.active_count))                           ; lua_setfield(L, -2, "pagesActive") ;
-        lua_pushinteger(L, (uint64_t) (vm_stat.inactive_count))                         ; lua_setfield(L, -2, "pagesInactive") ;
-        lua_pushinteger(L, (uint64_t) (vm_stat.speculative_count))                      ; lua_setfield(L, -2, "pagesSpeculative") ;
-        lua_pushinteger(L, (uint64_t) (vm_stat.throttled_count))                        ; lua_setfield(L, -2, "pagesThrottled") ;
-        lua_pushinteger(L, (uint64_t) (vm_stat.wire_count))                             ; lua_setfield(L, -2, "pagesWiredDown") ;
-        lua_pushinteger(L, (uint64_t) (vm_stat.purgeable_count))                        ; lua_setfield(L, -2, "pagesPurgeable") ;
-        lua_pushinteger(L, (uint64_t) (vm_stat.faults))                                 ; lua_setfield(L, -2, "translationFaults") ;
-        lua_pushinteger(L, (uint64_t) (vm_stat.cow_faults))                             ; lua_setfield(L, -2, "pagesCopyOnWrite") ;
-        lua_pushinteger(L, (uint64_t) (vm_stat.zero_fill_count))                        ; lua_setfield(L, -2, "pagesZeroFilled") ;
-        lua_pushinteger(L, (uint64_t) (vm_stat.reactivations))                          ; lua_setfield(L, -2, "pagesReactivated") ;
-        lua_pushinteger(L, (uint64_t) (vm_stat.purges))                                 ; lua_setfield(L, -2, "pagesPurged") ;
-        lua_pushinteger(L, (uint64_t) (vm_stat.external_page_count))                    ; lua_setfield(L, -2, "fileBackedPages") ;
-        lua_pushinteger(L, (uint64_t) (vm_stat.internal_page_count))                    ; lua_setfield(L, -2, "anonymousPages") ;
-        lua_pushinteger(L, (uint64_t) (vm_stat.total_uncompressed_pages_in_compressor)) ; lua_setfield(L, -2, "uncompressedPages") ;
-        lua_pushinteger(L, (uint64_t) (vm_stat.compressor_page_count))                  ; lua_setfield(L, -2, "pagesUsedByVMCompressor") ;
-        lua_pushinteger(L, (uint64_t) (vm_stat.decompressions))                         ; lua_setfield(L, -2, "pagesDecompressed") ;
-        lua_pushinteger(L, (uint64_t) (vm_stat.compressions))                           ; lua_setfield(L, -2, "pagesCompressed") ;
-        lua_pushinteger(L, (uint64_t) (vm_stat.pageins))                                ; lua_setfield(L, -2, "pageIns") ;
-        lua_pushinteger(L, (uint64_t) (vm_stat.pageouts))                               ; lua_setfield(L, -2, "pageOuts") ;
-        lua_pushinteger(L, (uint64_t) (vm_stat.swapins))                                ; lua_setfield(L, -2, "swapIns") ;
-        lua_pushinteger(L, (uint64_t) (vm_stat.swapouts))                               ; lua_setfield(L, -2, "swapOuts") ;
-        lua_pushinteger(L, (uint64_t) (vm_stat.lookups))                                ; lua_setfield(L, -2, "cacheLookups") ;
-        lua_pushinteger(L, (uint64_t) (vm_stat.hits))                                   ; lua_setfield(L, -2, "cacheHits") ;
-        lua_pushinteger(L, (uint32_t) (pagesize))                                       ; lua_setfield(L, -2, "pageSize") ;
-        lua_pushinteger(L, (uint64_t) (memsize))                                        ; lua_setfield(L, -2, "memSize") ;
+        lua_pushinteger(L, (lua_Integer) (vm_stat.free_count - vm_stat.speculative_count)) ; lua_setfield(L, -2, "pagesFree") ;
+        lua_pushinteger(L, (lua_Integer) (vm_stat.active_count))                           ; lua_setfield(L, -2, "pagesActive") ;
+        lua_pushinteger(L, (lua_Integer) (vm_stat.inactive_count))                         ; lua_setfield(L, -2, "pagesInactive") ;
+        lua_pushinteger(L, (lua_Integer) (vm_stat.speculative_count))                      ; lua_setfield(L, -2, "pagesSpeculative") ;
+        lua_pushinteger(L, (lua_Integer) (vm_stat.throttled_count))                        ; lua_setfield(L, -2, "pagesThrottled") ;
+        lua_pushinteger(L, (lua_Integer) (vm_stat.wire_count))                             ; lua_setfield(L, -2, "pagesWiredDown") ;
+        lua_pushinteger(L, (lua_Integer) (vm_stat.purgeable_count))                        ; lua_setfield(L, -2, "pagesPurgeable") ;
+        lua_pushinteger(L, (lua_Integer) (vm_stat.faults))                                 ; lua_setfield(L, -2, "translationFaults") ;
+        lua_pushinteger(L, (lua_Integer) (vm_stat.cow_faults))                             ; lua_setfield(L, -2, "pagesCopyOnWrite") ;
+        lua_pushinteger(L, (lua_Integer) (vm_stat.zero_fill_count))                        ; lua_setfield(L, -2, "pagesZeroFilled") ;
+        lua_pushinteger(L, (lua_Integer) (vm_stat.reactivations))                          ; lua_setfield(L, -2, "pagesReactivated") ;
+        lua_pushinteger(L, (lua_Integer) (vm_stat.purges))                                 ; lua_setfield(L, -2, "pagesPurged") ;
+        lua_pushinteger(L, (lua_Integer) (vm_stat.external_page_count))                    ; lua_setfield(L, -2, "fileBackedPages") ;
+        lua_pushinteger(L, (lua_Integer) (vm_stat.internal_page_count))                    ; lua_setfield(L, -2, "anonymousPages") ;
+        lua_pushinteger(L, (lua_Integer) (vm_stat.total_uncompressed_pages_in_compressor)) ; lua_setfield(L, -2, "uncompressedPages") ;
+        lua_pushinteger(L, (lua_Integer) (vm_stat.compressor_page_count))                  ; lua_setfield(L, -2, "pagesUsedByVMCompressor") ;
+        lua_pushinteger(L, (lua_Integer) (vm_stat.decompressions))                         ; lua_setfield(L, -2, "pagesDecompressed") ;
+        lua_pushinteger(L, (lua_Integer) (vm_stat.compressions))                           ; lua_setfield(L, -2, "pagesCompressed") ;
+        lua_pushinteger(L, (lua_Integer) (vm_stat.pageins))                                ; lua_setfield(L, -2, "pageIns") ;
+        lua_pushinteger(L, (lua_Integer) (vm_stat.pageouts))                               ; lua_setfield(L, -2, "pageOuts") ;
+        lua_pushinteger(L, (lua_Integer) (vm_stat.swapins))                                ; lua_setfield(L, -2, "swapIns") ;
+        lua_pushinteger(L, (lua_Integer) (vm_stat.swapouts))                               ; lua_setfield(L, -2, "swapOuts") ;
+        lua_pushinteger(L, (lua_Integer) (vm_stat.lookups))                                ; lua_setfield(L, -2, "cacheLookups") ;
+        lua_pushinteger(L, (lua_Integer) (vm_stat.hits))                                   ; lua_setfield(L, -2, "cacheHits") ;
+        lua_pushinteger(L, (uint32_t) (pagesize))                                          ; lua_setfield(L, -2, "pageSize") ;
+        lua_pushinteger(L, (lua_Integer) (memsize))                                        ; lua_setfield(L, -2, "memSize") ;
     return 1 ;
 }
 

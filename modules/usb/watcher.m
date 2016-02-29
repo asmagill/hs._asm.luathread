@@ -50,7 +50,7 @@ void DeviceNotification(void *refCon, io_service_t service __unused, natural_t m
         LuaSkin *skin = [LuaSkin performSelector:@selector(thread)]; //[LuaSkin shared];
         lua_State *L = skin.L;
 
-        [skin pushLuaRef:LST_getRefTable(skin, USERDATA_TAG) ref:watcher->fn];
+        [skin pushLuaRef:LST_getRefTable(skin, USERDATA_TAG, refTable) ref:watcher->fn];
 
         // Prepare the callback's argument table
         lua_newtable(L);
@@ -93,7 +93,7 @@ void DeviceAdded(void *refCon, io_iterator_t iterator) {
     CFMutableDictionaryRef deviceData;
     NSString *productName;
     NSString *vendorName;
-    int length;
+    size_t length;
 
     while ((usbDevice = IOIteratorNext(iterator))) {
         // Prepare an object to store private data about this USB device
@@ -107,7 +107,7 @@ void DeviceAdded(void *refCon, io_iterator_t iterator) {
 
         // Extract the USB device's name
         productName = (__bridge NSString *)CFDictionaryGetValue(deviceData, CFSTR(kUSBProductString));
-        length = (int)[productName length] + 1;
+        length = [productName length] + 1;
         privateDataRef->productName = malloc(length);
         if (![productName getCString:privateDataRef->productName maxLength:length encoding:NSUTF8StringEncoding]) {
             privateDataRef->productName[0] = '\0';
@@ -115,7 +115,7 @@ void DeviceAdded(void *refCon, io_iterator_t iterator) {
 
         // Extract the USB device's vendor's name
         vendorName = (__bridge NSString *)CFDictionaryGetValue(deviceData, CFSTR(kUSBVendorString));
-        length = (int)[vendorName length] + 1;
+        length = [vendorName length] + 1;
         privateDataRef->vendorName = malloc(length);
         if (![vendorName getCString:privateDataRef->vendorName maxLength:length encoding:NSUTF8StringEncoding]) {
             privateDataRef->vendorName[0] = '\0';
@@ -140,7 +140,7 @@ void DeviceAdded(void *refCon, io_iterator_t iterator) {
             LuaSkin *skin = [LuaSkin performSelector:@selector(thread)]; //[LuaSkin shared];
             lua_State *L = skin.L;
 
-            [skin pushLuaRef:LST_getRefTable(skin, USERDATA_TAG) ref:watcher->fn];
+            [skin pushLuaRef:LST_getRefTable(skin, USERDATA_TAG, refTable) ref:watcher->fn];
 
             lua_newtable(L);
             lua_pushstring(L, "productName");
@@ -190,7 +190,7 @@ static int usb_watcher_new(lua_State* L) {
     memset(usbwatcher, 0, sizeof(usbwatcher_t));
     lua_pushvalue(L, 1);
 
-    usbwatcher->fn = [skin luaRef:LST_getRefTable(skin, USERDATA_TAG)];
+    usbwatcher->fn = [skin luaRef:LST_getRefTable(skin, USERDATA_TAG, refTable)];
     usbwatcher->running = NO;
     usbwatcher->gNotifyPort = IONotificationPortCreate(kIOMasterPortDefault);
     usbwatcher->runLoopSource = IONotificationPortGetRunLoopSource(usbwatcher->gNotifyPort);
@@ -269,7 +269,7 @@ static int usb_watcher_gc(lua_State* L) {
 
     lua_pushcfunction(L, usb_watcher_stop) ; lua_pushvalue(L,1); lua_call(L, 1, 1);
 
-    usbwatcher->fn = [skin luaUnref:LST_getRefTable(skin, USERDATA_TAG) ref:usbwatcher->fn];
+    usbwatcher->fn = [skin luaUnref:LST_getRefTable(skin, USERDATA_TAG, refTable) ref:usbwatcher->fn];
 
     IONotificationPortDestroy(usbwatcher->gNotifyPort);
 

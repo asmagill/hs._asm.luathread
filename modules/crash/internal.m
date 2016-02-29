@@ -58,7 +58,7 @@ static int crashLog(lua_State *L) {
 ///
 /// Returns:
 ///  * None
-static int crashKV(lua_State *L) {
+static int crashKV(__unused lua_State *L) {
     LuaSkin *skin = LST_getLuaSkin(); //[LuaSkin shared] ;
     [skin checkArgs:LS_TSTRING, LS_TSTRING, LS_TBREAK];
 
@@ -88,7 +88,7 @@ static int residentSize(lua_State *L) {
                                    (task_info_t)&info,
                                    &size);
     if (kerr == KERN_SUCCESS) {
-        lua_pushinteger(L, info.resident_size);
+        lua_pushinteger(L, (lua_Integer)info.resident_size);
     } else {
         lua_pushnil(L);
         NSLog(@"Error with task_info(): %s", mach_error_string(kerr));

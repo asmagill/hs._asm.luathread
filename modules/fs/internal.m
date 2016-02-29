@@ -1013,7 +1013,7 @@ NSURL *path_to_nsurl(NSString *path) {
     return [NSURL fileURLWithPath:[path stringByExpandingTildeInPath]];
 }
 
-NSArray *tags_from_file(lua_State *L, NSString *filePath) {
+NSArray *tags_from_file(__unused lua_State *L, NSString *filePath) {
     LuaSkin *skin = LST_getLuaSkin(); //[LuaSkin shared] ;
     NSURL *url = path_to_nsurl(filePath);
     if (!url) {
@@ -1030,7 +1030,7 @@ NSArray *tags_from_file(lua_State *L, NSString *filePath) {
     return tags;
 }
 
-BOOL tags_to_file(lua_State *L, NSURL *url, NSArray *tags) {
+BOOL tags_to_file(__unused lua_State *L, NSURL *url, NSArray *tags) {
     LuaSkin *skin = LST_getLuaSkin(); //[LuaSkin shared] ;
     NSError *error;
 
