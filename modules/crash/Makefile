@@ -1,7 +1,7 @@
 
 # if making this by hand, you will need to point this to your copy of the Hammerspoon source so that
 # the Crashlytics framework can be found.
-HAMMERSOURCE ?= /opt/amagill/src/hammerspoon/hammerspoon/
+HAMMERSOURCE ?= /opt/amagill/src/hammerspoon/hammerspoon/Pods/Crashlytics/OSX
 
 mkfile_path := $(abspath $(lastword $(MAKEFILE_LIST)))
 current_dir := $(notdir $(patsubst %/,%,$(dir $(mkfile_path))))
