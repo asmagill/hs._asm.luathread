@@ -30,7 +30,6 @@ NSDictionary *assignmentsFromParent ;
 int getHamster(lua_State *L, id obj, NSMutableDictionary *alreadySeen) ;
 id setHamster(lua_State *L, int idx, NSMutableDictionary *alreadySeen) ;
 
-// @interface HSASMLuaThread : NSObject <NSPortDelegate, LuaSkinDelegate>
 @interface HSASMLuaThread : NSThread <NSPortDelegate, LuaSkinDelegate>
 @property (readonly) lua_State      *L ;
 @property (readonly) int            runStringRef ;
