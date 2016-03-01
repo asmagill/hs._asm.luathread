@@ -1,0 +1,72 @@
+8d7
+< #import "../../LuaSkinThread.h"
+17,20c16
+< // Modules which support luathread have to store refTable in the threadDictionary rather than a static,
+< // but we can keep this around, since the macros defined in LuaSkinThread.h will expect it when a module
+< // is written to seamlessly work in both environments
+< static int refTable = LUA_NOREF;
+---
+> int refTable;
+50c46
+<         LuaSkin *skin = [LuaSkin performSelector:@selector(thread)]; //[LuaSkin shared];
+---
+>         LuaSkin *skin = [LuaSkin shared];
+53c49
+<         [skin pushLuaRef:LST_getRefTable(skin, USERDATA_TAG, refTable) ref:watcher->fn];
+---
+>         [skin pushLuaRef:refTable ref:watcher->fn];
+89c85
+<     LuaSkin *skin = [LuaSkin performSelector:@selector(thread)]; //[LuaSkin shared];
+---
+>     LuaSkin *skin = [LuaSkin shared];
+96c92
+<     size_t length;
+---
+>     int length;
+110c106
+<         length = [productName length] + 1;
+---
+>         length = (int)[productName length] + 1;
+118c114
+<         length = [vendorName length] + 1;
+---
+>         length = (int)[vendorName length] + 1;
+140c136
+<             LuaSkin *skin = [LuaSkin performSelector:@selector(thread)]; //[LuaSkin shared];
+---
+>             LuaSkin *skin = [LuaSkin shared];
+143c139
+<             [skin pushLuaRef:LST_getRefTable(skin, USERDATA_TAG, refTable) ref:watcher->fn];
+---
+>             [skin pushLuaRef:refTable ref:watcher->fn];
+185c181
+<     LuaSkin *skin = [LuaSkin performSelector:@selector(thread)]; //[LuaSkin shared];
+---
+>     LuaSkin *skin = [LuaSkin shared];
+193c189
+<     usbwatcher->fn = [skin luaRef:LST_getRefTable(skin, USERDATA_TAG, refTable)];
+---
+>     usbwatcher->fn = [skin luaRef:refTable];
+214c210
+<     LuaSkin *skin = [LuaSkin performSelector:@selector(thread)]; //[LuaSkin shared];
+---
+>     LuaSkin *skin = [LuaSkin shared];
+266c262
+<     LuaSkin *skin = [LuaSkin performSelector:@selector(thread)]; //[LuaSkin shared];
+---
+>     LuaSkin *skin = [LuaSkin shared];
+272c268
+<     usbwatcher->fn = [skin luaUnref:LST_getRefTable(skin, USERDATA_TAG, refTable) ref:usbwatcher->fn];
+---
+>     usbwatcher->fn = [skin luaUnref:refTable ref:usbwatcher->fn];
+310,316c306,307
+<     LuaSkin *skin = LST_getLuaSkin(); //[LuaSkin shared] ;
+< 
+<     LST_setRefTable(skin, USERDATA_TAG, refTable,
+<         [skin registerLibraryWithObject:USERDATA_TAG
+<                               functions:usbLib
+<                           metaFunctions:meta_gcLib
+<                         objectFunctions:usb_metalib]) ;
+---
+>     LuaSkin *skin = [LuaSkin shared];
+>     refTable = [skin registerLibraryWithObject:USERDATA_TAG functions:usbLib metaFunctions:meta_gcLib objectFunctions:usb_metalib];

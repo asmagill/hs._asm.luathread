@@ -1,0 +1,85 @@
+5d4
+< #import "../../LuaSkinThread.h"
+19,21c18,20
+< @interface LST_HSWiFiWatcher : NSObject
+< @property          lua_State*  L;
+< @property          int         fn;
+---
+> @interface HSWiFiWatcher : NSObject
+> @property lua_State* L;
+> @property int fn;
+23d21
+< @property (weak)   NSThread    *myMainThread ;
+26c24
+< @implementation LST_HSWiFiWatcher
+---
+> @implementation HSWiFiWatcher
+30,34c28
+< #pragma clang diagnostic push
+< #pragma clang diagnostic ignored "-Wdeprecated-declarations"
+<         _interface = [CWInterface interface];
+< #pragma clang diagnostic pop
+<         _myMainThread = [NSThread currentThread] ;
+---
+>         self.interface = [CWInterface interface];
+40,43c34,36
+<     [self performSelector:@selector(ssidChanged:)
+<                  onThread:_myMainThread
+<                withObject:nil
+<             waitUntilDone:YES];
+---
+>     [self performSelectorOnMainThread:@selector(ssidChanged:)
+>                                        withObject:nil
+>                                        waitUntilDone:YES];
+47c40
+<     LuaSkin *skin = LST_getLuaSkin();
+---
+>     LuaSkin *skin = [LuaSkin shared];
+50c43
+<     [skin pushLuaRef:LST_getRefTable(skin, USERDATA_TAG, refTable) ref:self.fn];
+---
+>     [skin pushLuaRef:refTable ref:self.fn];
+80c73
+<     LuaSkin *skin = LST_getLuaSkin();
+---
+>     LuaSkin *skin = [LuaSkin shared];
+87c80
+<     wifiwatcher->fn = [skin luaRef:LST_getRefTable(skin, USERDATA_TAG, refTable)];
+---
+>     wifiwatcher->fn = [skin luaRef:refTable];
+89c82
+<     LST_HSWiFiWatcher* object = [[LST_HSWiFiWatcher alloc] init];
+---
+>     HSWiFiWatcher* object = [[HSWiFiWatcher alloc] init];
+117,118d109
+< #pragma clang diagnostic push
+< #pragma clang diagnostic ignored "-Wdeprecated-declarations"
+123d113
+< #pragma clang diagnostic pop
+144,145d133
+< #pragma clang diagnostic push
+< #pragma clang diagnostic ignored "-Wdeprecated-declarations"
+149d136
+< #pragma clang diagnostic pop
+155c142
+<     LuaSkin *skin = LST_getLuaSkin();
+---
+>     LuaSkin *skin = [LuaSkin shared];
+161c148
+<     wifiwatcher->fn = [skin luaUnref:LST_getRefTable(skin, USERDATA_TAG, refTable) ref:wifiwatcher->fn];
+---
+>     wifiwatcher->fn = [skin luaUnref:refTable ref:wifiwatcher->fn];
+163c150
+<     LST_HSWiFiWatcher* object = (__bridge_transfer id)wifiwatcher->obj;
+---
+>     HSWiFiWatcher* object = (__bridge_transfer id)wifiwatcher->obj;
+200,205c187,188
+<     LuaSkin *skin = LST_getLuaSkin();
+<     LST_setRefTable(skin, USERDATA_TAG, refTable,
+<         [skin registerLibraryWithObject:USERDATA_TAG
+<                               functions:wifiLib
+<                           metaFunctions:meta_gcLib
+<                         objectFunctions:wifi_metalib]);
+---
+>     LuaSkin *skin = [LuaSkin shared];
+>     refTable = [skin registerLibraryWithObject:USERDATA_TAG functions:wifiLib metaFunctions:meta_gcLib objectFunctions:wifi_metalib];

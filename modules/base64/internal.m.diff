@@ -1,0 +1,6 @@
+3d2
+< #import "../../LuaSkinThread.h"
+57c56
+<     LuaSkin *skin = LST_getLuaSkin(); //[LuaSkin shared] ;
+---
+>     LuaSkin *skin = [LuaSkin shared];

@@ -1,0 +1,185 @@
+5d4
+< #import "../../LuaSkinThread.h"
+10a10,18
+> static int logFnRef = LUA_NOREF;
+> 
+> #pragma mark - Testing out better logging with hs.logger
+> 
+> #define _cERROR   "ef"
+> #define _cWARN    "wf"
+> #define _cINFO    "f"
+> #define _cDEBUG   "df"
+> #define _cVERBOSE "vf"
+13,14c21,22
+< static int __unused log_to_console(lua_State *L, int level, NSString *theMessage) {
+<     LuaSkin *skin = LST_getLuaSkin();
+---
+> static int __unused log_to_console(lua_State *L, const char *level, NSString *theMessage) {
+>     LuaSkin *skin = [LuaSkin shared];
+30c38,57
+<     [skin logAtLevel:level withMessage:fullMessage];
+---
+>     // Put it into the system logs, may help with troubleshooting
+>     [skin logBreadcrumb:[NSString stringWithFormat:@"hs.wifi: %@", fullMessage]];
+> 
+>     // If hs.logger reference set, use it and the level will indicate whether the user sees it or not
+>     // otherwise we print to the console for everything, just in case we forget to register.
+>     if (logFnRef != LUA_NOREF) {
+>         [skin pushLuaRef:refTable ref:logFnRef];
+>         lua_getfield(L, -1, level); lua_remove(L, -2);
+>     } else {
+>         lua_getglobal(L, "print");
+>     }
+> 
+>     lua_pushstring(L, [fullMessage UTF8String]);
+>     if (![[LuaSkin shared] protectedCallAndTraceback:1 nresults:0]) { return lua_error(L); }
+>     return 0;
+> }
+> 
+> static int lua_registerLogForC(__unused lua_State *L) {
+>     [[LuaSkin shared] checkArgs:LS_TTABLE, LS_TBREAK];
+>     logFnRef = [[LuaSkin shared] luaRef:refTable];
+43,46c70,72
+< @interface LST_HSWifiScan : NSObject
+< @property int      fnRef ;
+< @property BOOL     isDone ;
+< @property NSThread *myMainThread ;
+---
+> @interface HSWifiScan : NSObject
+> @property int fnRef ;
+> @property BOOL isDone ;
+51c77
+< @implementation LST_HSWifiScan
+---
+> @implementation HSWifiScan
+58d83
+<         _myMainThread = [NSThread currentThread] ;
+72,75c97,99
+<         [self performSelector:@selector(invokeCallback:)
+<                      onThread:_myMainThread
+<                    withObject:theError
+<                 waitUntilDone:NO];
+---
+>         [self performSelectorOnMainThread:@selector(invokeCallback:)
+>                            withObject:theError
+>                         waitUntilDone:NO];
+77,80c101,103
+<         [self performSelector:@selector(invokeCallback:)
+<                      onThread:_myMainThread
+<                    withObject:availableNetworks
+<                 waitUntilDone:NO];
+---
+>         [self performSelectorOnMainThread:@selector(invokeCallback:)
+>                            withObject:availableNetworks
+>                         waitUntilDone:NO];
+86c109
+<         LuaSkin *skin = LST_getLuaSkin() ;
+---
+>         LuaSkin *skin = [LuaSkin shared] ;
+88c111
+<         [LST_getLuaSkin() pushLuaRef:LST_getRefTable(skin, USERDATA_TAG, refTable) ref:_fnRef];
+---
+>         [[LuaSkin shared] pushLuaRef:refTable ref:_fnRef];
+90c113
+<             log_to_console(L, LS_LOG_INFO, [(NSError *)object localizedDescription]) ;
+---
+>             log_to_console(L, _cINFO, [(NSError *)object localizedDescription]) ;
+97c120
+<             log_to_console(L, LS_LOG_ERROR, [skin toNSObjectAtIndex:-1]) ;
+---
+>             log_to_console(L, _cERROR, [skin toNSObjectAtIndex:-1]) ;
+118c141
+<     LuaSkin *skin = LST_getLuaSkin() ;
+---
+>     LuaSkin *skin = [LuaSkin shared] ;
+152c175
+<     LuaSkin *skin = LST_getLuaSkin() ;
+---
+>     LuaSkin *skin = [LuaSkin shared] ;
+176c199
+<     LuaSkin *skin = LST_getLuaSkin() ;
+---
+>     LuaSkin *skin = [LuaSkin shared] ;
+198c221
+<     LuaSkin *skin = LST_getLuaSkin() ;
+---
+>     LuaSkin *skin = [LuaSkin shared] ;
+253c276
+<     LuaSkin *skin = LST_getLuaSkin() ;
+---
+>     LuaSkin *skin = [LuaSkin shared] ;
+259c282
+<         callbackRef = [skin luaRef:LST_getRefTable(skin, USERDATA_TAG, refTable)];
+---
+>         callbackRef = [skin luaRef:refTable];
+266,267c289,290
+<     LST_HSWifiScan *scanner = [[LST_HSWifiScan alloc] initWithCallback:callbackRef onInterface:theName];
+<     void** scannerPtr = lua_newuserdata(L, sizeof(LST_HSWifiScan *));
+---
+>     HSWifiScan *scanner = [[HSWifiScan alloc] initWithCallback:callbackRef onInterface:theName];
+>     void** scannerPtr = lua_newuserdata(L, sizeof(HSWifiScan *));
+285c308
+<     LuaSkin *skin = LST_getLuaSkin() ;
+---
+>     LuaSkin *skin = [LuaSkin shared] ;
+344c367
+<     LuaSkin *skin = LST_getLuaSkin() ;
+---
+>     LuaSkin *skin = [LuaSkin shared] ;
+375c398
+<     LuaSkin *skin = LST_getLuaSkin();
+---
+>     LuaSkin *skin = [LuaSkin shared];
+377c400
+<     LST_HSWifiScan *scanner = get_objectFromUserdata(__bridge LST_HSWifiScan, L, 1);
+---
+>     HSWifiScan *scanner = get_objectFromUserdata(__bridge HSWifiScan, L, 1);
+385c408
+<     LuaSkin *skin = LST_getLuaSkin() ;
+---
+>     LuaSkin *skin = [LuaSkin shared] ;
+471c494
+<     LuaSkin *skin = LST_getLuaSkin() ;
+---
+>     LuaSkin *skin = [LuaSkin shared] ;
+490c513
+<     LuaSkin *skin = LST_getLuaSkin() ;
+---
+>     LuaSkin *skin = [LuaSkin shared] ;
+583c606
+<     LuaSkin *skin = LST_getLuaSkin() ;
+---
+>     LuaSkin *skin = [LuaSkin shared] ;
+611,612c634,635
+<     LST_HSWifiScan *scanner = get_objectFromUserdata(__bridge LST_HSWifiScan, L, 1);
+<     LuaSkin *skin = LST_getLuaSkin();
+---
+>     HSWifiScan *scanner = get_objectFromUserdata(__bridge HSWifiScan, L, 1);
+>     LuaSkin *skin = [LuaSkin shared];
+618,619c641,642
+<     LST_HSWifiScan *scanner = get_objectFromUserdata(__bridge_transfer LST_HSWifiScan, L, 1);
+<     LuaSkin *skin = LST_getLuaSkin();
+---
+>     HSWifiScan *scanner = get_objectFromUserdata(__bridge_transfer HSWifiScan, L, 1);
+>     LuaSkin *skin = [LuaSkin shared];
+621c644
+<     scanner.fnRef = [skin luaUnref:LST_getRefTable(skin, USERDATA_TAG, refTable) ref:scanner.fnRef];
+---
+>     scanner.fnRef = [skin luaUnref:refTable ref:scanner.fnRef];
+642a666
+>     {"_registerLogForC", lua_registerLogForC},
+662,667c686,692
+<     LuaSkin *skin = LST_getLuaSkin();
+<     LST_setRefTable(skin, USERDATA_TAG, refTable,
+<         [skin registerLibraryWithObject:USERDATA_TAG
+<                               functions:wifilib
+<                           metaFunctions:nil // metalib
+<                         objectFunctions:userdata_metaLib]);
+---
+>     LuaSkin *skin = [LuaSkin shared];
+>     refTable = [skin registerLibraryWithObject:USERDATA_TAG
+>                                      functions:wifilib
+>                                  metaFunctions:nil // metalib
+>                                objectFunctions:userdata_metaLib];
+> 
+>     logFnRef = LUA_NOREF;

@@ -1,0 +1,38 @@
+5d4
+< #import "../../LuaSkinThread.h"
+14,15c13,14
+< static void caffeinate_create_assertion(__unused lua_State *L, CFStringRef assertionType, IOPMAssertionID *assertionID) {
+<     LuaSkin *skin = LST_getLuaSkin();
+---
+> static void caffeinate_create_assertion(lua_State *L, CFStringRef assertionType, IOPMAssertionID *assertionID) {
+>     LuaSkin *skin = [LuaSkin shared];
+35,36c34,35
+< static void caffeinate_release_assertion(__unused lua_State *L, IOPMAssertionID *assertionID) {
+<     LuaSkin *skin = LST_getLuaSkin();
+---
+> static void caffeinate_release_assertion(lua_State *L, IOPMAssertionID *assertionID) {
+>     LuaSkin *skin = [LuaSkin shared];
+66c65
+<     lua_pushboolean(L, (BOOL)noIdleDisplaySleep);
+---
+>     lua_pushboolean(L, noIdleDisplaySleep);
+86c85
+<     lua_pushboolean(L, (BOOL)noIdleSystemSleep);
+---
+>     lua_pushboolean(L, noIdleSystemSleep);
+94c93
+<     LuaSkin *skin = LST_getLuaSkin();
+---
+>     LuaSkin *skin = [LuaSkin shared];
+99c98
+<         ac_and_battery = (BOOL)lua_toboolean(L, 1);
+---
+>         ac_and_battery = lua_toboolean(L, 1);
+130c129
+<     lua_pushboolean(L, (BOOL)noSystemSleep);
+---
+>     lua_pushboolean(L, noSystemSleep);
+188c187
+<     LuaSkin *skin = LST_getLuaSkin();
+---
+>     LuaSkin *skin = [LuaSkin shared];

@@ -1,0 +1,86 @@
+5d4
+< #import "../../LuaSkinThread.h"
+22,25c21,22
+< @interface LST_SpaceWatcher : NSObject
+< @property        spacewatcher_t* object;
+< @property (weak) NSThread      *myMainThread ;
+< 
+---
+> @interface SpaceWatcher : NSObject
+> @property spacewatcher_t* object;
+29c26
+< @implementation LST_SpaceWatcher
+---
+> @implementation SpaceWatcher
+32,33c29
+<         _object       = object;
+<         _myMainThread = [NSThread currentThread] ;
+---
+>         self.object = object;
+40c36
+<     LuaSkin *skin = LST_getLuaSkin();
+---
+>     LuaSkin *skin = [LuaSkin shared];
+43c39
+<     [skin pushLuaRef:LST_getRefTable(skin, USERDATA_TAG, refTable) ref:self.object->fn];
+---
+>     [skin pushLuaRef:refTable ref:self.object->fn];
+52,58d47
+< - (void) _spaceChanged:(id)notification {
+<     [self performSelector:@selector(spaceChanged:)
+<                  onThread:_myMainThread
+<                withObject:notification
+<             waitUntilDone:YES];
+< }
+< 
+89c78
+<     LuaSkin *skin = LST_getLuaSkin();
+---
+>     LuaSkin *skin = [LuaSkin shared];
+96c85
+<     spaceWatcher->fn = [skin luaRef:LST_getRefTable(skin, USERDATA_TAG, refTable)];
+---
+>     spaceWatcher->fn = [skin luaRef:refTable];
+98c87
+<     spaceWatcher->obj = (__bridge_retained void*) [[LST_SpaceWatcher alloc] initWithObject:spaceWatcher];
+---
+>     spaceWatcher->obj = (__bridge_retained void*) [[SpaceWatcher alloc] initWithObject:spaceWatcher];
+115c104
+<     LuaSkin *skin = LST_getLuaSkin();
+---
+>     LuaSkin *skin = [LuaSkin shared];
+124c113
+<     spaceWatcher->self = [skin luaRef:LST_getRefTable(skin, USERDATA_TAG, refTable)];
+---
+>     spaceWatcher->self = [skin luaRef:refTable];
+128c117
+<     LST_SpaceWatcher* observer = (__bridge LST_SpaceWatcher*)spaceWatcher->obj;
+---
+>     SpaceWatcher* observer = (__bridge SpaceWatcher*)spaceWatcher->obj;
+130c119
+<                selector:@selector(_spaceChanged:)
+---
+>                selector:@selector(spaceChanged:)
+156c145
+<     [[[NSWorkspace sharedWorkspace] notificationCenter] removeObserver:(__bridge LST_SpaceWatcher*)spaceWatcher->obj];
+---
+>     [[[NSWorkspace sharedWorkspace] notificationCenter] removeObserver:(__bridge SpaceWatcher*)spaceWatcher->obj];
+161c150
+<     LuaSkin *skin = LST_getLuaSkin();
+---
+>     LuaSkin *skin = [LuaSkin shared];
+167c156
+<     spaceWatcher->fn = [skin luaUnref:LST_getRefTable(skin, USERDATA_TAG, refTable) ref:spaceWatcher->fn];
+---
+>     spaceWatcher->fn = [skin luaUnref:refTable ref:spaceWatcher->fn];
+169c158
+<     LST_SpaceWatcher* object = (__bridge_transfer LST_SpaceWatcher*)spaceWatcher->obj;
+---
+>     SpaceWatcher* object = (__bridge_transfer SpaceWatcher*)spaceWatcher->obj;
+193,195c182,183
+<     LuaSkin *skin = LST_getLuaSkin();
+<     LST_setRefTable(skin, USERDATA_TAG, refTable,
+<         [skin registerLibraryWithObject:USERDATA_TAG functions:watcherlib metaFunctions:nil objectFunctions:watcher_objectlib]);
+---
+>     LuaSkin *skin = [LuaSkin shared];
+>     refTable = [skin registerLibraryWithObject:USERDATA_TAG functions:watcherlib metaFunctions:nil objectFunctions:watcher_objectlib];

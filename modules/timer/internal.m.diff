@@ -1,0 +1,105 @@
+4d3
+< #import "../../LuaSkinThread.h"
+23c22
+<     LuaSkin *skin = LST_getLuaSkin(); //[LuaSkin shared] ;
+---
+>     LuaSkin *skin = [LuaSkin shared];
+31c30
+<     [skin pushLuaRef:LST_getRefTable(skin, USERDATA_TAG, refTable) ref:t->fn];
+---
+>     [skin pushLuaRef:refTable ref:t->fn];
+36c35
+<             CFRunLoopRemoveTimer(CFRunLoopGetCurrent(), t->t, kCFRunLoopCommonModes);
+---
+>             CFRunLoopRemoveTimer(CFRunLoopGetMain(), t->t, kCFRunLoopCommonModes);
+59c58
+<     LuaSkin *skin = LST_getLuaSkin(); //[LuaSkin shared] ;
+---
+>     LuaSkin *skin = [LuaSkin shared];
+68c67
+<     timer->fn = [skin luaRef:LST_getRefTable(skin, USERDATA_TAG, refTable)];
+---
+>     timer->fn = [skin luaRef:refTable];
+98c97
+<     LuaSkin *skin = LST_getLuaSkin(); //[LuaSkin shared] ;
+---
+>     LuaSkin *skin = [LuaSkin shared];
+108c107
+<     CFRunLoopAddTimer(CFRunLoopGetCurrent(), timer->t, kCFRunLoopCommonModes);
+---
+>     CFRunLoopAddTimer(CFRunLoopGetMain(), timer->t, kCFRunLoopCommonModes);
+127c126
+<     LuaSkin *skin = LST_getLuaSkin(); //[LuaSkin shared] ;
+---
+>     LuaSkin *skin = [LuaSkin shared];
+136c135
+<     timer->fn = [skin luaRef:LST_getRefTable(skin, USERDATA_TAG, refTable)];
+---
+>     timer->fn = [skin luaRef:refTable];
+147c146
+<     CFRunLoopAddTimer(CFRunLoopGetCurrent(), timer->t, kCFRunLoopCommonModes);
+---
+>     CFRunLoopAddTimer(CFRunLoopGetMain(), timer->t, kCFRunLoopCommonModes);
+164c163
+<     LuaSkin *skin = LST_getLuaSkin(); //[LuaSkin shared] ;
+---
+>     LuaSkin *skin = [LuaSkin shared];
+182c181
+<     LuaSkin *skin = LST_getLuaSkin(); //[LuaSkin shared] ;
+---
+>     LuaSkin *skin = [LuaSkin shared];
+186c185
+<     lua_pushboolean(L, CFRunLoopContainsTimer(CFRunLoopGetCurrent(), timer->t, kCFRunLoopCommonModes));
+---
+>     lua_pushboolean(L, CFRunLoopContainsTimer(CFRunLoopGetMain(), timer->t, kCFRunLoopCommonModes));
+205c204
+<     LuaSkin *skin = LST_getLuaSkin(); //[LuaSkin shared] ;
+---
+>     LuaSkin *skin = [LuaSkin shared];
+227c226
+<     LuaSkin *skin = LST_getLuaSkin(); //[LuaSkin shared] ;
+---
+>     LuaSkin *skin = [LuaSkin shared];
+248c247
+<     LuaSkin *skin = LST_getLuaSkin(); //[LuaSkin shared] ;
+---
+>     LuaSkin *skin = [LuaSkin shared];
+256c255
+<     CFRunLoopRemoveTimer(CFRunLoopGetCurrent(), timer->t, kCFRunLoopCommonModes);
+---
+>     CFRunLoopRemoveTimer(CFRunLoopGetMain(), timer->t, kCFRunLoopCommonModes);
+261c260
+<     LuaSkin *skin = LST_getLuaSkin(); //[LuaSkin shared] ;
+---
+>     LuaSkin *skin = [LuaSkin shared];
+266c265
+<         timer->fn = [skin luaUnref:LST_getRefTable(skin, USERDATA_TAG, refTable) ref:timer->fn];
+---
+>         timer->fn = [skin luaUnref:refTable ref:timer->fn];
+270,271c269,270
+<         if (CFRunLoopContainsTimer(CFRunLoopGetCurrent(), timer->t, kCFRunLoopCommonModes)) {
+<             CFRunLoopRemoveTimer(CFRunLoopGetCurrent(), timer->t, kCFRunLoopCommonModes);
+---
+>         if (CFRunLoopContainsTimer(CFRunLoopGetMain(), timer->t, kCFRunLoopCommonModes)) {
+>             CFRunLoopRemoveTimer(CFRunLoopGetMain(), timer->t, kCFRunLoopCommonModes);
+291c290
+<     LuaSkin *skin = LST_getLuaSkin(); //[LuaSkin shared] ;
+---
+>     LuaSkin *skin = [LuaSkin shared];
+298c297
+<     } else if (CFRunLoopContainsTimer(CFRunLoopGetCurrent(), timer->t, kCFRunLoopCommonModes)) {
+---
+>     } else if (CFRunLoopContainsTimer(CFRunLoopGetMain(), timer->t, kCFRunLoopCommonModes)) {
+318c317
+<     LuaSkin *skin = LST_getLuaSkin(); //[LuaSkin shared] ;
+---
+>     LuaSkin *skin = [LuaSkin shared];
+357,361c356,357
+<     LuaSkin *skin = LST_getLuaSkin(); //[LuaSkin shared] ;
+< 
+<     LST_setRefTable(skin, USERDATA_TAG, refTable,
+<         [skin registerLibrary:timerLib metaFunctions:meta_gcLib]);
+< 
+---
+>     LuaSkin *skin = [LuaSkin shared];
+>     refTable = [skin registerLibrary:timerLib metaFunctions:meta_gcLib];

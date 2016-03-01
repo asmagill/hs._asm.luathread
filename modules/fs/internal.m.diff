@@ -1,0 +1,34 @@
+65d64
+< #import "../../LuaSkinThread.h"
+1016,1017c1015,1016
+< NSArray *tags_from_file(__unused lua_State *L, NSString *filePath) {
+<     LuaSkin *skin = LST_getLuaSkin(); //[LuaSkin shared] ;
+---
+> NSArray *tags_from_file(lua_State *L, NSString *filePath) {
+>     LuaSkin *skin = [LuaSkin shared];
+1033,1034c1032,1033
+< BOOL tags_to_file(__unused lua_State *L, NSURL *url, NSArray *tags) {
+<     LuaSkin *skin = LST_getLuaSkin(); //[LuaSkin shared] ;
+---
+> BOOL tags_to_file(lua_State *L, NSURL *url, NSArray *tags) {
+>     LuaSkin *skin = [LuaSkin shared];
+1054c1053
+<     LuaSkin *skin = LST_getLuaSkin(); //[LuaSkin shared] ;
+---
+>     LuaSkin *skin = [LuaSkin shared];
+1086c1085
+<     LuaSkin *skin = LST_getLuaSkin(); //[LuaSkin shared] ;
+---
+>     LuaSkin *skin = [LuaSkin shared];
+1126c1125
+<     LuaSkin *skin = LST_getLuaSkin(); //[LuaSkin shared] ;
+---
+>     LuaSkin *skin = [LuaSkin shared];
+1162c1161
+<     LuaSkin *skin = LST_getLuaSkin(); //[LuaSkin shared] ;
+---
+>     LuaSkin *skin = [LuaSkin shared];
+1215c1214
+<     LuaSkin *skin = LST_getLuaSkin(); //[LuaSkin shared] ;
+---
+>     LuaSkin *skin = [LuaSkin shared] ;

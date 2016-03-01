@@ -1,0 +1,20 @@
+5d4
+< #import "../../LuaSkinThread.h"
+41c40
+<     LuaSkin *skin = LST_getLuaSkin(); //[LuaSkin shared] ;
+---
+>     LuaSkin *skin = [LuaSkin shared];
+61,62c60,61
+< static int crashKV(__unused lua_State *L) {
+<     LuaSkin *skin = LST_getLuaSkin(); //[LuaSkin shared] ;
+---
+> static int crashKV(lua_State *L) {
+>     LuaSkin *skin = [LuaSkin shared];
+91c90
+<         lua_pushinteger(L, (lua_Integer)info.resident_size);
+---
+>         lua_pushinteger(L, info.resident_size);
+113c112
+<     LuaSkin *skin = LST_getLuaSkin(); //[LuaSkin shared] ;
+---
+>     LuaSkin *skin = [LuaSkin shared];

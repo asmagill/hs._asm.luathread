@@ -1,0 +1,28 @@
+9c9
+< -- local applescript = require "hs.applescript"
+---
+> local applescript = require "hs.applescript"
+143,145c143,145
+< -- function caffeinate.logOut()
+< --     applescript('tell application "System Events" to log out')
+< -- end
+---
+> function caffeinate.logOut()
+>     applescript('tell application "System Events" to log out')
+> end
+156,158c156,158
+< -- function caffeinate.restartSystem()
+< --     applescript('tell application "System Events" to restart')
+< -- end
+---
+> function caffeinate.restartSystem()
+>     applescript('tell application "System Events" to restart')
+> end
+169,171c169,171
+< -- function caffeinate.shutdownSystem()
+< --     applescript('tell application "System Events" to shut down')
+< -- end
+---
+> function caffeinate.shutdownSystem()
+>     applescript('tell application "System Events" to shut down')
+> end

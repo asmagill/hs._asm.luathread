@@ -1,0 +1,18 @@
+3d2
+< #import "../../LuaSkinThread.h"
+19d17
+<     LuaSkin *skin = LST_getLuaSkin(); //[LuaSkin shared] ;
+21c19
+<         id obj = [skin toNSObjectAtIndex:1] ;
+---
+>         id obj = [[LuaSkin shared] toNSObjectAtIndex:1] ;
+65d62
+<     LuaSkin *skin = LST_getLuaSkin(); //[LuaSkin shared] ;
+73c70
+<         [skin pushNSObject:obj] ;
+---
+>         [[LuaSkin shared] pushNSObject:obj] ;
+91c88
+<     LuaSkin *skin = LST_getLuaSkin(); //[LuaSkin shared] ;
+---
+>     LuaSkin *skin = [LuaSkin shared];
