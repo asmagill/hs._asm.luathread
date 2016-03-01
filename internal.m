@@ -43,8 +43,10 @@
 //
 // +  check if thread is running in some (all?) methods
 
-#import "luathread.h"
 #import "LuaSkinThread.h"
+#import "LuaSkinThread+Private.h"
+
+#import "luathread.h"
 
 static int refTable = LUA_NOREF;
 

@@ -1,60 +1,43 @@
-// Create a LuaSkin subclass which can be unique per thread
-//
-// This is not quite a drop-in replacement for LuaSkin in modules which use LuaSkin...
-// At a minimum, all references to [LuaSkin shared] need to be replaced with
-//                                 [LuaSkin performSelector:@selector(thread)].
-// If you wish for a module to work in more than one luathread instance at the same time,
-//    you should also store refTable values in the thread dictionary as demonstrated in
-//    the modules included in the luathread modules/ sub-directory.
-//
-// Modules might also need additional changes if they dispatch blocks to the main queue or
-//    explicitly call selectors on the main thread... some examples of changes that work can
-//    be found in the modules/ sub-directory of the luathread repository and an example of a
-//    third-party module which is written to be compatible with both core Hammerspoon and
-//    luathreads can be seen in hs._asm.notificationcenter
-//
-// Currently all of these referenced modules/repositories are subdirectories of
-//    https://github.com/asmagill/hammerspoon_asm.  If this change, I will try to keep
-//    these notes up-to-date
-
 #import "LuaSkinThread.h"
-#import "luathread.h"
+#import "LuaSkinThread+Private.h"
 
-// I don't remember why the tracking dictionarys were added as local static variables in
-// LuaSkin rather than as properties of the object itself, but they were, so we have to use
-// our own properties and override any method which uses them to keep our conversion
-// functions safe with a LuaSkin subclass...
-
-@interface LuaSkinThread ()
-@property        NSMutableDictionary *registeredNSHelperFunctions ;
-@property        NSMutableDictionary *registeredNSHelperLocations ;
-@property        NSMutableDictionary *registeredLuaObjectHelperFunctions ;
-@property        NSMutableDictionary *registeredLuaObjectHelperLocations ;
-@property        NSMutableDictionary *registeredLuaObjectHelperUserdataMappings ;
-@property (weak) HSASMLuaThread      *threadForThisSkin ;
-
--(int)getRefTableForModule:(const char *)module inThread:(NSThread *)thread ;
--(int)getRefForLabel:(const char *)label inModule:(const char *)module inThread:(NSThread *)thread ;
--(BOOL)setRefTable:(int)refTable forModule:(const char *)module inThread:(NSThread *)thread ;
--(BOOL)setRef:(int)refNumber forLabel:(const char *)label inModule:(const char *)module inThread:(NSThread *)thread ;
-@end
-
-// Since the overridden methods reference these, we need the interface available here as well,
-// as they aren't included in the stock LuaSkin.h
-@interface LuaSkin (conversionSupport)
-// internal methods for pushNSObject
-- (int)pushNSObject:(id)obj     withOptions:(LS_NSConversionOptions)options alreadySeenObjects:(NSMutableDictionary *)alreadySeen ;
-- (int)pushNSNumber:(id)obj     withOptions:(LS_NSConversionOptions)options ;
-- (int)pushNSArray:(id)obj      withOptions:(LS_NSConversionOptions)options alreadySeenObjects:(NSMutableDictionary *)alreadySeen ;
-- (int)pushNSSet:(id)obj        withOptions:(LS_NSConversionOptions)options alreadySeenObjects:(NSMutableDictionary *)alreadySeen ;
-- (int)pushNSDictionary:(id)obj withOptions:(LS_NSConversionOptions)options alreadySeenObjects:(NSMutableDictionary *)alreadySeen ;
-- (int)pushNSValue:(id)obj withOptions:(LS_NSConversionOptions)options ;
-// internal methods for toNSObjectAtIndex
-- (id)toNSObjectAtIndex:(int)idx withOptions:(LS_NSConversionOptions)options alreadySeenObjects:(NSMutableDictionary *)alreadySeen ;
-- (id)tableAtIndex:(int)idx      withOptions:(LS_NSConversionOptions)options alreadySeenObjects:(NSMutableDictionary *)alreadySeen;
-@end
+#pragma mark - LuaSkinThread Class Implementation
 
 @implementation LuaSkinThread
+
+#pragma mark - LuaSkinThread public methods
+
++(id)thread {
+    // if we're on the main thread, go ahead and act normally
+    if ([NSThread isMainThread]) return [LuaSkin shared] ;
+
+    // otherwise, we're storing the LuaSkin instance in the thread's dictionary
+    HSASMLuaThread  *thisThread = (HSASMLuaThread *)[NSThread currentThread] ;
+
+    LuaSkinThread *thisSkin ;
+    if ([thisThread.dictionaryLock lockBeforeDate:[NSDate dateWithTimeIntervalSinceNow:LOCK_TIMEOUT]]) {
+        thisSkin   = [thisThread.threadDictionary objectForKey:@"_LuaSkin"] ;
+        [thisThread.dictionaryLock unlock] ;
+    } else {
+        ERROR(@"[LuaSkinThread thread] unable to obtain dictionary lock") ;
+        return nil ;
+    }
+
+    if (!thisSkin) {
+        thisSkin = [[LuaSkinThread alloc] init] ;
+    }
+    return thisSkin ;
+}
+
+-(BOOL)setRef:(int)refNumber forLabel:(const char *)label inModule:(const char *)module {
+    return [self setRef:refNumber forLabel:label inModule:module inThread:[NSThread currentThread]] ;
+}
+
+-(int)getRefForLabel:(const char *)label inModule:(const char *)module {
+    return [self getRefForLabel:label inModule:module inThread:[NSThread currentThread]] ;
+}
+
+#pragma mark - LuaSkinThread internal methods
 
 // Inject a new class method for use as a replacement for [LuaSkin shared] in a threaded instance.
 // We do this, rather than swizzle shared itself because LuaSkin isn't the only component of a module
@@ -62,7 +45,6 @@
 // looked at and tested to fail to load within the luathread... by leaving the shared class method
 // alone, an exception is still thrown for untested modules and we don't potentially introduce new
 // unintended side-effects in to the core LuaSkin and Hammerspoon modules
-
 +(BOOL)inject {
     static dispatch_once_t onceToken ;
     static BOOL            injected = NO ;
@@ -89,42 +71,6 @@
     return injected ;
 }
 
-+(id)thread {
-    // if we're on the main thread, go ahead and act normally
-    if ([NSThread isMainThread]) return [LuaSkin shared] ;
-
-    // otherwise, we're storing the LuaSkin instance in the thread's dictionary
-    HSASMLuaThread  *thisThread = (HSASMLuaThread *)[NSThread currentThread] ;
-
-    LuaSkinThread *thisSkin ;
-    if ([thisThread.dictionaryLock lockBeforeDate:[NSDate dateWithTimeIntervalSinceNow:LOCK_TIMEOUT]]) {
-        thisSkin   = [thisThread.threadDictionary objectForKey:@"_LuaSkin"] ;
-        [thisThread.dictionaryLock unlock] ;
-    } else {
-        ERROR(@"[LuaSkinThread thread] unable to obtain dictionary lock") ;
-        return nil ;
-    }
-
-    if (!thisSkin) {
-        thisSkin = [[LuaSkinThread alloc] init] ;
-    }
-    return thisSkin ;
-}
-
-// Methods useful in compatibile Hammerspoon modules
-
--(BOOL)setRefTable:(int)refTable forModule:(const char *)module {
-    return [self setRef:refTable forLabel:"_refTable" inModule:module inThread:[NSThread currentThread]] ;
-}
-
--(BOOL)setRefTable:(int)refTable forModule:(const char *)module inThread:(NSThread *)thread {
-    return [self setRef:refTable forLabel:"_refTable" inModule:module inThread:thread] ;
-}
-
--(BOOL)setRef:(int)refNumber forLabel:(const char *)label inModule:(const char *)module {
-    return [self setRef:refNumber forLabel:label inModule:module inThread:[NSThread currentThread]] ;
-}
-
 -(BOOL)setRef:(int)refNumber forLabel:(const char *)label inModule:(const char *)module inThread:(NSThread *)thread {
     BOOL result = NO ;
     if ([thread isKindOfClass:[HSASMLuaThread class]]) {
@@ -142,24 +88,12 @@
             result = YES ;
             [luaThread.dictionaryLock unlock] ;
         } else {
-            ERROR(@"[LuaSkinThread setRef:forLabel:inModule:inThread:] unable to obtain dictionary lock") ;
+            ERROR(@"[LuaSkinThread setRef:forLabel:inModule:] unable to obtain dictionary lock") ;
         }
     } else {
-        ERROR(@"[LuaSkinThread setRef:forLabel:inModule:inThread:] thread is not an hs._asm.luathread") ;
+        ERROR(@"[LuaSkinThread setRef:forLabel:inModule:] thread is not an hs._asm.luathread") ;
     }
     return result ;
-}
-
--(int)getRefTableForModule:(const char *)module {
-    return [self getRefForLabel:"_refTable" inModule:module inThread:[NSThread currentThread]] ;
-}
-
--(int)getRefTableForModule:(const char *)module inThread:(NSThread *)thread {
-    return [self getRefForLabel:"_refTable" inModule:module inThread:thread] ;
-}
-
--(int)getRefForLabel:(const char *)label inModule:(const char *)module {
-    return [self getRefForLabel:label inModule:module inThread:[NSThread currentThread]] ;
 }
 
 -(int)getRefForLabel:(const char *)label inModule:(const char *)module inThread:(NSThread *)thread {
@@ -176,20 +110,20 @@
             result = holder ? [holder intValue] : LUA_NOREF ;
             [luaThread.dictionaryLock unlock] ;
         } else {
-            ERROR(@"[LuaSkinThread getRefForLabel:inModule:inThread:] unable to obtain dictionary lock") ;
+            ERROR(@"[LuaSkinThread getRefForLabel:inModule:] unable to obtain dictionary lock") ;
         }
     } else {
-        ERROR(@"[LuaSkinThread getRefForLabel:inModule:inThread:] thread is not an hs._asm.luathread") ;
+        ERROR(@"[LuaSkinThread getRefForLabel:inModule:] thread is not an hs._asm.luathread") ;
     }
     return result ;
 }
 
-// the following methods override the LuaSkin methods we need to make this work
+#pragma mark - LuaSkinThread overrides to the LuaSkin class
 
 - (id)init {
     self = [super init];
     if (self) {
-        if (_L == NULL) [self createLuaState] ;
+        if (self.L == NULL) [self createLuaState] ;
         _registeredNSHelperFunctions               = [[NSMutableDictionary alloc] init] ;
         _registeredNSHelperLocations               = [[NSMutableDictionary alloc] init] ;
         _registeredLuaObjectHelperFunctions        = [[NSMutableDictionary alloc] init] ;
@@ -211,9 +145,9 @@
 
 - (void)destroyLuaState {
     NSLog(@"LuaSkinThread destroyLuaState");
-    NSAssert((_L != NULL), @"LuaSkinThread destroyLuaState called with no Lua environment", nil);
-    if (_L) {
-        lua_close(_L);
+    NSAssert((self.L != NULL), @"LuaSkinThread destroyLuaState called with no Lua environment", nil);
+    if (self.L) {
+        lua_close(self.L);
         [_registeredNSHelperFunctions removeAllObjects] ;
         [_registeredNSHelperLocations removeAllObjects] ;
         [_registeredLuaObjectHelperFunctions removeAllObjects] ;
@@ -229,7 +163,7 @@
             ERROR(@"[LuaSkinThread destroyLuaState] unable to obtain dictionary lock") ;
         }
     }
-    _L = NULL;
+    self.L = NULL;
 }
 
 - (BOOL)registerPushNSHelper:(pushNSHelperFunction)helperFN forClass:(char*)className {
@@ -240,20 +174,18 @@
     if (level == 0) level = 3 ;
 
     if (className && helperFN) {
-        if ([_registeredNSHelperFunctions objectForKey:[NSString stringWithUTF8String:className]]) {
+        if (_registeredNSHelperFunctions[@(className)]) {
             [self logAtLevel:LS_LOG_WARN
                  withMessage:[NSString stringWithFormat:@"registerPushNSHelper:forClass:%s already defined at %@",
                                                         className,
-                                                        [_registeredNSHelperLocations objectForKey:[NSString stringWithUTF8String:className]]]
+                                                        _registeredNSHelperLocations[@(className)]]
                 fromStackPos:level] ;
         } else {
-            luaL_where(_L, level) ;
-            NSString *locationString = [NSString stringWithFormat:@"%s", lua_tostring(_L, -1)] ;
-            [_registeredNSHelperLocations setObject:locationString
-                                             forKey:[NSString stringWithUTF8String:className]] ;
-            [_registeredNSHelperFunctions setObject:[NSValue valueWithPointer:(void *)helperFN]
-                                             forKey:[NSString stringWithUTF8String:className]] ;
-            lua_pop(_L, 1) ;
+            luaL_where(self.L, level) ;
+            NSString *locationString = @(lua_tostring(self.L, -1)) ;
+            _registeredNSHelperLocations[@(className)] = locationString;
+            _registeredNSHelperFunctions[@(className)] = [NSValue valueWithPointer:(void *)helperFN];
+            lua_pop(self.L, 1) ;
             allGood = YES ;
         }
     } else {
@@ -265,12 +197,12 @@
 }
 
 - (id)luaObjectAtIndex:(int)idx toClass:(char *)className {
-    NSString *theClass = [NSString stringWithUTF8String:(const char *)className] ;
+    NSString *theClass = @(className) ;
 
     for (id key in _registeredLuaObjectHelperFunctions) {
         if ([theClass isEqualToString:key]) {
-            luaObjectHelperFunction theFunc = (luaObjectHelperFunction)[[_registeredLuaObjectHelperFunctions objectForKey:key] pointerValue] ;
-            return theFunc(_L, lua_absindex(_L, idx)) ;
+            luaObjectHelperFunction theFunc = (luaObjectHelperFunction)[_registeredLuaObjectHelperFunctions[key] pointerValue] ;
+            return theFunc(self.L, lua_absindex(self.L, idx)) ;
         }
     }
     return nil ;
@@ -284,20 +216,18 @@
     if (level == 0) level = 3 ;
 
     if (className && helperFN) {
-        if ([_registeredLuaObjectHelperFunctions objectForKey:[NSString stringWithUTF8String:className]]) {
+        if (_registeredLuaObjectHelperFunctions[@(className)]) {
             [self logAtLevel:LS_LOG_WARN
                  withMessage:[NSString stringWithFormat:@"registerLuaObjectHelper:forClass:%s already defined at %@",
                                                         className,
-                                                        [_registeredLuaObjectHelperFunctions objectForKey:[NSString stringWithUTF8String:className]]]
+                                                        _registeredLuaObjectHelperFunctions[@(className)]]
                 fromStackPos:level] ;
         } else {
-            luaL_where(_L, level) ;
-            NSString *locationString = [NSString stringWithFormat:@"%s", lua_tostring(_L, -1)] ;
-            [_registeredLuaObjectHelperLocations setObject:locationString
-                                                forKey:[NSString stringWithUTF8String:className]] ;
-            [_registeredLuaObjectHelperFunctions setObject:[NSValue valueWithPointer:(void *)helperFN]
-                                                forKey:[NSString stringWithUTF8String:className]] ;
-            lua_pop(_L, 1) ;
+            luaL_where(self.L, level) ;
+            NSString *locationString = @(lua_tostring(self.L, -1)) ;
+            _registeredLuaObjectHelperLocations[@(className)] = locationString;
+            _registeredLuaObjectHelperFunctions[@(className)] = [NSValue valueWithPointer:(void *)helperFN];
+            lua_pop(self.L, 1) ;
             allGood = YES ;
         }
     } else {
@@ -311,15 +241,15 @@
 - (BOOL)registerLuaObjectHelper:(luaObjectHelperFunction)helperFN forClass:(char *)className withUserdataMapping:(char *)userdataTag {
     BOOL allGood = [self registerLuaObjectHelper:helperFN forClass:className];
     if (allGood)
-        [_registeredLuaObjectHelperUserdataMappings setObject:[NSString stringWithUTF8String:className] forKey:[NSString stringWithUTF8String:userdataTag]];
+        _registeredLuaObjectHelperUserdataMappings[@(userdataTag)] = @(className);
     return allGood ;
 }
 
 - (int)pushNSObject:(id)obj withOptions:(LS_NSConversionOptions)options alreadySeenObjects:(NSMutableDictionary *)alreadySeen {
     if (obj) {
 // NOTE: We catch self-referential loops, do we also need a recursive depth?  Will crash at depth of 512...
-        if ([alreadySeen objectForKey:obj]) {
-            lua_rawgeti(_L, LUA_REGISTRYINDEX, [[alreadySeen objectForKey:obj] intValue]) ;
+        if (alreadySeen[obj]) {
+            lua_rawgeti(self.L, LUA_REGISTRYINDEX, [alreadySeen[obj] intValue]) ;
             return 1 ;
         }
 
@@ -327,8 +257,8 @@
 
         for (id key in _registeredNSHelperFunctions) {
             if ([obj isKindOfClass: NSClassFromString(key)]) {
-                pushNSHelperFunction theFunc = (pushNSHelperFunction)[[_registeredNSHelperFunctions objectForKey:key] pointerValue] ;
-                int resultAnswer = theFunc(_L, obj) ;
+                pushNSHelperFunction theFunc = (pushNSHelperFunction)[_registeredNSHelperFunctions[key] pointerValue] ;
+                int resultAnswer = theFunc(self.L, obj) ;
                 if (resultAnswer > -1) return resultAnswer ;
             }
         }
@@ -336,7 +266,7 @@
         // Check for built-in classes
 
         if ([obj isKindOfClass:[NSNull class]]) {
-            lua_pushnil(_L) ;
+            lua_pushnil(self.L) ;
         } else if ([obj isKindOfClass:[NSNumber class]]) {
             [self pushNSNumber:obj withOptions:options] ;
 // Note, the NSValue check must come *after* the NSNumber check, as NSNumber is a sub-class of NSValue
@@ -344,11 +274,11 @@
             [self pushNSValue:obj withOptions:options] ;
         } else if ([obj isKindOfClass:[NSString class]]) {
                 size_t size = [(NSString *)obj lengthOfBytesUsingEncoding:NSUTF8StringEncoding] ;
-                lua_pushlstring(_L, [(NSString *)obj UTF8String], size) ;
+                lua_pushlstring(self.L, [(NSString *)obj UTF8String], size) ;
         } else if ([obj isKindOfClass:[NSData class]]) {
-            lua_pushlstring(_L, [(NSData *)obj bytes], [(NSData *)obj length]) ;
+            lua_pushlstring(self.L, [(NSData *)obj bytes], [(NSData *)obj length]) ;
         } else if ([obj isKindOfClass:[NSDate class]]) {
-            lua_pushinteger(_L, lround([(NSDate *)obj timeIntervalSince1970])) ;
+            lua_pushinteger(self.L, lround([(NSDate *)obj timeIntervalSince1970])) ;
         } else if ([obj isKindOfClass:[NSArray class]]) {
             [self pushNSArray:obj withOptions:options alreadySeenObjects:alreadySeen] ;
         } else if ([obj isKindOfClass:[NSSet class]]) {
@@ -359,23 +289,108 @@
 // normally I'd make a class a helper registered as part of a module; however, NSURL is common enough
 // and 99% of the time we just want it stringified... by putting it in here, if someone needs it to do
 // more later, they can register a helper to catch the object before it reaches here.
-            lua_pushstring(_L, [[obj absoluteString] UTF8String]) ;
+            lua_pushstring(self.L, [[obj absoluteString] UTF8String]) ;
         } else {
             if ((options & LS_NSDescribeUnknownTypes) == LS_NSDescribeUnknownTypes) {
                 [self logVerbose:[NSString stringWithFormat:@"unrecognized type %@; converting to '%@'", NSStringFromClass([obj class]), [obj debugDescription]]] ;
-                lua_pushstring(_L, [[NSString stringWithFormat:@"%@", [obj debugDescription]] UTF8String]) ;
+                lua_pushstring(self.L, [[NSString stringWithFormat:@"%@", [obj debugDescription]] UTF8String]) ;
             } else if ((options & LS_NSIgnoreUnknownTypes) == LS_NSIgnoreUnknownTypes) {
                 [self logVerbose:[NSString stringWithFormat:@"unrecognized type %@; ignoring", NSStringFromClass([obj class])]] ;
                 return 0 ;
             }else {
                 [self logDebug:[NSString stringWithFormat:@"unrecognized type %@; returning nil", NSStringFromClass([obj class])]] ;
-                lua_pushnil(_L) ;
+                lua_pushnil(self.L) ;
             }
         }
     } else {
-        lua_pushnil(_L) ;
+        lua_pushnil(self.L) ;
     }
     return 1 ;
+}
+
+- (id)toNSObjectAtIndex:(int)idx withOptions:(LS_NSConversionOptions)options alreadySeenObjects:(NSMutableDictionary *)alreadySeen {
+    char *userdataTag = nil;
+
+    int realIndex = lua_absindex(self.L, idx) ;
+    NSMutableArray *seenObject = alreadySeen[[NSValue valueWithPointer:lua_topointer(self.L, idx)]] ;
+    if (seenObject) {
+        if ([[seenObject lastObject] isEqualToNumber:@(NO)] && ((options & LS_NSAllowsSelfReference) != LS_NSAllowsSelfReference)) {
+            [self logAtLevel:LS_LOG_WARN
+                 withMessage:@"lua table cannot contain self-references"
+                fromStackPos:1] ;
+//             return [NSNull null] ;
+            return nil ;
+        } else {
+            return [seenObject firstObject] ;
+        }
+    }
+    switch (lua_type(self.L, realIndex)) {
+        case LUA_TNUMBER:
+            if (lua_isinteger(self.L, idx)) {
+                return @(lua_tointeger(self.L, idx)) ;
+            } else {
+                return @(lua_tonumber(self.L, idx));
+            }
+        case LUA_TSTRING: {
+                LS_NSConversionOptions stringOptions = options & ( LS_NSPreserveLuaStringExactly | LS_NSLuaStringAsDataOnly ) ;
+                if (stringOptions == LS_NSLuaStringAsDataOnly) {
+                    size_t size ;
+                    unsigned char *junk = (unsigned char *)lua_tolstring(self.L, idx, &size) ;
+                    return [NSData dataWithBytes:(void *)junk length:size] ;
+                } else if (stringOptions == LS_NSPreserveLuaStringExactly) {
+                    if ([self isValidUTF8AtIndex:idx]) {
+                        size_t size ;
+                        unsigned char *string = (unsigned char *)lua_tolstring(self.L, idx, &size) ;
+                        return [[NSString alloc] initWithData:[NSData dataWithBytes:(void *)string length:size] encoding: NSUTF8StringEncoding] ;
+                    } else {
+                        size_t size ;
+                        unsigned char *junk = (unsigned char *)lua_tolstring(self.L, idx, &size) ;
+                        return [NSData dataWithBytes:(void *)junk length:size] ;
+                    }
+                } else {
+                    if (stringOptions != LS_NSNone) {
+                        [self logAtLevel:LS_LOG_DEBUG
+                             withMessage:@"only one of LS_NSPreserveLuaStringExactly or LS_NSLuaStringAsDataOnly can be specified: using default behavior"
+                            fromStackPos:0] ;
+                    }
+                    return [self getValidUTF8AtIndex:idx] ;
+                }
+            }
+        case LUA_TNIL:
+            return [NSNull null] ;
+        case LUA_TBOOLEAN:
+            return lua_toboolean(self.L, idx) ? (id)kCFBooleanTrue : (id)kCFBooleanFalse;
+        case LUA_TTABLE:
+            return [self tableAtIndex:realIndex withOptions:options alreadySeenObjects:alreadySeen] ;
+        case LUA_TUSERDATA: // Note: This is specifically last, so it can fall through to the default case, for objects we can't handle automatically
+            //FIXME: This seems very unsafe to happen outside a protected call
+            if (lua_getfield(self.L, realIndex, "__type") == LUA_TSTRING) {
+                userdataTag = (char *)lua_tostring(self.L, -1);
+            }
+            lua_pop(self.L, 1);
+
+            if (userdataTag) {
+                NSString *classMapping = _registeredLuaObjectHelperUserdataMappings[@(userdataTag)];
+                if (classMapping) {
+                    return [self luaObjectAtIndex:realIndex toClass:(char *)[classMapping UTF8String]];
+                }
+            }
+            if (userdataTag) [self logBreadcrumb:[NSString stringWithFormat:@"unrecognized userdata type %s", userdataTag]] ;
+        default:
+            if ((options & LS_NSDescribeUnknownTypes) == LS_NSDescribeUnknownTypes) {
+                NSString *answer = @(luaL_tolstring(self.L, idx, NULL));
+                [self logVerbose:[NSString stringWithFormat:@"unrecognized type %s; converting to '%@'", lua_typename(self.L, lua_type(self.L, realIndex)), answer]] ;
+                lua_pop(self.L, 1) ;
+                return answer ;
+            } else if ((options & LS_NSIgnoreUnknownTypes) == LS_NSIgnoreUnknownTypes) {
+                [self logVerbose:[NSString stringWithFormat:@"unrecognized type %s; ignoring with placeholder [NSNull null]",
+                                                          lua_typename(self.L, lua_type(self.L, realIndex))]] ;
+                return [NSNull null] ;
+            } else {
+                [self logDebug:[NSString stringWithFormat:@"unrecognized type %s; returning nil", lua_typename(self.L, lua_type(self.L, realIndex))]] ;
+                return nil ;
+            }
+    }
 }
 
 @end
