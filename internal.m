@@ -1,10 +1,12 @@
+//    Convert LuaSkinThread docs to headerdoc format
+//
 // +  Move this to it's own repo -- now switch to submodule in wip
 //
 //    rethink hs._asm.luaskinpokeytool now that we can link thread to skin and vice-versa
 //
 // -  hs._asm.luathread:reload()?  Should check if isExecuting and fail if YES.  Take argument to
 //        cancel and then restart?
-//    add method for thread that prints to console for immediate error notifications, etc.
+// *  add method for thread that prints to console for immediate error notifications, etc.
 //
 // +  Document LuaSkinThread, what it does, why, and how
 //
@@ -26,7 +28,7 @@
 //
 //    _threadinit.lua should include list of modules known to fail/not-ported so they can be
 //        rejected w/out actually throwing exception... will aid if autoloader functionality added
-//    record of diffs between ported modules and current in HS to generate report indicating
+// *  record of diffs between ported modules and current in HS to generate report indicating
 //        when they need to be reviewed for possible new changes/updates
 //
 // -  Modify thread.m to use thread supported LuaSkin for argument checking, etc. -- started
