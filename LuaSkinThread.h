@@ -30,12 +30,15 @@
 #pragma mark - Helper Macros to aid in integrating with Hammerspoon module code
 // Your modules still need modifying, but this simplifies some of the boilerplate code
 
-// a simple check to see if LuaSkinThread has been properly injected into LuaSkin, returns Bool
+// a simple check to see if LuaSkinThread has been properly injected into LuaSkin; returns Bool
 #define LST_isAvailable() ([LuaSkin respondsToSelector:@selector(thread)])
 
 // a replacement for [LuaSkin shared] which will work whether LuaSkinThread has been loaded or not
 #define LST_getLuaSkin() (LST_isAvailable() ? \
                              [LuaSkin performSelector:@selector(thread)] : [LuaSkin shared])
+
+// a simple check to see if the specified skin is a LuaSkinThread object; returns Bool
+#define LST_skinIsLuaSkinThread(skin) ((strcmp(object_getClassName(skin), "LuaSkinThread") == 0))
 
 // For the following macros, the arguments are defined as follows:
 //    skin     - the LuaSkin or LuaSkinThread value in use for the module in this particular instance.
@@ -55,14 +58,14 @@
 // "luaRef" in the core modules) for each module rather than LUA_REGISTRYINDEX.  This macro will
 // return the value in the specified variable, if the current skin is LuaSkin, or check for the
 // stored value in the thread dictionary, if the current skin is a LuaSkinThread.
-#define LST_getRefTable(skin, tag, variable) ((strcmp(object_getClassName(skin), "LuaSkinThread") == 0) ? \
+#define LST_getRefTable(skin, tag, variable) (LST_skinIsLuaSkinThread(skin) ? \
                                        [(LuaSkinThread *)skin getRefForLabel:"_refTable" inModule:tag] : variable)
 
 // LuaSkin uses individual reference tables (usually stored in a module's global space as the integer
 // "luaRef" in the core modules) for each module rather than LUA_REGISTRYINDEX.  This macro will
 // set the value for the reference table in the specified variable, if the current skin is LuaSkin, or
 // set it in the thread dictionary, if the current skin is a LuaSkinThread.
-#define LST_setRefTable(skin, tag, variable, value) if (strcmp(object_getClassName(skin), "LuaSkinThread") == 0) { \
+#define LST_setRefTable(skin, tag, variable, value) if (LST_skinIsLuaSkinThread(skin)) { \
             if (![(LuaSkinThread *)skin setRef:(value) forLabel:"_refTable" inModule:tag]) { \
                 [skin logError:[NSString stringWithFormat:@"unable to register refTable in thread dictionary for %s", tag]] ; \
             } \
@@ -75,12 +78,12 @@
 // LST_getRefTable that also allows for a label to be specified.  If skin == LuaSkin, the specified
 // variable will be returned; if skin == LuaSkinThread, the specified label name will be looked up in
 // the stored references in the thread's dictionary.
-#define LST_getRefForLabel(skin, tag, label, variable) ((strcmp(object_getClassName(skin), "LuaSkinThread") == 0) ? \
+#define LST_getRefForLabel(skin, tag, label, variable) (LST_skinIsLuaSkinThread(skin) ? \
                                        [(LuaSkinThread *)skin getRefForLabel:label inModule:tag] : variable)
 
 // A more generic version of LST_setRefTable which lets you set the label used in the thread dictionary
 // for the reference to be stored.
-#define LST_setRefForLabel(skin, tag, label, variable, value) if (strcmp(object_getClassName(skin), "LuaSkinThread") == 0) { \
+#define LST_setRefForLabel(skin, tag, label, variable, value) if (LST_skinIsLuaSkinThread(skin)) { \
             if (![(LuaSkinThread *)skin setRef:(value) forLabel:label inModule:tag]) { \
                 [skin logError:[NSString stringWithFormat:@"unable to register %s in thread dictionary for %s", label, tag]] ; \
             } \
