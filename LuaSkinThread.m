@@ -126,7 +126,7 @@
         _threadForThisSkin = (HSASMLuaThread *)[NSThread currentThread] ;
 
         if ([_threadForThisSkin.dictionaryLock lockBeforeDate:[NSDate dateWithTimeIntervalSinceNow:LOCK_TIMEOUT]]) {
-            [_threadForThisSkin.threadDictionary setObject:self                               forKey:@"_LuaSkin"];
+            [_threadForThisSkin.threadDictionary setObject:self forKey:@"_LuaSkin"];
             [_threadForThisSkin.threadDictionary setObject:[[NSMutableDictionary alloc] init] forKey:@"_internalReferences"] ;
             [_threadForThisSkin.dictionaryLock unlock] ;
         } else {

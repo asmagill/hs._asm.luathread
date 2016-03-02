@@ -94,9 +94,10 @@ if _instance then
         elseif level == 3 then logger.i(message) -- LS_LOG_INFO
         elseif level == 2 then logger.w(message) -- LS_LOG_WARN
         elseif level == 1 then logger.e(message) -- LS_LOG_ERROR
-  --           hs.showError(message)
+            _instance:flush()
         else
             print("*** UNKNOWN LOG LEVEL: "..tostring(level).."\n\t"..message)
+            _instance:flush()
         end
     end
 
