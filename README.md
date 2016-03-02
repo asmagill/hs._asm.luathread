@@ -42,13 +42,15 @@ luathread.new([name]) -> threadObj
 Create a new lua thread instance.
 
 Parameters:
- * name - an optional name for the thread instance.  If no name is provided, a randomly generated one is used.
+ * name - an optional name for the thread instance.  This name is used during the startup of the thread to identify a custom initialization file.
 
 Returns:
  * the thread object
 
 Notes:
  * the name does not have to be unique.  If a file with the name `_init.*name*.lua` is located in the users Hammerspoon configuration directory (`~/.hammerspoon` by default), then it will be executed at thread startup.
+
+ * A unique identifier is assigned to each instance and is available with the [hs._asm.luathread:name](#name) and [hs._asm.luathread._instance:name](#name2) methods during run-time.  If a name is provided with this constructor, it is prepended to the unique identifier.
 
 ### Module Methods
 
@@ -179,7 +181,7 @@ Parameters:
  * None
 
 Returns:
- * the name specified or dynamically assigned at the time of the thread's creation.
+ * the unique identifier for the instance dynamically assigned at the time of the thread's creation.
 
 - - -
 
@@ -389,7 +391,7 @@ Parameters:
  * None
 
 Returns:
- * the name specified or dynamically assigned at the time of the thread's creation.
+ * the unique identifier for the instance dynamically assigned at the time of the thread's creation.
 
 - - -
 

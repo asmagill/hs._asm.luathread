@@ -11,6 +11,8 @@
 
 local instanceName, assignments = ...
 
+local customInitName = instanceName:match("^([^::]+)")
+
 if _instance then
 
     debug.sethook(function(t,l)
@@ -138,7 +140,7 @@ if _instance then
 
     print("-- ".._VERSION..", Hammerspoon instance "..instanceName)
 
-    local custominit = assignments.configdir.."/_init."..instanceName..".lua"
+    local custominit = assignments.configdir.."/_init."..customInitName..".lua"
     if not os.execute("[ -f "..custominit.." ]") then
         custominit = assignments.configdir.."/_init.lua"
         if not os.execute("[ -f "..custominit.." ]") then

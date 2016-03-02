@@ -252,7 +252,7 @@ static int threadIsCancelled(lua_State *L) {
 ///  * None
 ///
 /// Returns:
-///  * the name specified or dynamically assigned at the time of the thread's creation.
+///  * the unique identifier for the instance dynamically assigned at the time of the thread's creation.
 static int threadName(lua_State *L) {
     HSASMLuaThread *luaThread = toHSASMLuaThreadFromLua(L, 1) ;
     lua_pushstring(L, [luaThread.name UTF8String]) ;

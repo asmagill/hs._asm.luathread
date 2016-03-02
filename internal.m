@@ -10,21 +10,9 @@
 //
 // +  Document LuaSkinThread, what it does, why, and how
 //
-//    Name should be used for choosing startup file, but thread name should be made always unique
+// *  Name should be used for choosing startup file, but thread name should be made always unique
 //    Add args to new, or other constructors, to indicate whether hammerspoon niceties should be included
-//        (module auto load, etc.) or it should be raw lua, or somewhere in-between
-//
-// +  Module conversion in progress for modules I care about... may take requests afterwards...
-//        To ensure proper object is used, prepend custom objects with LST_; otherwise, console reports:
-//            2/28/16 6:20:33.345 PM Hammerspoon[35609]: objc[35609]: Class XXX is implemented in both blah.so \
-//                and otherblah.so. One of the two will be used. Which one is undefined.
-//        Copy/link to LuaSkinThread.h and import into objc files
-//        use macros in LuaSkinThread.h (prefixed with LST) where needed to replace:
-//            [LuaSkin shared], refTable, and initial assignment to refTable in luaopen function declaration
-//        any place which specifies MainThread or RunLoopMain, change to current or store current in
-//            object during creation and use in callback
-//            *note: no workaround for `dispatch_get_main_queue` yet...
-//        other?
+//        (module auto load, etc.) or it should be raw lua, or somewhere in-between?
 //
 //    _threadinit.lua should include list of modules known to fail/not-ported so they can be
 //        rejected w/out actually throwing exception... will aid if autoloader functionality added
@@ -44,6 +32,18 @@
 //            the entire module over...
 //
 // +  check if thread is running in some (all?) methods
+//
+// +  Module conversion in progress for modules I care about... may take requests afterwards...
+//        To ensure proper object is used, prepend custom objects with LST_; otherwise, console reports:
+//            2/28/16 6:20:33.345 PM Hammerspoon[35609]: objc[35609]: Class XXX is implemented in both blah.so \
+//                and otherblah.so. One of the two will be used. Which one is undefined.
+//        Copy/link to LuaSkinThread.h and import into objc files
+//        use macros in LuaSkinThread.h (prefixed with LST) where needed to replace:
+//            [LuaSkin shared], refTable, and initial assignment to refTable in luaopen function declaration
+//        any place which specifies MainThread or RunLoopMain, change to current or store current in
+//            object during creation and use in callback
+//            *note: no workaround for `dispatch_get_main_queue` yet...
+//        other?
 
 #import "LuaSkinThread.h"
 #import "LuaSkinThread+Private.h"
@@ -124,17 +124,21 @@ static int refTable = LUA_NOREF;
 /// Create a new lua thread instance.
 ///
 /// Parameters:
-///  * name - an optional name for the thread instance.  If no name is provided, a randomly generated one is used.
+///  * name - an optional name for the thread instance.  This name is used during the startup of the thread to identify a custom initialization file.
 ///
 /// Returns:
 ///  * the thread object
 ///
 /// Notes:
 ///  * the name does not have to be unique.  If a file with the name `_init.*name*.lua` is located in the users Hammerspoon configuration directory (`~/.hammerspoon` by default), then it will be executed at thread startup.
+///
+///  * A unique identifier is assigned to each instance and is available with the [hs._asm.luathread:name](#name) and [hs._asm.luathread._instance:name](#name2) methods during run-time.  If a name is provided with this constructor, it is prepended to the unique identifier.
 static int newLuaThreadWithName(lua_State *L) {
     LuaSkin *skin = [LuaSkin shared] ;
     [skin checkArgs:LS_TSTRING | LS_TOPTIONAL, LS_TBREAK] ;
-    NSString *name = (lua_gettop(L) == 1) ? [skin toNSObjectAtIndex:1] : [[NSUUID UUID] UUIDString] ;
+    NSString *name = (lua_gettop(L) == 1) ?
+        [NSString stringWithFormat:@"%@::%@", [skin toNSObjectAtIndex:1], [[NSUUID UUID] UUIDString]] :
+        [[NSUUID UUID] UUIDString] ;
     HSASMLuaThreadManager *luaThread = [[HSASMLuaThreadManager alloc] initWithName:name] ;
     [skin pushNSObject:luaThread] ;
     return 1 ;
@@ -395,7 +399,7 @@ static int cancelThread(lua_State *L) {
 ///  * None
 ///
 /// Returns:
-///  * the name specified or dynamically assigned at the time of the thread's creation.
+///  * the unique identifier for the instance dynamically assigned at the time of the thread's creation.
 static int threadName(__unused lua_State *L) {
     LuaSkin *skin = [LuaSkin shared] ;
     [skin checkArgs:LS_TUSERDATA, USERDATA_TAG, LS_TANY | LS_TOPTIONAL, LS_TANY | LS_TOPTIONAL, LS_TBREAK] ;
