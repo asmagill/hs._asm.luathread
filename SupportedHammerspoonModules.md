@@ -25,9 +25,12 @@ If you encounter any problems with a module in an `hs._asm.luathread` instance, 
 
 Module             | Status   | Notes
 -------------------|----------|------
+hs.appfinder       | yes      | requires application and window
 hs.alert           | yes      | as of v0.3; given a dark blue background to distinguish source of visible alerts
+hs.application     | yes      | as of v0.7
 hs.base64          | yes      | as of v0.3
 hs.battery         | yes      | as of v0.6
+hs.brightness      | yes      | as of v0.7
 hs.caffeinate      | yes      | as of v0.6
 hs.crash           | yes      | as of v0.3
 hs.doc             | yes      | as of v0.2; requires json and fs
@@ -37,24 +40,25 @@ hs.fs              | yes      | volume fully supported as of v0.6
 hs.geometry        | yes      |
 hs.hash            | yes      | as of v0.3
 hs.host            | yes      | as of v0.2
+hs.image           | yes      | as of v0.7
 hs.inspect         | yes      |
 hs.json            | yes      | as of v0.2
 hs.logger          | yes      |
 hs.pathwatcher     | yes      | as of v0.2
+hs.screen          | no       | as of v0.7, reapplyGamma internal callback needs testing
 hs.settings        | yes      | as of v0.6
 hs.spaces          | yes      | as of v0.7
 hs.timer           | yes      | as of v0.6
+hs.uielement       | yes      | as of v0.7
 hs.usb             | yes      | as of v0.2
 hs.utf8            | yes      |
 hs.wifi            | yes      | as of v0.6
+hs.window          | yes      | as of v0.7, core module functions only (not filter, layout, or tiling)
 
 Module             | Status   | Notes
 -------------------|----------|------
-hs.appfinder       | no       | requires application and window
 hs.applescript     | no       | to be replaced with osascript
-hs.application     | no       |
 hs.audiodevice     | no       | uses `dispatch_get_main_queue`, no simple workaround yet
-hs.brightness      | no       |
 hs.chooser         | no       |
 hs.console         | no       |
 hs.dockicon        | no       |
@@ -82,17 +86,14 @@ hs.notify          | no       |
 hs.osascript       | no       |
 hs.pasteboard      | no       | requires styledtext, drawing.color, image, sound
 hs.redshift        | no       |
-hs.screen          | no       | uses `dispatch_get_main_queue`, no simple workaround yet
 hs.sound           | no       | required for pasteboard, uses `dispatch_get_main_queue`, no simple workaround yet
 hs.speech          | no       |
 hs.spotify         | no       | requires alert, applescript, application
 hs.styledtext      | no       | required for pasteboard
 hs.tabs            | no       |
 hs.task            | no       | uses `dispatch_get_main_queue`, no simple workaround yet
-hs.uielement       | no       |
 hs.urlevent        | no       |
 hs.webview         | no       |
-hs.window          | no       |
 
 ### Core Functions
 

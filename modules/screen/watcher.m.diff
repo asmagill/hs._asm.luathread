@@ -1,0 +1,73 @@
+4d3
+< #import "../../LuaSkinThread.h"
+21c20
+< @interface LST_MJScreenWatcher : NSObject
+---
+> @interface MJScreenWatcher : NSObject
+24d22
+< @property NSThread *myMainThread ;
+27,35c25
+< @implementation LST_MJScreenWatcher
+< - (instancetype)init {
+<     self = [super init] ;
+<     if (self) {
+<         _myMainThread = [NSThread currentThread] ;
+<     }
+<     return self ;
+< }
+< 
+---
+> @implementation MJScreenWatcher
+37,40c27,29
+<     [self performSelector:@selector(screensChanged:)
+<                  onThread:self.myMainThread
+<                withObject:nil
+<             waitUntilDone:YES];
+---
+>     [self performSelectorOnMainThread:@selector(screensChanged:)
+>                                         withObject:nil
+>                                         waitUntilDone:YES];
+44c33
+<     LuaSkin *skin = LST_getLuaSkin();
+---
+>     LuaSkin *skin = [LuaSkin shared];
+47c36
+<     [skin pushLuaRef:LST_getRefTable(skin, USERDATA_TAG, refTable) ref:self.fn];
+---
+>     [skin pushLuaRef:refTable ref:self.fn];
+75c64
+<     LuaSkin *skin = LST_getLuaSkin();
+---
+>     LuaSkin *skin = [LuaSkin shared];
+83c72
+<     screenwatcher->fn = [skin luaRef:LST_getRefTable(skin, USERDATA_TAG, refTable)];
+---
+>     screenwatcher->fn = [skin luaRef:refTable];
+85c74
+<     LST_MJScreenWatcher* object = [[LST_MJScreenWatcher alloc] init];
+---
+>     MJScreenWatcher* object = [[MJScreenWatcher alloc] init];
+145c134
+<     LuaSkin *skin = LST_getLuaSkin();
+---
+>     LuaSkin *skin = [LuaSkin shared];
+151c140
+<     screenwatcher->fn = [skin luaUnref:LST_getRefTable(skin, USERDATA_TAG, refTable) ref:screenwatcher->fn];
+---
+>     screenwatcher->fn = [skin luaUnref:refTable ref:screenwatcher->fn];
+153c142
+<     LST_MJScreenWatcher* object = (__bridge_transfer id)screenwatcher->obj;
+---
+>     MJScreenWatcher* object = (__bridge_transfer id)screenwatcher->obj;
+189,195c178,180
+< int luaopen_hs_screen_watcher(__unused lua_State* L) {
+<     LuaSkin *skin = LST_getLuaSkin();
+<     LST_setRefTable(skin, USERDATA_TAG, refTable,
+<         [skin registerLibraryWithObject:USERDATA_TAG
+<                               functions:screenLib
+<                           metaFunctions:meta_gcLib
+<                         objectFunctions:screen_metalib]) ;
+---
+> int luaopen_hs_screen_watcher(lua_State* L) {
+>     LuaSkin *skin = [LuaSkin shared];
+>     refTable = [skin registerLibraryWithObject:USERDATA_TAG functions:screenLib metaFunctions:meta_gcLib objectFunctions:screen_metalib];

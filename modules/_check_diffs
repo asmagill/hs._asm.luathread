@@ -3,18 +3,42 @@
 source="/opt/amagill/src/hammerspoon/hammerspoon"
 
 for folder in [a-z]* ; do
+#     if [ -d $folder ]; then
+# #         if [ $folder != "_luathreadcoreadditions" ]; then
+#             echo -n "-- ${folder}:"
+#             cd $folder
+#             for diffFile in *.diff ; do
+#                 file=${diffFile%.diff}
+#                 echo -ne "\011${file}"
+#                 originalFile="${source}/extensions/${folder//\.//}/${file}"
+#                 diff $file $originalFile > ${file}.tmp
+#                 diff $diffFile ${file}.tmp &> /dev/null || echo -n "<-CHANGED"
+#                 rm ${file}.tmp
+#             done
+#             echo
+#             cd ..
+# #         fi
+#     fi
     if [ -d $folder ]; then
-#         if [ $folder != "_luathreadcoreadditions" ]; then
-            echo "-- $folder --"
+        if [[ $folder != "_luathreadcoreadditions" ]]; then
+            echo -n "-- ${folder}:"
             cd $folder
-            for diffFile in *.diff ; do
-                file=${diffFile%.diff}
-                originalFile="${source}/extensions/${folder//\.//}/${file}"
-                diff $file $originalFile > ${file}.tmp
-                diff $diffFile ${file}.tmp &> /dev/null || echo "   ${file} file differences have changed"
-                rm ${file}.tmp
+            for file in *.{lua,m,h} ; do
+                if [[ ${file%.*} != "*" ]]; then
+                    echo -ne "\011${file}"
+                    diffFile=${file}.diff
+                    if [ -e $diffFile ]; then
+                        originalFile="${source}/extensions/${folder//\.//}/${file}"
+                        diff $file $originalFile > ${file}.tmp
+                        diff $diffFile ${file}.tmp &> /dev/null || echo -n "<-CHANGED"
+                        rm ${file}.tmp
+                    else
+                        echo -n "<-NO_DIFF"
+                    fi
+                fi
             done
+            echo
             cd ..
-#         fi
+        fi
     fi
 done

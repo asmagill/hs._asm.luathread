@@ -4,7 +4,7 @@ VERSION ?= 0.0
 
 all:
 
-install: clean
+install:
 	HS_APPLICATION=$(HS_APPLICATION) PREFIX=$(PREFIX) $(MAKE) -C .. $@
 	-for f in [a-z_]* ; do [ -d $$f ] && echo "-- $$f --" && HS_APPLICATION=$(HS_APPLICATION) PREFIX=$(PREFIX) $(MAKE) -C $$f $@ ; done
 

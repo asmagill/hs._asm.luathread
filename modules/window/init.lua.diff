@@ -1,0 +1,9 @@
+8c8
+< local uielement = require "hs.uielement"  -- Make sure parent module loads
+---
+> local uielement = hs.uielement  -- Make sure parent module loads
+858,859c858
+< --   local submodules={filter=true,layout=true,tiling=true,switcher=true,highlight=true}
+<   local submodules={}
+---
+>   local submodules={filter=true,layout=true,tiling=true,switcher=true,highlight=true}

@@ -1,34 +1,85 @@
-65d64
+38,39d37
 < #import "../../LuaSkinThread.h"
-1016,1017c1015,1016
+< 
+66,67c64,65
+< const char *path_at_index(__unused lua_State *L, int i) {
+<     NSString *path = [LST_getLuaSkin() toNSObjectAtIndex:i];
+---
+> const char *path_at_index(lua_State *L, int i) {
+>     NSString *path = [[LuaSkin shared] toNSObjectAtIndex:i];
+77c75
+<             NSString *tag = [LST_getLuaSkin() toNSObjectAtIndex:-1];
+---
+>             NSString *tag = [[LuaSkin shared] toNSObjectAtIndex:-1];
+85c83
 < NSArray *tags_from_file(__unused lua_State *L, NSString *filePath) {
-<     LuaSkin *skin = LST_getLuaSkin(); //[LuaSkin shared] ;
 ---
 > NSArray *tags_from_file(lua_State *L, NSString *filePath) {
->     LuaSkin *skin = [LuaSkin shared];
-1033,1034c1032,1033
-< BOOL tags_to_file(__unused lua_State *L, NSURL *url, NSArray *tags) {
-<     LuaSkin *skin = LST_getLuaSkin(); //[LuaSkin shared] ;
+91c89
+<         [LST_getLuaSkin() logError:[NSString stringWithFormat:@"hs.fs tags_from_file() Unable to get tags for %@: %@", url, [error localizedDescription]]];
 ---
-> BOOL tags_to_file(lua_State *L, NSURL *url, NSArray *tags) {
->     LuaSkin *skin = [LuaSkin shared];
-1054c1053
-<     LuaSkin *skin = LST_getLuaSkin(); //[LuaSkin shared] ;
+>         [[LuaSkin shared] logError:[NSString stringWithFormat:@"hs.fs tags_from_file() Unable to get tags for %@: %@", url, [error localizedDescription]]];
+97c95
+< BOOL tags_to_file(__unused lua_State *L, NSString *filePath, NSArray *tags) {
+---
+> BOOL tags_to_file(lua_State *L, NSString *filePath, NSArray *tags) {
+102c100
+<         [LST_getLuaSkin() logError:[NSString stringWithFormat:@"hs.fs tags_to_file() Unable to set tags for %@: %@", url, [error localizedDescription]]];
+---
+>         [[LuaSkin shared] logError:[NSString stringWithFormat:@"hs.fs tags_to_file() Unable to set tags for %@: %@", url, [error localizedDescription]]];
+122c120
+<     [LST_getLuaSkin() checkArgs:LS_TSTRING, LS_TBREAK];
+---
+>     [[LuaSkin shared] checkArgs:LS_TSTRING, LS_TBREAK];
+332c330
+<     [LST_getLuaSkin() checkArgs:LS_TSTRING, LS_TSTRING, LS_TBOOLEAN|LS_TOPTIONAL, LS_TBREAK];
+---
+>     [[LuaSkin shared] checkArgs:LS_TSTRING, LS_TSTRING, LS_TBOOLEAN|LS_TOPTIONAL, LS_TBREAK];
+338c336
+<         error = (BOOL)symlink(oldpath, newpath);
+---
+>         error = symlink(oldpath, newpath);
+340c338
+<         error = (BOOL)link(oldpath, newpath);
+---
+>         error = link(oldpath, newpath);
+366c364
+<     [LST_getLuaSkin() checkArgs:LS_TSTRING, LS_TBREAK];
+---
+>     [[LuaSkin shared] checkArgs:LS_TSTRING, LS_TBREAK];
+395c393
+<     [LST_getLuaSkin() checkArgs:LS_TSTRING, LS_TBREAK];
+---
+>     [[LuaSkin shared] checkArgs:LS_TSTRING, LS_TBREAK];
+463c461
+<     [LST_getLuaSkin() checkArgs:LS_TSTRING, LS_TBREAK];
+---
+>     [[LuaSkin shared] checkArgs:LS_TSTRING, LS_TBREAK];
+557c555
+<     [LST_getLuaSkin() checkArgs:LS_TSTRING, LS_TNUMBER|LS_TOPTIONAL, LS_TNUMBER|LS_TOPTIONAL, LS_TBREAK];
+---
+>     [[LuaSkin shared] checkArgs:LS_TSTRING, LS_TNUMBER|LS_TOPTIONAL, LS_TNUMBER|LS_TOPTIONAL, LS_TBREAK];
+706c704
+<     [LST_getLuaSkin() checkArgs:LS_TSTRING, LS_TSTRING|LS_TOPTIONAL, LS_TBREAK];
+---
+>     [[LuaSkin shared] checkArgs:LS_TSTRING, LS_TSTRING|LS_TOPTIONAL, LS_TBREAK];
+782c780
+<     LuaSkin *skin = LST_getLuaSkin();
 ---
 >     LuaSkin *skin = [LuaSkin shared];
-1086c1085
-<     LuaSkin *skin = LST_getLuaSkin(); //[LuaSkin shared] ;
+815c813
+<     LuaSkin *skin = LST_getLuaSkin();
 ---
 >     LuaSkin *skin = [LuaSkin shared];
-1126c1125
-<     LuaSkin *skin = LST_getLuaSkin(); //[LuaSkin shared] ;
+838c836
+<     LuaSkin *skin = LST_getLuaSkin();
 ---
 >     LuaSkin *skin = [LuaSkin shared];
-1162c1161
-<     LuaSkin *skin = LST_getLuaSkin(); //[LuaSkin shared] ;
+859c857
+<     LuaSkin *skin = LST_getLuaSkin();
 ---
 >     LuaSkin *skin = [LuaSkin shared];
-1215c1214
-<     LuaSkin *skin = LST_getLuaSkin(); //[LuaSkin shared] ;
+895c893
+<     LuaSkin *skin = LST_getLuaSkin() ;
 ---
 >     LuaSkin *skin = [LuaSkin shared] ;

@@ -1,0 +1,88 @@
+5d4
+< #import "../../LuaSkinThread.h"
+65,68c64,65
+< @interface LST_AppWatcher : NSObject
+< @property                  appwatcher_t* object;
+< @property (readonly, weak) NSThread      *myMainThread ;
+< 
+---
+> @interface AppWatcher : NSObject
+> @property appwatcher_t* object;
+72c69
+< @implementation LST_AppWatcher
+---
+> @implementation AppWatcher
+76d72
+<         _myMainThread = [NSThread currentThread] ;
+81,90d76
+< - (void)callback:(NSDictionary*)dict withEvent:(event_t)event {
+<     [self performSelector:@selector(_callback:)
+<                  onThread:_myMainThread
+<                withObject:@{
+<                               @"dict"  : dict,
+<                               @"event" : @(event)
+<                           }
+<             waitUntilDone:YES];
+< }
+< 
+92,95c78
+< - (void)_callback:(NSDictionary*)passThroughDict  {
+<     NSDictionary *dict = passThroughDict[@"dict"] ;
+<     event_t      event = [passThroughDict[@"event"] unsignedIntValue] ;
+< 
+---
+> - (void)callback:(NSDictionary*)dict withEvent:(event_t)event {
+102c85
+<     LuaSkin *skin = LST_getLuaSkin();
+---
+>     LuaSkin *skin = [LuaSkin shared];
+112c95
+<     [skin pushLuaRef:LST_getRefTable(skin, USERDATA_TAG, refTable) ref:self.object->fn];
+---
+>     [skin pushLuaRef:refTable ref:self.object->fn];
+177c160
+<     LuaSkin *skin = LST_getLuaSkin();
+---
+>     LuaSkin *skin = [LuaSkin shared];
+185c168
+<     appWatcher->fn = [skin luaRef:LST_getRefTable(skin, USERDATA_TAG, refTable)];
+---
+>     appWatcher->fn = [skin luaRef:refTable];
+187c170
+<     appWatcher->obj = (__bridge_retained void*) [[LST_AppWatcher alloc] initWithObject:appWatcher];
+---
+>     appWatcher->obj = (__bridge_retained void*) [[AppWatcher alloc] initWithObject:appWatcher];
+195c178
+< static void register_observer(LST_AppWatcher* observer) {
+---
+> static void register_observer(AppWatcher* observer) {
+232c215
+< static void unregister_observer(LST_AppWatcher* observer) {
+---
+> static void unregister_observer(AppWatcher* observer) {
+260c243
+<     register_observer((__bridge LST_AppWatcher*)appWatcher->obj);
+---
+>     register_observer((__bridge AppWatcher*)appWatcher->obj);
+291c274
+<     LuaSkin *skin = LST_getLuaSkin();
+---
+>     LuaSkin *skin = [LuaSkin shared];
+297c280
+<     appWatcher->fn = [skin luaUnref:LST_getRefTable(skin, USERDATA_TAG, refTable) ref:appWatcher->fn];
+---
+>     appWatcher->fn = [skin luaUnref:refTable ref:appWatcher->fn];
+299c282
+<     LST_AppWatcher* object = (__bridge_transfer LST_AppWatcher*)appWatcher->obj;
+---
+>     AppWatcher* object = (__bridge_transfer AppWatcher*)appWatcher->obj;
+353,358c336,337
+<     LuaSkin *skin = LST_getLuaSkin();
+<     LST_setRefTable(skin, USERDATA_TAG, refTable,
+<         [skin registerLibraryWithObject:USERDATA_TAG
+<                               functions:appLib
+<                           metaFunctions:metaGcLib
+<                         objectFunctions:metaLib]);
+---
+>     LuaSkin *skin = [LuaSkin shared];
+>     refTable = [skin registerLibraryWithObject:USERDATA_TAG functions:appLib metaFunctions:metaGcLib objectFunctions:metaLib];

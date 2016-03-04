@@ -1,0 +1,58 @@
+6d5
+< #import "../../LuaSkinThread.h"
+130c129
+<     LuaSkin *skin = LST_getLuaSkin();
+---
+>     LuaSkin *skin = [LuaSkin shared];
+232c231
+<     BOOL allWindows = (BOOL)lua_toboolean(L, 2);
+---
+>     BOOL allWindows = lua_toboolean(L, 2);
+259,260d257
+< #pragma clang diagnostic push
+< #pragma clang diagnostic ignored "-Wdeprecated-declarations"
+262d258
+< #pragma clang diagnostic pop
+273c269
+<     BOOL allWindows = (BOOL)lua_toboolean(L, 2);
+---
+>     BOOL allWindows = lua_toboolean(L, 2);
+275,276d270
+< #pragma clang diagnostic push
+< #pragma clang diagnostic ignored "-Wdeprecated-declarations"
+279d272
+< #pragma clang diagnostic pop
+478,479c471,472
+< AXUIElementRef _findmenuitembyname(__unused lua_State* L, AXUIElementRef app, NSString *name) {
+<     LuaSkin *skin = LST_getLuaSkin();
+---
+> AXUIElementRef _findmenuitembyname(lua_State* L, AXUIElementRef app, NSString *name) {
+>     LuaSkin *skin = [LuaSkin shared];
+559c552
+<     LuaSkin *skin = LST_getLuaSkin();
+---
+>     LuaSkin *skin = [LuaSkin shared];
+685c678
+<     LuaSkin *skin = LST_getLuaSkin();
+---
+>     LuaSkin *skin = [LuaSkin shared];
+768c761
+<     LuaSkin *skin = LST_getLuaSkin();
+---
+>     LuaSkin *skin = [LuaSkin shared];
+852c845
+<             unsigned int modsInt = [modsSrc unsignedIntValue];
+---
+>             int modsInt = [modsSrc intValue];
+935c928
+<     LuaSkin *skin = LST_getLuaSkin();
+---
+>     LuaSkin *skin = [LuaSkin shared];
+1059c1052
+<         [LST_getLuaSkin() logAtLevel:LS_LOG_WARN
+---
+>         [[LuaSkin shared] logAtLevel:LS_LOG_WARN
+1068c1061
+<     LuaSkin *skin = LST_getLuaSkin();
+---
+>     LuaSkin *skin = [LuaSkin shared];
