@@ -87,7 +87,10 @@ NSArray *tags_from_file(__unused lua_State *L, NSString *filePath) {
     NSArray *tags;
     NSError *error;
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wpartial-availability"
     if (![url getResourceValue:&tags forKey:NSURLTagNamesKey error:&error]) {
+#pragma clang diagnostic pop
         [LST_getLuaSkin() logError:[NSString stringWithFormat:@"hs.fs tags_from_file() Unable to get tags for %@: %@", url, [error localizedDescription]]];
         return nil;
     }
@@ -98,7 +101,10 @@ BOOL tags_to_file(__unused lua_State *L, NSString *filePath, NSArray *tags) {
     NSURL *url = path_to_nsurl(filePath);
     NSError *error;
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wpartial-availability"
     if (![url setResourceValue:tags forKey:NSURLTagNamesKey error:&error]) {
+#pragma clang diagnostic pop
         [LST_getLuaSkin() logError:[NSString stringWithFormat:@"hs.fs tags_to_file() Unable to set tags for %@: %@", url, [error localizedDescription]]];
         return false;
     }
@@ -906,6 +912,43 @@ static int hs_fileuti(lua_State *L) {
     return 1 ;
 }
 
+/// hs.fs.fileUTIalternate(fileUTI, type) -> string
+/// Function
+/// Returns the fileUTI's equivalent form in an alternate type specification format.
+///
+/// Parameters:
+///  * a string containing a file UTI, such as one returned by `hs.fs.fileUTI`.
+///  * a string specifying the alternate format for the UTI.  This string may be one of the following:
+///     * `extension`  - as a file extension, commonly used for platform independant file sharing when file metadata can't be guaranteed to be cross-platform compatible.  Generally considered unreliable when other file type identification methods are available.
+///    * `mime`       - as a mime-type, commonly used by Internet applications like web browsers and email applications.
+///    * `pasteboard` - as an NSPasteboard type (see `hs.pasteboard`).
+///    * `ostype`     - four character file type, most common pre OS X, but still used in some legacy APIs.
+///
+/// Returns:
+///  * the file UTI in the alternate format or nil if the UTI does not have an alternate of the specified type.
+static int hs_fileUTIalternate(lua_State *L) {
+    LuaSkin *skin = LST_getLuaSkin() ;
+    [skin checkArgs:LS_TSTRING, LS_TSTRING, LS_TBREAK] ;
+    NSString *fileUTI = [skin toNSObjectAtIndex:1] ;
+    NSString *format  = [skin toNSObjectAtIndex:2] ;
+
+    NSString *convertTo ;
+    if ([format isEqualToString:@"extension"]) {
+        convertTo = (__bridge NSString *)kUTTagClassFilenameExtension ;
+    } else if ([format isEqualToString:@"mime"]) {
+        convertTo = (__bridge NSString *)kUTTagClassMIMEType ;
+    } else if ([format isEqualToString:@"pasteboard"]) {
+        convertTo = (__bridge NSString *)kUTTagClassNSPboardType ;
+    } else if ([format isEqualToString:@"ostype"]) {
+        convertTo = (__bridge NSString *)kUTTagClassOSType ;
+    } else {
+        return luaL_error(L, "invalid alternate type %s specified", [format UTF8String]) ;
+    }
+
+    [skin pushNSObject:(__bridge_transfer NSString *)UTTypeCopyPreferredTagWithClass((__bridge CFStringRef)fileUTI, (__bridge CFStringRef)convertTo)] ;
+    return 1 ;
+}
+
 static const struct luaL_Reg fslib[] = {
     {"attributes", file_info},
     {"chdir", change_dir},
@@ -925,6 +968,7 @@ static const struct luaL_Reg fslib[] = {
     {"tagsGet", tagsGet},
     {"temporaryDirectory", hs_temporaryDirectory},
     {"fileUTI", hs_fileuti},
+    {"fileUTIalternate", hs_fileUTIalternate},
     {NULL, NULL},
 };
 

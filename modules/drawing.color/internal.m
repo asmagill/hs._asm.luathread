@@ -107,12 +107,14 @@ static int NSColor_tolua(lua_State *L, id obj) {
           lua_pushnumber(L, [safeColor greenComponent]) ; lua_setfield(L, -2, "green") ;
           lua_pushnumber(L, [safeColor blueComponent])  ; lua_setfield(L, -2, "blue") ;
           lua_pushnumber(L, [safeColor alphaComponent]) ; lua_setfield(L, -2, "alpha") ;
+          lua_pushstring(L, "NSColor") ; lua_setfield(L, -2, "__luaSkinType") ;
     } else if ([[theColor colorSpaceName] isEqualToString:NSNamedColorSpace]) {
         lua_newtable(L) ;
           [LST_getLuaSkin() pushNSObject:[theColor catalogNameComponent]] ;
           lua_setfield(L, -2, "list") ;
           [LST_getLuaSkin() pushNSObject:[theColor colorNameComponent]] ;
           lua_setfield(L, -2, "name") ;
+          lua_pushstring(L, "NSColor") ; lua_setfield(L, -2, "__luaSkinType") ;
     } else {
         lua_pushstring(L, [[NSString stringWithFormat:@"unable to convert colorspace from %@ to NSCalibratedRGBColorSpace", [theColor colorSpaceName]] UTF8String]) ;
     }
@@ -263,7 +265,7 @@ int luaopen_hs_drawing_color_internal(lua_State* __unused L) {
     LST_setRefForLabel(skin, USERDATA_TAG, "colorCollectionsTable", colorCollectionsTable, LUA_NOREF) ;
 
     [skin registerPushNSHelper:NSColor_tolua      forClass:"NSColor"] ;
-    [skin registerLuaObjectHelper:table_toNSColor forClass:"NSColor"] ;
+    [skin registerLuaObjectHelper:table_toNSColor forClass:"NSColor" withTableMapping:"NSColor"] ;
 
     [skin registerPushNSHelper:NSColorList_tolua  forClass:"NSColorList"] ;
 

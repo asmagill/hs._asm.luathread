@@ -119,7 +119,7 @@ static int application_applicationsForBundleID(lua_State* L) {
 
 /// hs.application.nameForBundleID(bundleID) -> string or nil
 /// Function
-/// Gets the name of an application, from its bundle identifier
+/// Gets the name of an application from its bundle identifier
 ///
 /// Parameters:
 ///  * bundleID - A string containing an application bundle identifier (e.g. "com.apple.Safari")
@@ -137,6 +137,25 @@ static int application_nameForBundleID(lua_State* L) {
     NSString *appName = [app objectForInfoDictionaryKey:(id)kCFBundleNameKey];
 
     lua_pushstring(L, [appName UTF8String]);
+    return 1;
+}
+
+/// hs.application.pathForBundleID(bundleID) -> string or nil
+/// Function
+/// Gets the filesystem path of an application from its bundle identifier
+///
+/// Parameters:
+///  * bundleID - A string containing an application bundle identifier (e.g. "com.apple.Safari")
+///
+/// Returns:
+///  * A string containing the app bundle's filesystem path, or nil if the bundle identifier could not be located
+static int application_pathForBundleID(__unused lua_State* L) {
+    LuaSkin *skin = LST_getLuaSkin();
+    [skin checkArgs:LS_TSTRING, LS_TBREAK];
+
+    NSString *appPath = [[NSWorkspace sharedWorkspace] absolutePathForAppBundleWithIdentifier:[skin toNSObjectAtIndex:1]];
+
+    [skin pushNSObject:appPath];
     return 1;
 }
 
@@ -308,6 +327,22 @@ static int application_title(lua_State* L) {
 static int application_bundleID(lua_State* L) {
     NSRunningApplication* app = nsobject_for_app(L, 1);
     lua_pushstring(L, [[app bundleIdentifier] UTF8String]);
+    return 1;
+}
+
+/// hs.application:path() -> string
+/// Method
+/// Returns the filesystem path of the app.
+///
+/// Parameters:
+///  * None
+///
+/// Returns:
+///  * A string containing the filesystem path of the application
+static int application_path(lua_State* L) {
+    NSRunningApplication* app = nsobject_for_app(L, 1);
+    NSString *appPath = [[NSWorkspace sharedWorkspace] absolutePathForAppBundleWithIdentifier:[app bundleIdentifier]];
+    [LST_getLuaSkin() pushNSObject:appPath];
     return 1;
 }
 
@@ -816,7 +851,8 @@ id _getMenuStructure(AXUIElementRef menuItem) {
                                                                       (__bridge NSString *)kAXMenuItemCmdCharAttribute,
                                                                       (__bridge NSString *)kAXMenuItemCmdModifiersAttribute,
                                                                       //(__bridge NSString *)kAXMenuItemCmdVirtualKeyAttribute,
-                                                                      (__bridge NSString *)kAXEnabledAttribute]];
+                                                                      (__bridge NSString *)kAXEnabledAttribute,
+                                                                      (__bridge NSString *)kAXMenuItemCmdGlyphAttribute]];
     CFArrayRef cfAttributeValues = NULL;
 
     AXUIElementCopyMultipleAttributeValues(menuItem, (__bridge CFArrayRef)attributeNames, 0, &cfAttributeValues);
@@ -930,6 +966,7 @@ id _getMenuStructure(AXUIElementRef menuItem) {
 ///   * AXMenuItemMarkChar - A string containing the "mark" character for a menu item. This is for toggleable menu items and will usually be an empty string or a Unicode tick character (✓)
 ///   * AXMenuItemCmdModifiers - A table containing string representations of the keyboard modifiers for the menu item's keyboard shortcut, or nil if no modifiers are present
 ///   * AXMenuItemCmdChar - A string containing the key for the menu item's keyboard shortcut, or an empty string if no shortcut is present
+///   * AXMenuItemCmdGlyph - An integer, corresponding to one of the defined glyphs in `hs.application.menuGlyphs` if the keyboard shortcut is a special character usually represented by a pictorial representation (think arrow keys, return, etc), or an empty string if no glyph is used in presenting the keyboard shortcut.
 ///  * Using `hs.inspect()` on these tables, while useful for exploration, can be extremely slow, taking several minutes to correctly render very complex menus
 static int application_getMenus(lua_State* L) {
     LuaSkin *skin = LST_getLuaSkin();
@@ -1022,6 +1059,7 @@ static const luaL_Reg applicationlib[] = {
     {"applicationForPID", application_applicationforpid},
     {"applicationsForBundleID", application_applicationsForBundleID},
     {"nameForBundleID", application_nameForBundleID},
+    {"pathForBundleID", application_pathForBundleID},
 
     {"allWindows", application_allWindows},
     {"mainWindow", application_mainWindow},
@@ -1032,6 +1070,7 @@ static const luaL_Reg applicationlib[] = {
     {"title", application_title},
     {"name", application_title},
     {"bundleID", application_bundleID},
+    {"path", application_path},
     {"isRunning", application_isRunning},
     {"unhide", application_unhide},
     {"hide", application_hide},
@@ -1064,11 +1103,17 @@ static int nsrunningapplication_tolua(lua_State *L, id obj) {
     return 1 ;
 }
 
+static id lua_tonsrunningapplication(lua_State *L, int idx) {
+    void *ptr = luaL_testudata(L, idx, "hs.application") ;
+    if (ptr) {
+        return nsobject_for_app(L, idx);
+    } else {
+        return nil ;
+    }
+}
+
 int luaopen_hs_application_internal(lua_State* L) {
     LuaSkin *skin = LST_getLuaSkin();
-
-    [skin registerPushNSHelper:nsrunningapplication_tolua
-                      forClass:"NSRunningApplication"] ;
 
     luaL_newlib(L, applicationlib);
 
@@ -1078,6 +1123,10 @@ int luaopen_hs_application_internal(lua_State* L) {
 
     if (luaL_newmetatable(L, "hs.application")) {
         lua_pushvalue(L, -2); // 'application' table
+
+        lua_pushstring(L, "hs.application") ;
+        lua_setfield(L, -2, "__type") ;
+
         lua_setfield(L, -2, "__index");
 
         // Use hs.uilement's equality
@@ -1093,6 +1142,12 @@ int luaopen_hs_application_internal(lua_State* L) {
         lua_setfield(L, -2, "__gc");
     }
     lua_pop(L, 1);
+
+    [skin registerPushNSHelper:nsrunningapplication_tolua
+                      forClass:"NSRunningApplication"] ;
+    [skin registerLuaObjectHelper:lua_tonsrunningapplication
+                         forClass:"NSRunningApplication"
+              withUserdataMapping:"hs.application"] ;
 
     return 1;
 }

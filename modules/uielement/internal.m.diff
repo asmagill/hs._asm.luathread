@@ -1,18 +1,64 @@
 7d6
 < #import "../../LuaSkinThread.h"
-17c16
+18c17
 <     LuaSkin *skin = LST_getLuaSkin();
 ---
 >     LuaSkin *skin = [LuaSkin shared];
-159c158
+160c159
 <     LuaSkin *skin = LST_getLuaSkin();
 ---
 >     LuaSkin *skin = [LuaSkin shared];
-212c211
+177c176
+<     watcher->handler_ref = [skin luaRef:LST_getRefTable(skin, userdataTag, refTable)];
+---
+>     watcher->handler_ref = [skin luaRef:refTable];
+182c181
+<     watcher->user_data_ref = [skin luaRef:LST_getRefTable(skin, userdataTag, refTable)];
+---
+>     watcher->user_data_ref = [skin luaRef:refTable];
+213c212
 <     LuaSkin *skin = LST_getLuaSkin();
 ---
 >     LuaSkin *skin = [LuaSkin shared];
-231c230
+219c218
+<     [skin pushLuaRef:LST_getRefTable(skin, userdataTag, refTable) ref:watcher->handler_ref];
+---
+>     [skin pushLuaRef:refTable ref:watcher->handler_ref];
+222,223c221,222
+<     [skin pushLuaRef:LST_getRefTable(skin, userdataTag, refTable) ref:watcher->watcher_ref]; // Parameter 3: watcher
+<     [skin pushLuaRef:LST_getRefTable(skin, userdataTag, refTable) ref:watcher->user_data_ref]; // Parameter 4: userData
+---
+>     [skin pushLuaRef:refTable ref:watcher->watcher_ref]; // Parameter 3: watcher
+>     [skin pushLuaRef:refTable ref:watcher->user_data_ref]; // Parameter 4: userData
+232c231
 <     LuaSkin *skin = LST_getLuaSkin();
 ---
 >     LuaSkin *skin = [LuaSkin shared];
+265c264
+<     watcher->watcher_ref = [skin luaRef:LST_getRefTable(skin, userdataTag, refTable)];
+---
+>     watcher->watcher_ref = [skin luaRef:refTable];
+279c278
+<     LuaSkin *skin = LST_getLuaSkin();
+---
+>     LuaSkin *skin = [LuaSkin shared];
+286c285
+<     watcher->watcher_ref = [skin luaUnref:LST_getRefTable(skin, userdataTag, refTable) ref:watcher->watcher_ref];
+---
+>     watcher->watcher_ref = [skin luaUnref:refTable ref:watcher->watcher_ref];
+326c325
+<     LuaSkin *skin = LST_getLuaSkin();
+---
+>     LuaSkin *skin = [LuaSkin shared];
+330,331c329,330
+<     watcher->handler_ref = [skin luaUnref:LST_getRefTable(skin, userdataTag, refTable) ref:watcher->handler_ref];
+<     watcher->user_data_ref = [skin luaUnref:LST_getRefTable(skin, userdataTag, refTable) ref:watcher->user_data_ref];
+---
+>     watcher->handler_ref = [skin luaUnref:refTable ref:watcher->handler_ref];
+>     watcher->user_data_ref = [skin luaUnref:refTable ref:watcher->user_data_ref];
+353d351
+<     LuaSkin *skin = LST_getLuaSkin();
+358c356
+<     LST_setRefTable(skin, userdataTag, refTable, luaL_ref(L, LUA_REGISTRYINDEX));
+---
+>     refTable = luaL_ref(L, LUA_REGISTRYINDEX);

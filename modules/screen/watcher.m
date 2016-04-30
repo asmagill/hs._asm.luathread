@@ -21,6 +21,7 @@ int refTable;
 @interface LST_MJScreenWatcher : NSObject
 @property lua_State* L;
 @property int fn;
+@property BOOL includeActive;
 @property NSThread *myMainThread ;
 @end
 
@@ -33,21 +34,30 @@ int refTable;
     return self ;
 }
 
-- (void) _screensChanged:(id __unused)bla {
+- (void) _screensChanged:(id)note {
     [self performSelector:@selector(screensChanged:)
                  onThread:self.myMainThread
-               withObject:nil
+               withObject:note
             waitUntilDone:YES];
 }
 
-- (void) screensChanged:(id __unused)bla {
+- (void) screensChanged:(NSNotification*)note {
     LuaSkin *skin = LST_getLuaSkin();
     lua_State *L = skin.L;
+    int argCount = _includeActive ? 1 : 0;
 
     [skin pushLuaRef:LST_getRefTable(skin, USERDATA_TAG, refTable) ref:self.fn];
-    if (![skin protectedCallAndTraceback:0 nresults:0]) {
+    if (_includeActive) {
+        if ([note.name isEqualToString:@"NSWorkspaceActiveDisplayDidChangeNotification"]) {
+            lua_pushboolean(L, YES);
+        } else {
+            lua_pushnil(L);
+        }
+    }
+    if (![skin protectedCallAndTraceback:argCount nresults:0]) {
         const char *errorMsg = lua_tostring(L, -1);
         [skin logError:[NSString stringWithFormat:@"hs.screen.watcher callback error: %s", errorMsg]];
+        lua_pop(L, 1); // clean up error message
     }
 }
 @end
@@ -71,6 +81,9 @@ typedef struct _screenwatcher_t {
 ///
 /// Returns:
 ///  * the screen watcher object
+///
+/// Notes:
+///  * A screen layout change usually involves a change that is made from the Displays Preferences Panel or when a monitor is attached or removed.
 static int screen_watcher_new(lua_State* L) {
     LuaSkin *skin = LST_getLuaSkin();
 
@@ -85,12 +98,39 @@ static int screen_watcher_new(lua_State* L) {
     LST_MJScreenWatcher* object = [[LST_MJScreenWatcher alloc] init];
     object.L = L;
     object.fn = screenwatcher->fn;
+    object.includeActive = NO;
     screenwatcher->obj = (__bridge_retained void*)object;
     screenwatcher->running = NO;
-
     luaL_getmetatable(L, USERDATA_TAG);
     lua_setmetatable(L, -2);
 
+    return 1;
+}
+
+/// hs.screen.watcher.newWithActiveScreen(fn) -> watcher
+/// Constructor
+/// Creates a new screen-watcher that is also called when the active screen changes.
+///
+/// Parameters:
+///  * The function to be called when a change in the screen layout or active screen occurs.  This function can optionally take one argument, a boolean which will indicate if the change was due to a screen layout change (nil) or because the active screen changed (true).
+///
+/// Returns:
+///  * the screen watcher object
+///
+/// Notes:
+///  * A screen layout change usually involves a change that is made from the Displays Preferences Panel or when a monitor is attached or removed.
+///    * `nil` was chosen instead of `falase` for the argument type when this type of change occurs to more closely match the previous behavior of having no argument passed to the callback function.
+///  * An active screen change indicates that the focused or main screen has changed when the user has "Displays have separate spaces" checked in the Mission Control Preferences Panel (the focused display is the display which has the active window and active menubar).
+///    * Detecting a change in the active display relies on watching for the `NSWorkspaceActiveDisplayDidChangeNotification` message which is not documented by Apple.  While this message has been around at least since OS X 10.9, because it is undocumented, we cannot be positive that Apple won't remove it in a future OS X update.  Because this watcher works by listening for posted messages, should Apple remove this notification, your callback function will no longer receive messages about this change -- it won't crash or change behavior in any other way.  This documentation will be updated if this status changes.
+static int screen_watcher_new_with_active_screen(lua_State* L) {
+    LuaSkin *skin = LST_getLuaSkin();
+    [skin checkArgs:LS_TFUNCTION, LS_TBREAK];
+
+    lua_pushcfunction(L, screen_watcher_new);
+    lua_pushvalue(L, 1);
+    lua_call(L, 1, 1);
+    screenwatcher_t* screenwatcher = luaL_checkudata(L, -1, USERDATA_TAG);
+    ((__bridge LST_MJScreenWatcher *)screenwatcher->obj).includeActive = YES;
     return 1;
 }
 
@@ -105,7 +145,7 @@ static int screen_watcher_new(lua_State* L) {
 ///  * the screen watcher object
 static int screen_watcher_start(lua_State* L) {
     screenwatcher_t* screenwatcher = luaL_checkudata(L, 1, USERDATA_TAG);
-    lua_settop(L,1) ;
+    lua_settop(L,1);
 
     if (screenwatcher->running) return 1;
     screenwatcher->running = YES;
@@ -114,7 +154,12 @@ static int screen_watcher_start(lua_State* L) {
                                              selector:@selector(_screensChanged:)
                                                  name:NSApplicationDidChangeScreenParametersNotification
                                                object:nil];
-
+    if (((__bridge LST_MJScreenWatcher *)screenwatcher->obj).includeActive) {
+        [[[NSWorkspace sharedWorkspace] notificationCenter] addObserver:(__bridge id)screenwatcher->obj
+                                                 selector:@selector(_screensChanged:)
+                                                     name:@"NSWorkspaceActiveDisplayDidChangeNotification"
+                                                   object:nil];
+    }
     return 1;
 }
 
@@ -129,7 +174,7 @@ static int screen_watcher_start(lua_State* L) {
 ///  * the screen watcher object
 static int screen_watcher_stop(lua_State* L) {
     screenwatcher_t* screenwatcher = luaL_checkudata(L, 1, USERDATA_TAG);
-    lua_settop(L,1) ;
+    lua_settop(L,1);
 
     if (!screenwatcher->running) return 1;
     screenwatcher->running = NO;
@@ -137,7 +182,11 @@ static int screen_watcher_stop(lua_State* L) {
     [[NSNotificationCenter defaultCenter] removeObserver:(__bridge id)screenwatcher->obj
                                                     name:NSApplicationDidChangeScreenParametersNotification
                                                   object:nil];
-
+    if (((__bridge LST_MJScreenWatcher *)screenwatcher->obj).includeActive) {
+        [[[NSWorkspace sharedWorkspace] notificationCenter] removeObserver:(__bridge id)screenwatcher->obj
+                                                        name:@"NSWorkspaceActiveDisplayDidChangeNotification"
+                                                      object:nil];
+    }
     return 1;
 }
 
@@ -146,7 +195,7 @@ static int screen_watcher_gc(lua_State* L) {
 
     screenwatcher_t* screenwatcher = luaL_checkudata(L, 1, USERDATA_TAG);
 
-    lua_pushcfunction(L, screen_watcher_stop) ; lua_pushvalue(L,1); lua_call(L, 1, 1);
+    lua_pushcfunction(L, screen_watcher_stop); lua_pushvalue(L,1); lua_call(L, 1, 1);
 
     screenwatcher->fn = [skin luaUnref:LST_getRefTable(skin, USERDATA_TAG, refTable) ref:screenwatcher->fn];
 
@@ -161,8 +210,8 @@ static int meta_gc(lua_State* __unused L) {
 }
 
 static int userdata_tostring(lua_State* L) {
-    lua_pushstring(L, [[NSString stringWithFormat:@"%s: (%p)", USERDATA_TAG, lua_topointer(L, 1)] UTF8String]) ;
-    return 1 ;
+    lua_pushstring(L, [[NSString stringWithFormat:@"%s: (%p)", USERDATA_TAG, lua_topointer(L, 1)] UTF8String]);
+    return 1;
 }
 
 // Metatable for created objects when _new invoked
@@ -177,6 +226,7 @@ static const luaL_Reg screen_metalib[] = {
 // Functions for returned object when module loads
 static const luaL_Reg screenLib[] = {
     {"new",     screen_watcher_new},
+    {"newWithActiveScreen", screen_watcher_new_with_active_screen},
     {NULL,      NULL}
 };
 

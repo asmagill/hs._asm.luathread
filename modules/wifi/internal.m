@@ -1,7 +1,6 @@
-#import <Cocoa/Cocoa.h>
-#import <CoreWLAN/CoreWLAN.h>
-#import <CoreWLAN/CWWiFiClient.h>
-#import <LuaSkin/LuaSkin.h>
+@import Cocoa;
+@import CoreWLAN;
+@import LuaSkin;
 #import "../../LuaSkinThread.h"
 
 #define USERDATA_TAG "hs.wifi"
@@ -160,6 +159,45 @@ static int disassociate(lua_State *L) {
     return 0 ;
 }
 
+/// hs.wifi.associate(network, passphrase[, interface]) -> boolean
+/// Function
+/// Connect the interface to a wireless network
+///
+/// Parameters:
+///  * network - A string containing the SSID of the network to associate to
+///  * passphrase - A string containing the passphrase of the network
+///  * interface - An optional string containing the name of an interface (see [hs.wifi.interfaces](#interfaces)). If not present, the default system WLAN device will be used
+///
+/// Returns:
+///  * A boolean, true if the network was joined successfully, false if an error occurred
+///
+/// Notes:
+///  * Enterprise WiFi networks are not currently supported. Please file an issue on GitHub if you need support for enterprise networks
+///  * This function blocks Hammerspoon until the operation is completed
+///  * If multiple access points are available with the same SSID, one will be chosen at random to connect to
+static int associate(lua_State *L) {
+    LuaSkin *skin = LST_getLuaSkin();
+    [skin checkArgs:LS_TSTRING, LS_TSTRING, LS_TSTRING | LS_TOPTIONAL, LS_TBREAK];
+
+    BOOL success = NO;
+    NSString *interfaceName = nil;
+
+    if (lua_type(L, 3) == LUA_TSTRING) {
+        interfaceName = [skin toNSObjectAtIndex:3];
+    }
+
+    CWInterface *interface = get_wifi_interface(interfaceName);
+    NSSet *networks = [interface scanForNetworksWithName:[skin toNSObjectAtIndex:1] error:nil];
+    CWNetwork *network = [networks anyObject];
+
+    if (network) {
+        success = [interface associateToNetwork:network password:[skin toNSObjectAtIndex:2] error:nil];
+    }
+
+    lua_pushboolean(L, success);
+    return 1;
+}
+
 /// hs.wifi.interfaces() -> table
 /// Function
 /// Returns a list of interface names for WLAN devices attached to the system
@@ -238,7 +276,7 @@ static int wifi_scan(lua_State* L __unused) {
 ///    * bssid                  - The basic service set identifier (BSSID) for the network.
 ///    * countryCode            - The country code (ISO/IEC 3166-1:1997) for the network.
 ///    * ibss                   - Whether or not the network is an IBSS (ad-hoc) network.
-///    * informationElementData - Information element data included in beacon or probe response frames.
+///    * informationElementData - Information element data included in beacon or probe response frames as an array of integers.
 ///    * noise                  - The aggregate noise measurement (dBm) for the network.
 ///    * PHYModes               - A table containing the PHY Modes supported by the network.
 ///    * rssi                   - The aggregate received signal strength indication (RSSI) measurement (dBm) for the network.
@@ -249,6 +287,32 @@ static int wifi_scan(lua_State* L __unused) {
 ///      * band   - The channel band.
 ///      * number - The channel number.
 ///      * width  - The channel width.
+///
+/// Notes:
+///  * The contents of the `informationElementData` field is returned as an array of integers, each array item representing a byte in the block of data for the element.
+///    * You can convert this data into a Lua string by passing the array as an argument to `string.char(table.unpack(results.informationElementData))`, but note that this field contains arbitrary binary data and should **not** be treated or considered as a *displayable* string. It requires additional parsing, depending upon the specific information you need from the probe or beacon response.
+///    * For debugging purposes, if you wish to view the contents of this field as a string, make sure to wrap `string.char(table.unpack(results.informationElementData))` with `hs.utf8.asciiOnly` or `hs.utf8.hexDump`, rather than just print the result directly.
+///    * As an example using [hs.wifi.interfaceDetails](#interfaceDetails) whose `cachedScanResults` key is an array of entries identical to the argument passed to this constructor's callback function:
+///
+///    ~~~
+///    function dumpIED(interface)
+///        local interface = interface or "en0"
+///        local cleanupFunction = hs.utf8.hexDump -- or hs.utf8.asciiOnly if you prefer
+///
+///        local cachedScanResults = hs.wifi.interfaceDetails(interface).cachedScanResults
+///        if not cachedScanResults then
+///            hs.wifi.availableNetworks() -- blocking, so only do if necessary
+///            cachedScanResults = hs.wifi.interfaceDetails(interface).cachedScanResults
+///        end
+///
+///        for i, v in ipairs(cachedScanResults) do
+///            print(v.ssid .. " on channel " .. v.wlanChannel.number .. " beacon data:")
+///            print(cleanupFunction(string.char(table.unpack(v.informationElementData))))
+///        end
+///    end
+///    ~~~
+///
+///    * These precautions are in response to Hammerspoon Github Issue #859.  As binary data, even when cleaned up with the Console's UTF8 wrapper code, some valid UTF8 sequences have been found to cause crashes in the OSX CoreText API during rendering.  While some specific sequences have made the rounds on the Internet, the specific code analysis at http://www.theregister.co.uk/2015/05/27/text_message_unicode_ios_osx_vulnerability/ suggests a possible cause of the problem which may be triggered by other currently unknown sequences as well.  As the sequences aren't at present predictable, we can't add to the UTF8 wrapper already in place for the Hammerspoon console.
 static int wifi_scan_background(lua_State* L __unused) {
     LuaSkin *skin = LST_getLuaSkin() ;
     [skin checkArgs:LS_TFUNCTION | LS_TNIL, LS_TSTRING | LS_TOPTIONAL, LS_TBREAK] ;
@@ -496,7 +560,6 @@ static int pushCWNetwork(lua_State *L, id obj) {
     [skin pushNSObject:[theNetwork ssid]] ;                   lua_setfield(L, -2, "ssid") ;
     lua_pushinteger(L, [theNetwork rssiValue]) ;              lua_setfield(L, -2, "rssi") ;
     lua_pushinteger(L, [theNetwork noiseMeasurement]) ;       lua_setfield(L, -2, "noise") ;
-    [skin pushNSObject:[theNetwork informationElementData]] ; lua_setfield(L, -2, "informationElementData") ;
     lua_pushboolean(L, [theNetwork ibss]) ;                   lua_setfield(L, -2, "ibss") ;
     [skin pushNSObject:[theNetwork countryCode]] ;            lua_setfield(L, -2, "countryCode") ;
     [skin pushNSObject:[theNetwork bssid]] ;                  lua_setfield(L, -2, "bssid") ;
@@ -576,6 +639,27 @@ static int pushCWNetwork(lua_State *L, id obj) {
     }
     lua_setfield(L, -2, "PHYModes") ;
 
+// Data from this property can contain a valid UTF8 sequence which causes CoreText to crash
+// Hammerspoon when displayed in the console... we'll make the value available as an array
+// of integers, rather than as a string so it can be examined by users if desired, but not
+// rendered as text when inspected.
+//
+// See https://github.com/Hammerspoon/hammerspoon/issues/859
+// and http://www.theregister.co.uk/2015/05/27/text_message_unicode_ios_osx_vulnerability/
+//
+// If we could reliably detect these sequences, I'd add a filter to the console in MJLua.m
+// or MJConsoleWindow.m, but the gory details in the second URL suggest that more than one
+// sequence could theoretically exist and the pattern isn't clear (yet).
+//     [skin pushNSObject:[theNetwork informationElementData]] ; lua_setfield(L, -2, "informationElementData") ;
+      lua_newtable(L);
+      NSData *informationElementData = [theNetwork informationElementData] ;
+      const unsigned char *bytes = [informationElementData bytes];
+      for (NSUInteger i = 0; i < [informationElementData length]; i++) {
+          lua_pushinteger(L, (lua_Integer)bytes[i]) ;
+          lua_rawseti(L, -2, luaL_len(L, -2) + 1) ;
+      }
+      lua_setfield(L, -2, "informationElementData") ;
+
     return 1 ;
 }
 
@@ -610,7 +694,7 @@ static int pushCWNetworkProfile(lua_State *L, id obj) {
 static int userdata_tostring(lua_State* L) {
     LST_HSWifiScan *scanner = get_objectFromUserdata(__bridge LST_HSWifiScan, L, 1);
     LuaSkin *skin = LST_getLuaSkin();
-    [skin pushNSObject:[NSString stringWithFormat:@"%s: %s (%p)", USERDATA_TAG, ((scanner.isDone) ? "scanning" : "done"), scanner]];
+    [skin pushNSObject:[NSString stringWithFormat:@"%s: %s (%p)", USERDATA_TAG, ((scanner.isDone) ? "scanning" : "done"), (void *)scanner]];
     return 1;
 }
 
@@ -639,6 +723,7 @@ static const luaL_Reg wifilib[] = {
     {"interfaceDetails", interfaceDetails},
     {"setPower", setPower},
     {"disassociate", disassociate},
+    {"associate", associate},
 
     {NULL, NULL}
 };

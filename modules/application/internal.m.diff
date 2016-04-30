@@ -4,55 +4,65 @@
 <     LuaSkin *skin = LST_getLuaSkin();
 ---
 >     LuaSkin *skin = [LuaSkin shared];
-232c231
+152,153c151,152
+< static int application_pathForBundleID(__unused lua_State* L) {
+<     LuaSkin *skin = LST_getLuaSkin();
+---
+> static int application_pathForBundleID(lua_State* L) {
+>     LuaSkin *skin = [LuaSkin shared];
+251c250
 <     BOOL allWindows = (BOOL)lua_toboolean(L, 2);
 ---
 >     BOOL allWindows = lua_toboolean(L, 2);
-259,260d257
+278,279d276
 < #pragma clang diagnostic push
 < #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-262d258
+281d277
 < #pragma clang diagnostic pop
-273c269
+292c288
 <     BOOL allWindows = (BOOL)lua_toboolean(L, 2);
 ---
 >     BOOL allWindows = lua_toboolean(L, 2);
-275,276d270
+294,295d289
 < #pragma clang diagnostic push
 < #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-279d272
+298d291
 < #pragma clang diagnostic pop
-478,479c471,472
+345c338
+<     [LST_getLuaSkin() pushNSObject:appPath];
+---
+>     [[LuaSkin shared] pushNSObject:appPath];
+513,514c506,507
 < AXUIElementRef _findmenuitembyname(__unused lua_State* L, AXUIElementRef app, NSString *name) {
 <     LuaSkin *skin = LST_getLuaSkin();
 ---
 > AXUIElementRef _findmenuitembyname(lua_State* L, AXUIElementRef app, NSString *name) {
 >     LuaSkin *skin = [LuaSkin shared];
-559c552
+594c587
 <     LuaSkin *skin = LST_getLuaSkin();
 ---
 >     LuaSkin *skin = [LuaSkin shared];
-685c678
+720c713
 <     LuaSkin *skin = LST_getLuaSkin();
 ---
 >     LuaSkin *skin = [LuaSkin shared];
-768c761
+803c796
 <     LuaSkin *skin = LST_getLuaSkin();
 ---
 >     LuaSkin *skin = [LuaSkin shared];
-852c845
+888c881
 <             unsigned int modsInt = [modsSrc unsignedIntValue];
 ---
 >             int modsInt = [modsSrc intValue];
-935c928
+972c965
 <     LuaSkin *skin = LST_getLuaSkin();
 ---
 >     LuaSkin *skin = [LuaSkin shared];
-1059c1052
+1098c1091
 <         [LST_getLuaSkin() logAtLevel:LS_LOG_WARN
 ---
 >         [[LuaSkin shared] logAtLevel:LS_LOG_WARN
-1068c1061
+1116c1109
 <     LuaSkin *skin = LST_getLuaSkin();
 ---
 >     LuaSkin *skin = [LuaSkin shared];

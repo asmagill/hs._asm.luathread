@@ -2,7 +2,11 @@
 < local uielement = require "hs.uielement"  -- Make sure parent module loads
 ---
 > local uielement = hs.uielement  -- Make sure parent module loads
-858,859c858
+10c10
+< local application = require "hs.application.internal"
+---
+> local application = require "hs.application"
+895,896c895
 < --   local submodules={filter=true,layout=true,tiling=true,switcher=true,highlight=true}
 <   local submodules={}
 ---

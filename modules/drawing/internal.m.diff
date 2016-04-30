@@ -7,7 +7,7 @@
 > #import "drawing.h"
 11a9
 > #define get_item_arg(L, idx) ((drawing_t *)luaL_checkudata(L, idx, USERDATA_TAG))
-14a13,405
+14a13,498
 > NSMutableArray *drawingWindows;
 > 
 > // Objective-C class interface implementations
@@ -106,6 +106,8 @@
 >         self.HSGradientAngle = 0;
 >         self.HSRoundedRectXRadius = 0.0;
 >         self.HSRoundedRectYRadius = 0.0;
+>         self.clipToRect = NO ;
+>         self.rectClippingBoundry = NSZeroRect ;
 >     }
 >     return self;
 > }
@@ -202,6 +204,13 @@
 >     // Draw our shape (fill) and outline (stroke)
 >     if (self.HSFill) {
 >         [circlePath setClip];
+>         if (self.clipToRect) {
+>             NSRect windowFrame = [self.window frame] ;
+>             NSRect myRect      = self.rectClippingBoundry ;
+>             myRect.origin.x    = myRect.origin.x - windowFrame.origin.x ;
+>             myRect.origin.y    = myRect.origin.y - ([[NSScreen screens][0] frame].size.height - windowFrame.origin.y - windowFrame.size.height);
+>             NSRectClip(myRect) ;
+>         }
 >          if (!self.HSGradientStartColor) {
 >             [circlePath fill];
 >         } else {
@@ -213,6 +222,13 @@
 >     if (self.HSStroke) {
 >         circlePath.lineWidth = self.HSLineWidth * 2.0; // We have to double this because the stroking line is centered around the path, but we want to clip it to not stray outside the path
 >         [circlePath setClip];
+>         if (self.clipToRect) {
+>             NSRect windowFrame = [self.window frame] ;
+>             NSRect myRect      = self.rectClippingBoundry ;
+>             myRect.origin.x    = myRect.origin.x - windowFrame.origin.x ;
+>             myRect.origin.y    = myRect.origin.y - ([[NSScreen screens][0] frame].size.height - windowFrame.origin.y - windowFrame.size.height);
+>             NSRectClip(myRect) ;
+>         }
 >         [circlePath stroke];
 >     }
 > 
@@ -262,7 +278,14 @@
 >     // Draw our shape (fill) and outline (stroke)
 >     if (self.HSFill) {
 >         [arcPath setClip];
->          if (!self.HSGradientStartColor) {
+>         if (self.clipToRect) {
+>             NSRect windowFrame = [self.window frame] ;
+>             NSRect myRect      = self.rectClippingBoundry ;
+>             myRect.origin.x    = myRect.origin.x - windowFrame.origin.x ;
+>             myRect.origin.y    = myRect.origin.y - ([[NSScreen screens][0] frame].size.height - windowFrame.origin.y - windowFrame.size.height);
+>             NSRectClip(myRect) ;
+>         }
+>         if (!self.HSGradientStartColor) {
 >             [arcPath fill];
 >         } else {
 >             NSGradient* aGradient = [[NSGradient alloc] initWithStartingColor:self.HSGradientStartColor
@@ -273,6 +296,13 @@
 >     if (self.HSStroke) {
 >         arcPath.lineWidth = self.HSLineWidth * 2.0; // We have to double this because the stroking line is centered around the path, but we want to clip it to not stray outside the path
 >         [arcPath setClip];
+>         if (self.clipToRect) {
+>             NSRect windowFrame = [self.window frame] ;
+>             NSRect myRect      = self.rectClippingBoundry ;
+>             myRect.origin.x    = myRect.origin.x - windowFrame.origin.x ;
+>             myRect.origin.y    = myRect.origin.y - ([[NSScreen screens][0] frame].size.height - windowFrame.origin.y - windowFrame.size.height);
+>             NSRectClip(myRect) ;
+>         }
 >         [arcPath stroke];
 >     }
 > 
@@ -301,6 +331,13 @@
 >     // Draw our shape (fill) and outline (stroke)
 >     if (self.HSFill) {
 >         [rectPath setClip];
+>         if (self.clipToRect) {
+>             NSRect windowFrame = [self.window frame] ;
+>             NSRect myRect      = self.rectClippingBoundry ;
+>             myRect.origin.x    = myRect.origin.x - windowFrame.origin.x ;
+>             myRect.origin.y    = myRect.origin.y - ([[NSScreen screens][0] frame].size.height - windowFrame.origin.y - windowFrame.size.height);
+>             NSRectClip(myRect) ;
+>         }
 >         if (!self.HSGradientStartColor) {
 >             [rectPath fill];
 >         } else {
@@ -312,6 +349,13 @@
 >     if (self.HSStroke) {
 >         rectPath.lineWidth = self.HSLineWidth;
 >         [rectPath setClip];
+>         if (self.clipToRect) {
+>             NSRect windowFrame = [self.window frame] ;
+>             NSRect myRect      = self.rectClippingBoundry ;
+>             myRect.origin.x    = myRect.origin.x - windowFrame.origin.x ;
+>             myRect.origin.y    = myRect.origin.y - ([[NSScreen screens][0] frame].size.height - windowFrame.origin.y - windowFrame.size.height);
+>             NSRectClip(myRect) ;
+>         }
 >         [rectPath stroke];
 >     }
 > 
@@ -338,6 +382,13 @@
 > 
 >     // Save the current graphics context settings
 >     [gc saveGraphicsState];
+>     if (self.clipToRect) {
+>         NSRect windowFrame = [self.window frame] ;
+>         NSRect myRect      = self.rectClippingBoundry ;
+>         myRect.origin.x    = myRect.origin.x - windowFrame.origin.x ;
+>         myRect.origin.y    = myRect.origin.y - ([[NSScreen screens][0] frame].size.height - windowFrame.origin.y - windowFrame.size.height);
+>         NSRectClip(myRect) ;
+>     }
 > 
 >     // Set the color in the current graphics context for future draw operations
 >     [[self HSStrokeColor] setStroke];
@@ -364,15 +415,15 @@
 >     self = [super initWithFrame:frameRect];
 >     if (self) {
 > // NOTE: Change default_textAttributes(...) and drawing_getTextDrawingSize(...) if you change these
->         NSTextField *theTextField = [[NSTextField alloc] initWithFrame:frameRect];
+>         HSDrawingTextField *theTextField = [[HSDrawingTextField alloc] initWithFrame:frameRect];
 >         [theTextField setFont: [NSFont systemFontOfSize: 27]];
 >         [theTextField setTextColor: [NSColor colorWithCalibratedWhite:1.0 alpha:1.0]];
 >         [theTextField setDrawsBackground: NO];
 >         [theTextField setBordered: NO];
 >         [theTextField setEditable: NO];
 >         [theTextField setSelectable: NO];
->         [self addSubview:theTextField];
->         self.textField = theTextField;
+>         [self addSubview:(NSTextField *)theTextField];
+>         self.textField = (NSTextField *)theTextField;
 >     }
 >     return self;
 > }
@@ -382,7 +433,7 @@
 > - (id)initWithFrame:(NSRect)frameRect {
 >     self = [super initWithFrame:frameRect];
 >     if (self) {
->         self.HSImageView = [[NSImageView alloc] initWithFrame:frameRect];
+>         self.HSImageView = [[HSDrawingNSImageView alloc] initWithFrame:frameRect];
 >         self.HSImageView.animates = YES;
 >         self.HSImageView.imageScaling = NSImageScaleProportionallyUpOrDown;
 >         [self addSubview:self.HSImageView];
@@ -401,7 +452,49 @@
 > }
 > @end
 > 
-17,19c408,1803
+> @implementation HSDrawingNSImageView
+> - (void)drawRect:(NSRect)rect {
+>     NSGraphicsContext* gc = [NSGraphicsContext currentContext];
+> 
+>     // Save the current graphics context settings
+>     [gc saveGraphicsState];
+> 
+>     if (((HSDrawingViewText *)self.superview).clipToRect) {
+>         NSRect windowFrame = [self.window frame] ;
+>         NSRect myRect      = ((HSDrawingViewText *)self.superview).rectClippingBoundry ;
+>         myRect.origin.x    = myRect.origin.x - windowFrame.origin.x ;
+>         myRect.origin.y    = myRect.origin.y - ([[NSScreen screens][0] frame].size.height - windowFrame.origin.y - windowFrame.size.height);
+>         NSRectClip(myRect) ;
+>     }
+>     [super drawRect:rect];
+> 
+>     // Restore the context to what it was before we messed with it
+>     [gc restoreGraphicsState];
+> }
+> @end
+> 
+> @implementation HSDrawingTextField
+> - (void)drawRect:(NSRect)rect {
+>     NSGraphicsContext* gc = [NSGraphicsContext currentContext];
+> 
+>     // Save the current graphics context settings
+>     [gc saveGraphicsState];
+> 
+>     if (((HSDrawingViewText *)self.superview).clipToRect) {
+>         NSRect windowFrame = [self.window frame] ;
+>         NSRect myRect      = ((HSDrawingViewText *)self.superview).rectClippingBoundry ;
+>         myRect.origin.x    = myRect.origin.x - windowFrame.origin.x ;
+>         myRect.origin.y    = myRect.origin.y - ([[NSScreen screens][0] frame].size.height - windowFrame.origin.y - windowFrame.size.height);
+>         NSRectClip(myRect) ;
+>     }
+>     [super drawRect:rect];
+> 
+>     // Restore the context to what it was before we messed with it
+>     [gc restoreGraphicsState];
+> }
+> @end
+> 
+17,19c501,1940
 < /// hs.drawing.disableScreenUpdates() -> None
 < /// Function
 < /// Tells the OS X window server to pause updating the physical displays for a short while.
@@ -1023,7 +1116,7 @@
 >     LuaSkin *skin = [LuaSkin shared];
 >     drawing_t *drawingObject = get_item_arg(L, 1);
 >     HSDrawingWindow *drawingWindow = (__bridge HSDrawingWindow *)drawingObject->window;
-> //    HSDrawingView   *drawingView   = (HSDrawingView *)drawingWindow.contentView;
+>     HSDrawingView   *drawingView   = (HSDrawingView *)drawingWindow.contentView;
 > 
 >     NSPoint windowLoc ;
 > 
@@ -1046,6 +1139,7 @@
 > 
 >     windowLoc.y=[[NSScreen screens][0] frame].size.height - windowLoc.y ;
 >     [drawingWindow setFrameTopLeftPoint:windowLoc] ;
+>     drawingView.needsDisplay = YES;
 > 
 >     lua_pushvalue(L, 1);
 >     return 1;
@@ -1100,6 +1194,49 @@
 > 
 >     lua_pushvalue(L, 1);
 >     return 1;
+> }
+> 
+> /// hs.drawing:clippingRectangle([rect | nil]) -> drawingObject or current value
+> /// Method
+> /// Set the screen area in which the drawing contents are visible.
+> ///
+> /// Parameters:
+> ///  * rect - an optional rectangle specifying the visible area of the screen where the drawing's contents are visible.  If an explicit `nil` is specified, no clipping rectangle is set.  Defaults to nil
+> ///
+> /// Returns:
+> ///  * if an argument is provided, returns the drawing object; otherwise the current value is returned.
+> ///
+> /// Notes:
+> ///  * This method can be used to specify the area of the display where this drawing should be visible.  If any portion of the drawing extends beyond this rectangle, the image is clipped so that only the portion within this rectangle is visible.
+> ///  * The rectangle defined by this method is independant of the drawing's actual frame -- if you move the drawing with [hs.drawing:setFrame](#setFrame) or [hs.drawing:setTopLeft](#setTopLeft), this rectangle retains its current value.
+> ///
+> ///  * This method does not work for image objects at present.
+> static int drawing_clippingRectangle(lua_State *L) {
+>     LuaSkin *skin = [LuaSkin shared] ;
+>     [skin checkArgs:LS_TUSERDATA, USERDATA_TAG, LS_TTABLE | LS_TNIL | LS_TOPTIONAL, LS_TBREAK] ;
+> 
+>     drawing_t *drawingObject = get_item_arg(L, 1);
+>     HSDrawingWindow *drawingWindow = (__bridge HSDrawingWindow *)drawingObject->window;
+>     HSDrawingView *drawingView = (HSDrawingView *)drawingWindow.contentView;
+> 
+>     if (lua_gettop(L) == 1) {
+>         if (drawingView.clipToRect) {
+>             [skin pushNSRect:drawingView.rectClippingBoundry] ;
+>         } else {
+>             lua_pushnil(L) ;
+>         }
+>     } else {
+>         if (lua_type(L, 2) == LUA_TNIL) {
+>             drawingView.clipToRect = NO ;
+>         } else {
+>             NSRect clippingRect = [skin tableToRectAtIndex:2] ;
+>             drawingView.rectClippingBoundry = clippingRect ;
+>             drawingView.clipToRect = YES ;
+>         }
+>         drawingView.needsDisplay = YES;
+>         lua_pushvalue(L, 1) ;
+>     }
+>     return 1 ;
 > }
 > 
 > /// hs.drawing:setFrame(rect) -> drawingObject
@@ -1802,16 +1939,16 @@
 > /// hs.drawing:setClickCallback(mouseUpFn, mouseDownFn) -> drawingObject
 > /// Method
 > /// Sets a callback for mouseUp and mouseDown click events
-22c1806,1807
+22c1943,1944
 < ///  * None
 ---
 > ///  * mouseUpFn - A function, can be nil, that will be called when the drawing object is clicked on and the mouse button is released. If this argument is nil, any existing callback is removed.
 > ///  * mouseDownFn - A function, can be nil, that will be called when the drawing object is clicked on and the mouse button is first pressed down. If this argument is nil, any existing callback is removed.
-25c1810
+25c1947
 < ///  * None
 ---
 > ///  * The drawing object
-28,29c1813,1854
+28,29c1950,1991
 < ///  * This method can be used to allow multiple changes which are being made to the users display appear as if they all occur simultaneously by holding off on updating the screen on the regular schedule.
 < ///  * This method should always be balanced with a call to [hs.drawing.enableScreenUpdates](#enableScreenUpdates) when your updates have been completed.  Failure to do so will be logged in the system logs.
 ---
@@ -1857,7 +1994,7 @@
 > /// hs.drawing:show([fadeInTime]) -> drawingObject
 > /// Method
 > /// Displays the drawing object
-31,35c1856,1875
+31,35c1993,2012
 < ///  * The window server will only allow you to pause updates for up to 1 second.  This prevents a rogue or hung process from locking the systems display completely.  Updates will be resumed when [hs.drawing.enableScreenUpdates](#enableScreenUpdates) is encountered or after 1 second, whichever comes first.
 < static int disableUpdates(__unused lua_State *L) {
 <     [LST_getLuaSkin() checkArgs:LS_TBREAK] ;
@@ -1884,7 +2021,7 @@
 > 
 >     lua_pushvalue(L, 1);
 >     return 1;
-38,40c1878,1907
+38,40c2015,2044
 < /// hs.drawing.enableScreenUpdates() -> None
 < /// Function
 < /// Tells the OS X window server to resume updating the physical displays after a previous pause.
@@ -1919,7 +2056,7 @@
 > /// hs.drawing:delete()
 > /// Method
 > /// Destroys the drawing object
-49c1916,1933
+49c2053,2070
 < ///  * In conjunction with [hs.drawing.disableScreenUpdates](#disableScreenUpdates), this method can be used to allow multiple changes which are being made to the users display appear as if they all occur simultaneously by holding off on updating the screen on the regular schedule.
 ---
 > ///  * This method immediately destroys the drawing object. If you want it to fade out, use `:hide()` first, with some suitable time, and `hs.timer.doAfter()` to schedule the `:delete()` call
@@ -1940,7 +2077,7 @@
 > /// hs.drawing:bringToFront([aboveEverything]) -> drawingObject
 > /// Method
 > /// Places the drawing object on top of normal windows
-51,55c1935,1950
+51,55c2072,2087
 < ///  * The window server will only allow you to pause updates for up to 1 second.  This prevents a rogue or hung process from locking the systems display completely.  Updates will be resumed when this function is encountered  or after 1 second, whichever comes first.
 < static int enableUpdates(__unused lua_State *L) {
 <     [LST_getLuaSkin() checkArgs:LS_TBREAK] ;
@@ -1963,7 +2100,7 @@
 > 
 >     lua_pushvalue(L, 1);
 >     return 1;
-58,62c1953,1965
+58,62c2090,2102
 < NSDictionary *modifyTextStyleFromStack(lua_State *L, int idx, NSDictionary *defaultStuff) {
 <     NSFont                  *theFont  = [[defaultStuff objectForKey:@"font"] copy] ;
 <     NSMutableParagraphStyle *theStyle ;
@@ -1983,7 +2120,7 @@
 >     drawing_t *drawingObject = get_item_arg(L, 1);
 >     HSDrawingWindow *drawingWindow = (__bridge HSDrawingWindow *)drawingObject->window;
 >     [drawingWindow setLevelBottom];
-64,77c1967,1969
+64,77c2104,2106
 <     if (lua_istable(L, idx)) {
 <         if (lua_getfield(L, -1, "font")) {
 <             if (lua_type(L, -1) == LUA_TTABLE) {
@@ -2002,7 +2139,7 @@
 >     lua_pushvalue(L, 1);
 >     return 1;
 > }
-79,87c1971,1982
+79,87c2108,2119
 <         if (lua_getfield(L, -1, "size")) {
 <             CGFloat pointSize = lua_tonumber(L, -1);
 <             NSString *fontName = theFont.fontName;
@@ -2025,7 +2162,7 @@
 > static int getAlpha(lua_State *L) {
 >     drawing_t *drawingObject = get_item_arg(L, 1);
 >     HSDrawingWindow *drawingWindow = (__bridge HSDrawingWindow *)drawingObject->window;
-89,92c1984,1986
+89,92c2121,2123
 <         if (lua_getfield(L, -1, "color")) {
 <             theColor = [LST_getLuaSkin() luaObjectAtIndex:-1 toClass:"NSColor"] ;
 <         }
@@ -2034,7 +2171,7 @@
 >     lua_pushnumber(L, [drawingWindow alphaValue]) ;
 >     return 1 ;
 > }
-94,117c1988,2006
+94,117c2125,2143
 <         if (lua_getfield(L, -1, "paragraphStyle")) {
 <             theStyle = [[LST_getLuaSkin() luaObjectAtIndex:-1 toClass:"NSParagraphStyle"] mutableCopy] ;
 <             lua_pop(L, 1) ;
@@ -2079,7 +2216,7 @@
 >         HSDrawingWindow *drawingWindow = (__bridge HSDrawingWindow *)drawingObject->window;
 >         [drawingWindow setAlphaValue:newLevel] ;
 >     }
-119,139c2008,2024
+119,139c2145,2161
 <             if (lua_getfield(L, -1, "lineBreak")) {
 <                 NSString *lineBreak = [NSString stringWithUTF8String:luaL_checkstring(L, -1)];
 <                 if ([lineBreak isEqualToString:@"wordWrap"]) {
@@ -2119,16 +2256,16 @@
 >     drawing_t *object1 = get_item_arg(L, 1);
 >     HSDrawingWindow *window1 = (__bridge HSDrawingWindow *)object1->window;
 >     NSInteger window2 ;
-140a2026,2027
+140a2163,2164
 >     if lua_isnone(L,2) {
 >         window2 = 0 ;
-142,143c2029,2030
+142,143c2166,2167
 <         luaL_error(L, "invalid textStyle type specified: %s", lua_typename(L, -1)) ;
 <         return nil ;
 ---
 >         drawing_t *object2 = get_item_arg(L, 2);
 >         window2 = [(__bridge HSDrawingWindow *)object2->window windowNumber];
-146c2033,2063
+146c2170,2200
 <     return @{@"font":theFont, @"style":theStyle, @"color":theColor} ;
 ---
 >     [window1 orderWindow:NSWindowAbove relativeTo:window2] ;
@@ -2162,7 +2299,7 @@
 > 
 >     lua_settop(L, 1);
 >     return 1 ;
-249a2167,2252
+249a2304,2389
 > /// hs.drawing:setLevel(theLevel) -> drawingObject
 > /// Method
 > /// Sets the window level more precisely than sendToBack and bringToFront.
@@ -2249,7 +2386,7 @@
 >     return 1 ;
 > }
 > 
-265,267c2268,2270
+265,267c2405,2407
 <       [LST_getLuaSkin() pushNSObject:[NSFont systemFontOfSize: 27]] ;                    lua_setfield(L, -2, "font") ;
 <       [LST_getLuaSkin() pushNSObject:[NSColor colorWithCalibratedWhite:1.0 alpha:1.0]] ; lua_setfield(L, -2, "color") ;
 <       [LST_getLuaSkin() pushNSObject:[NSParagraphStyle defaultParagraphStyle]] ;         lua_setfield(L, -2, "paragraphStyle") ;
@@ -2257,15 +2394,15 @@
 >       [[LuaSkin shared] pushNSObject:[NSFont systemFontOfSize: 27]] ;                    lua_setfield(L, -2, "font") ;
 >       [[LuaSkin shared] pushNSObject:[NSColor colorWithCalibratedWhite:1.0 alpha:1.0]] ; lua_setfield(L, -2, "color") ;
 >       [[LuaSkin shared] pushNSObject:[NSParagraphStyle defaultParagraphStyle]] ;         lua_setfield(L, -2, "paragraphStyle") ;
-307c2310
+307c2447
 <     [LST_getLuaSkin() checkArgs:LS_TANY, LS_TTABLE | LS_TNIL | LS_TOPTIONAL, LS_TBREAK] ;
 ---
 >     [[LuaSkin shared] checkArgs:LS_TANY, LS_TTABLE | LS_TNIL | LS_TOPTIONAL, LS_TBREAK] ;
-337c2340
+337c2477
 <                 NSAttributedString *theText = [LST_getLuaSkin() luaObjectAtIndex:1 toClass:"NSAttributedString"] ;
 ---
 >                 NSAttributedString *theText = [[LuaSkin shared] luaObjectAtIndex:1 toClass:"NSAttributedString"] ;
-350a2354,2427
+350a2491,2564
 > /// hs.drawing:wantsLayer([flag]) -> object or boolean
 > /// Method
 > /// Gets or sets whether or not the drawing object should be rendered by the view or by Core Animation.
@@ -2340,14 +2477,14 @@
 >     return 1 ;
 > }
 > 
-353a2431,2436
+353a2568,2573
 >     {"circle",             drawing_newCircle},
 >     {"ellipticalArc",      drawing_newEllipticalArc},
 >     {"rectangle",          drawing_newRect},
 >     {"line",               drawing_newLine},
 >     {"text",               drawing_newText},
 >     {"_image",             drawing_newImage},
-362a2446,2488
+362a2583,2626
 >     {"wantsLayer",          drawing_wantsLayer},
 >     {"setStroke", drawing_setStroke},
 >     {"setStrokeWidth", drawing_setStrokeWidth},
@@ -2388,10 +2525,11 @@
 >     {"setStyledText", drawing_setStyledText},
 >     {"getStyledText", drawing_getStyledText},
 >     {"setArcAngles", drawing_setArcAngles},
+>     {"clippingRectangle", drawing_clippingRectangle},
 > 
 >     {"__tostring", userdata_tostring},
 >     {"__gc", drawing_delete},
-367,372c2493,2494
+367,372c2631,2632
 <     LuaSkin *skin = LST_getLuaSkin();
 <     LST_setRefTable(skin, USERDATA_TAG, refTable,
 <         [skin registerLibraryWithObject:USERDATA_TAG

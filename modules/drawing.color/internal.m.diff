@@ -31,48 +31,48 @@
 < // [LST_getLuaSkin() pushNSObject:NSColor]
 ---
 > // [[LuaSkin shared] pushNSObject:NSColor]
-112c108
+113c109
 <           [LST_getLuaSkin() pushNSObject:[theColor catalogNameComponent]] ;
 ---
 >           [[LuaSkin shared] pushNSObject:[theColor catalogNameComponent]] ;
-114c110
+115c111
 <           [LST_getLuaSkin() pushNSObject:[theColor colorNameComponent]] ;
 ---
 >           [[LuaSkin shared] pushNSObject:[theColor colorNameComponent]] ;
-123c119
+125c121
 < // [LST_getLuaSkin() pushNSObject:NSColorList]
 ---
 > // [[LuaSkin shared] pushNSObject:NSColorList]
-131c127
+133c129
 <         [LST_getLuaSkin() pushNSObject:[colorList colorWithKey:key]] ;
 ---
 >         [[LuaSkin shared] pushNSObject:[colorList colorWithKey:key]] ;
-140c136
+142c138
 <     LuaSkin *skin = LST_getLuaSkin() ;
 ---
 >     LuaSkin *skin = [LuaSkin shared] ;
-200,201c196,197
+202,203c198,199
 <             if (LST_getRefForLabel(skin, USERDATA_TAG, "colorCollectionsTable", colorCollectionsTable) != LUA_NOREF) {
 <                 [skin pushLuaRef:LST_getRefTable(skin, USERDATA_TAG, refTable) ref:LST_getRefForLabel(skin, USERDATA_TAG, "colorCollectionsTable", colorCollectionsTable)] ;
 ---
 >             if (colorCollectionsTable != LUA_NOREF) {
 >                 [skin pushLuaRef:refTable ref:colorCollectionsTable] ;
-228c224
+230c226
 < // [LST_getLuaSkin() luaObjectAtIndex:idx toClass:"NSColor"]
 ---
 > // [[LuaSkin shared] luaObjectAtIndex:idx toClass:"NSColor"]
-237,238c233
+239,240c235
 <     LuaSkin *skin = LST_getLuaSkin() ;
 <     [skin checkArgs:LS_TTABLE, LS_TBREAK] ;
 ---
 >     [[LuaSkin shared] checkArgs:LS_TTABLE, LS_TBREAK] ;
-241,243c236
+243,245c238
 <     LST_setRefForLabel(skin, USERDATA_TAG, "colorCollectionsTable", colorCollectionsTable,
 <         [skin luaRef:LST_getRefTable(skin, USERDATA_TAG, refTable)]) ;
 < 
 ---
 >     colorCollectionsTable = [[LuaSkin shared] luaRef:refTable] ;
-258,263c251,253
+260,265c253,255
 <     LuaSkin *skin = LST_getLuaSkin();
 <     LST_setRefTable(skin, USERDATA_TAG, refTable,
 <         [skin registerLibrary:moduleLib
