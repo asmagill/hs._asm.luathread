@@ -13,12 +13,13 @@ ack --objc 'luaUnref:\w+'
 echo""
 
 echo "Non-unique refTable:"
-ack --objc "\w+\s*=\s*\[\w+\s+registerLibrary:"
+ack --objc "\w+\s*=\s*\[\w+\s+registerLibrary"
 echo ""
 
 echo "Thread related areas of concern:"
 ack --objc 'dispatch_get_main_queue'
 ack --objc 'performSelectorOnMainThread:'
+ack --objc 'CFRunLoopGetMain'
 echo ""
 
 if [ -n "$1" ]; then popd ; fi

@@ -25,12 +25,11 @@ if _instance then
     package.path  = assignments.path
     package.cpath = assignments.cpath
 
-    hs= {
-        rawprint             = print, -- save internal function, in case needed
-        configdir            = assignments.configdir,
-        processInfo          = assignments.processInfo,
-        docstrings_json_file = assignments.docstrings_json_file,
-    }
+    hs = require("hs.luathread.luaskin._coresupport")
+    hs.rawprint             = print -- save internal function, in case needed
+    hs.configdir            = assignments.configdir
+    hs.processInfo          = assignments.processInfo
+    hs.docstrings_json_file = assignments.docstrings_json_file
 
     print      = function(...) _instance:print(...) end
     hs.printf  = function(fmt,...) return print(string.format(fmt,...)) end
@@ -38,6 +37,7 @@ if _instance then
     hs._exit   = function(...) _instance:cancel(...) end
     os.exit    = hs._exit
 
+    hs._logmessage = function(s) print(s) end
 
     hs.execute = function(command, user_env)
         local f
@@ -73,10 +73,6 @@ if _instance then
             print("*** UNKNOWN LOG LEVEL: "..tostring(level).."\n\t"..message)
             _instance:flush()
         end
-    end
-
-    if (package.searchpath("hs._luathreadcoreadditions", package.path)) then
-        require("hs._luathreadcoreadditions")
     end
 
     local runstring = function(s)
