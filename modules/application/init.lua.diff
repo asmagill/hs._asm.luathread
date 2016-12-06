@@ -1,4 +1,0 @@
-5c5
-< local uielement = require "hs.uielement"  -- Make sure parent module loads
----
-> local uielement = hs.uielement  -- Make sure parent module loads
