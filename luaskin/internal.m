@@ -108,9 +108,9 @@ static void registerLuaSkinThreadWithSkin(LuaSkin *skin) ;
                 NSMutableArray *results = [[NSMutableArray alloc] init] ;
                 for (int i = preStackTop ; i < postStackTop ; i++) {
                     id value = [_skin toNSObjectAtIndex:(i + 1) withOptions:LS_NSUnsignedLongLongPreserveBits |
-                                                                           LS_NSDescribeUnknownTypes         |
-                                                                           LS_NSPreserveLuaStringExactly     |
-                                                                           LS_NSAllowsSelfReference] ;
+                                                                            LS_NSDescribeUnknownTypes         |
+                                                                            LS_NSPreserveLuaStringExactly     |
+                                                                            LS_NSAllowsSelfReference] ;
                     if (!value) value = [NSNull null] ;
                     [results addObject:value] ;
                 }
@@ -231,6 +231,25 @@ static int luaskin_reloadLuaThread(__unused lua_State *L) {
     LuaSkinThread *thread = [skin toNSObjectAtIndex:1] ;
     thread.restartLuaState = YES ;
     return 0 ;
+}
+
+static int luaskin_pushResults(lua_State *L) {
+    LuaSkin *skin = [LuaSkin threaded] ;
+    [skin checkArgs:LS_TUSERDATA, USERDATA_TAG, LS_TBREAK | LS_TVARARG] ;
+    LuaSkinThread *thread = [skin toNSObjectAtIndex:1] ;
+    NSMutableArray *results = [[NSMutableArray alloc] init] ;
+    int            n       = lua_gettop(L);
+    for (int i = 2 ; i <= n ; i++) {
+        id value = [skin toNSObjectAtIndex:i withOptions:LS_NSUnsignedLongLongPreserveBits |
+                                                         LS_NSDescribeUnknownTypes         |
+                                                         LS_NSPreserveLuaStringExactly     |
+                                                         LS_NSAllowsSelfReference] ;
+        if (!value) value = [NSNull null] ;
+        [results addObject:value] ;
+    }
+    [thread returnResults:results] ;
+    lua_pushvalue(L, 1) ;
+    return 1 ;
 }
 
 static int luaskin_printOutput(lua_State *L) {
@@ -378,6 +397,7 @@ static const luaL_Reg userdata_metaLib[] = {
     {"getFromDictionary", luaskin_getFromDictionary},
     {"setInDictionary",   luaskin_setInDictionary},
     {"keysForDictionary", luaskin_keysForDictionary},
+    {"push",              luaskin_pushResults},
 
     {"__tostring",        userdata_tostring},
     {"__eq",              userdata_eq},

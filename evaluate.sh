@@ -20,6 +20,7 @@ echo "Thread related areas of concern:"
 ack --objc 'dispatch_get_main_queue'
 ack --objc 'performSelectorOnMainThread:'
 ack --objc 'CFRunLoopGetMain'
+ack --objc '\[NSThread mainThread\]'
 echo ""
 
 if [ -n "$1" ]; then popd ; fi

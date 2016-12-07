@@ -1,5 +1,5 @@
 
-#define VERBOSE_LOGGING
+// #define VERBOSE_LOGGING
 
 extern int luathread_managerForThreadWithType(lua_State *L, id threadObject, NSString *type) ;
 

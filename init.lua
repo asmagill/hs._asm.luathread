@@ -14,8 +14,11 @@ local knownThreadTypes = {
 --     luajit  = USERDATA_TAG..".luajit",
 }
 
-if not require(USERDATA_TAG..".supported")() then
-    error("Requires threadable branch of Hammerspoon at https://github.com/asmagill/hammerspoon/tree/threadable", 2)
+local wrapper = require(USERDATA_TAG..".supported")
+if not wrapper.supported() then
+    require("hs.alert")("This Hammerspoon Application does not support threads.", 10)
+    wrapper.injectPlaceholders()
+    return {}
 end
 
 -- we have to open the internal library globally first so sub-modules can see it

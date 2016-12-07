@@ -1,14 +1,3 @@
--- This is the required initialization script for a lua thread instance.  This will be
--- installed into the proper place by the Makefile or when you expand the pre-compiled
--- archive.
---
--- If you wish to add additional initialization code of your own, you can create a file
--- in your Hammerspoon configuration directory (usually ~/.hammerspoon) named
--- _init.*name*.lua (if you want to load it only when you create a thread with a
--- particular name) or _init.lua, if you want to load it for any thread that does not
--- match a name-specific file.  If you create such a file, it will be executed *after*
--- this file completes.
-
 local instanceName, assignments = ...
 
 local customInitName = instanceName:match("^([^::]+)")
@@ -20,62 +9,87 @@ if _instance then
         end
     end, "", 1000)
 
-    _sharedDictionary = require("hs.luathread._sharedDictionaryBuilder")("hs.luathread.luaskin")(_instance)
-
     package.path  = assignments.path
     package.cpath = assignments.cpath
 
+    local settings = require("hs.settings")
+    local autoload_extensions = settings.get("HSAutoLoadExtensionsInThread")
+    if type(autoload_extensions) == "nil" then
+        autoload_extensions = settings.get("HSAutoLoadExtensions")
+    end
+    if type(autoload_extensions) == "nil" then autoload_extensions = true end
+
     hs = require("hs.luathread.luaskin._coresupport")
-    hs.rawprint             = print -- save internal function, in case needed
-    hs.configdir            = assignments.configdir
-    hs.processInfo          = assignments.processInfo
-    hs.docstrings_json_file = assignments.docstrings_json_file
+    hs.processInfo = assignments.processInfo
+    hs.reload      = function(...) _instance:reload(...) end
+    hs._exit       = function(...) _instance:cancel(...) end
 
-    print      = function(...) _instance:print(...) end
-    hs.printf  = function(fmt,...) return print(string.format(fmt,...)) end
-    hs.reload  = function(...) _instance:reload(...) end
-    hs._exit   = function(...) _instance:cancel(...) end
-    os.exit    = hs._exit
+    hs._logmessage = function(s) _instance:print(tostring(s):match("^(.-)\n?$")) end
 
-    hs._logmessage = function(s) print(s) end
-
-    hs.execute = function(command, user_env)
-        local f
-        if user_env then
-          f = io.popen(os.getenv("SHELL")..[[ -l -i -c "]]..command..[["]], 'r')
-        else
-          f = io.popen(command, 'r')
-        end
-        local s = f:read('*a')
-        local status, exit_type, rc = f:close()
-        return s, status, exit_type, rc
-    end
-
-    local logger = require("hs.logger").new("LSinThread", "debug")
-    hs.luaSkinLog       = logger
-
-    hs.handleLogMessage = function(level, message)
---         local levelLabels = { "ERROR", "WARNING", "INFO", "DEBUG", "VERBOSE" }
--- we don't want to have to require anything which isn't safe as-is from Hammerspoon in this file
--- to minimize problems if they don't install the entire set of re-compiled supported modules
---       -- may change in the future if this fills crashlog with too much useless stuff
---         if level ~= 5 then
---             crashLog(string.format("(%s) %s", (levelLabels[level] or tostring(level)), message))
---         end
-
-        if level == 5 then     logger.v(message) -- LS_LOG_VERBOSE
-        elseif level == 4 then logger.d(message) -- LS_LOG_DEBUG
-        elseif level == 3 then logger.i(message) -- LS_LOG_INFO
-        elseif level == 2 then logger.w(message) -- LS_LOG_WARN
-        elseif level == 1 then logger.e(message) -- LS_LOG_ERROR
-            _instance:flush()
-        else
-            print("*** UNKNOWN LOG LEVEL: "..tostring(level).."\n\t"..message)
-            _instance:flush()
+    local custominit = assignments.configdir.."/_init."..customInitName..".lua"
+    if not os.execute("[ -f "..custominit.." ]") then
+        custominit = assignments.configdir.."/_init.lua"
+        if not os.execute("[ -f "..custominit.." ]") then
+            custominit = nil
         end
     end
 
+    _sharedDictionary = require("hs.luathread._sharedDictionaryBuilder")("hs.luathread.luaskin")(_instance)
+
+    hs._logmessage("-- ".._VERSION..", Hammerspoon instance "..instanceName)
+    local retval = { require("hs._coresetup").setup(hs.processInfo.resourcePath .. "/extensions",
+                                                    tostring(custominit),
+                                                    custominit, -- if nil, loadfile returns an empty fn
+                                                    assignments.configdir,
+                                                    assignments.docstrings_json_file,
+                                                    true, -- we don't want a dialog displayed, even if they don't
+                                                    autoload_extensions) }
+
+
+    -- make sure logs get flushed to calling thread immediately
+    local handleLogMessage = hs.handleLogMessage
+    hs.handleLogMessage = function(...)
+        handleLogMessage(...)
+        _instance:flush()
+    end
+
+    -- requires threadsafe webview, which is not likely soon, if ever
+    hs.hsdocs = setmetatable({}, {
+        __call     = function(...) return "hs.hsdocs not available outside main thread" end,
+        __tostring = function(...) return "hs.hsdocs not available outside main thread" end,
+        __index    = function(self, key) return self end
+    })
+
+    -- console auto-complete for a thread?
+    hs.completionsForInputString = setmetatable({}, {
+        __call     = function(...) return "hs.completionsForInputString not available outside main thread" end,
+        __tostring = function(...) return "hs.completionsForInputString not available outside main thread" end,
+        __index    = function(self, key) return self end
+    })
+
+    function hs.showError(err)
+        hs._notify("Hammerspoon error in thread " .. customInitName)
+        print("*** ERROR: "..err)
+        hs.focus()
+        hs.openConsole()
+        hs._TERMINATED=true
+    end
+
+    -- default runstring doesn't return results or flush, so we ignore it and create our own
     local runstring = function(s)
+        if hs._consoleInputPreparser then
+          if type(hs._consoleInputPreparser) == "function" then
+            local status, s2 = pcall(hs._consoleInputPreparser, s)
+            if status then
+              s = s2
+            else
+              hs.luaSkinLog.ef("console preparse error: %s", s2)
+            end
+          else
+              hs.luaSkinLog.e("console preparser must be a function or nil")
+          end
+        end
+
         --print("runstring")
         local fn, err = load("return " .. s)
         if not fn then fn, err = load(s) end
@@ -102,34 +116,6 @@ if _instance then
         return table.unpack(sharedResults)
     end
 
-    -- Because LuaSkin uses the stack trace to identify object conversion function source lines
-    --    to help identify duplicates, we need to keep parity with the fact that Hammerspoon
-    --    wraps require for crashlogs and Mjolnir module detection or the stack trace numbers will
-    --    differ.
-    rawrequire = require
-    require = function(modulename) return rawrequire(modulename) end
-
-    print("-- ".._VERSION..", Hammerspoon instance "..instanceName)
-
-    local custominit = assignments.configdir.."/_init."..customInitName..".lua"
-    if not os.execute("[ -f "..custominit.." ]") then
-        custominit = assignments.configdir.."/_init.lua"
-        if not os.execute("[ -f "..custominit.." ]") then
-            custominit = nil
-        end
-    end
-    if custominit then
-        local fn, err
-        print("-- Loading " .. custominit)
-        fn, err = loadfile(custominit)
-        if fn then
-            fn, err = xpcall(fn, debug.traceback)
-        end
-        if not fn then
-            print("\n"..err.."\n")
-        end
-    end
-    print "-- Done."
     _instance:flush()
     return runstring
 else
