@@ -1,8 +1,12 @@
 @import Cocoa ;
 @import LuaSkin ;
 #import "LuaSkin+Properties.h"
+#import "../LuaSkin+threaded.h"
 
 static const char *USERDATA_TAG = "hs.luathread.luaskin.skin" ;
+
+extern NSMapTable *threadToSkinMap ;
+extern NSMapTable *threadToRefTableMap ;
 
 #define get_objectFromUserdata(objType, L, idx, tag) (objType*)*((void**)luaL_checkudata(L, idx, tag))
 
@@ -53,8 +57,8 @@ static int skin_onThisThread(lua_State *L) {
 static int skin_refTableReferences(__unused lua_State *L) {
     LuaSkin *skin = [LuaSkin threaded] ;
     [skin checkArgs:LS_TUSERDATA, USERDATA_TAG, LS_TBREAK] ;
-    LuaSkin *altSkin = [skin toNSObjectAtIndex:1] ;
-    [skin pushNSObject:altSkin.refTableReferences] ;
+    NSMutableDictionary *refTableMap = [threadToRefTableMap objectForKey:[NSThread currentThread]] ;
+    [skin pushNSObject:refTableMap] ;
     return 1 ;
 }
 

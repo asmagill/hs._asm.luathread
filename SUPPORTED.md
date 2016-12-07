@@ -1,16 +1,16 @@
 ### Summary of Support
 
-This is a brief summary of what has been updated, either in this module, or in the threadable branch of Hammerspoon at https://github.com/asmagill/hammerspoon/tree/threadable.
+This is a brief summary of what modules will at least load in a threaded skin.
 
 Inclusion here just indicates that the known necessary changes have been made -- additional testing is still required and you should procede with extreme caution.
 
 Module                                | Status  | Notes
 --------------------------------------|---------|------
 hs                                    | Partial | See below
-hs._coresetup                         |   YES   | Wrapped by `_threadinit.lua`
-hs.alert                              |   NO    |   Needs thread safe drawing
-hs.appfinder                          |   NO    | Requires application, window
-hs.applescript                        |   NO    | Requires osascript
+hs._coresetup                         |   YES   | Lua Only, wrapped by `_threadinit.lua`
+hs.alert                              |   NO    | Lua Only, Needs thread safe drawing
+hs.appfinder                          |   NO    | Lua Only, Requires application, window
+hs.applescript                        |   NO    | Lua Only, Requires osascript
 hs.application                        |   NO    | Requires window
 hs.application.watcher                |   NO    |
 hs.audiodevice                        |   NO    |
@@ -22,26 +22,26 @@ hs.battery.watcher                    |   YES   |
 hs.brightness                         |   YES   |
 hs.caffeinate                         |   NO    | Requires applescript
 hs.caffeinate.watcher                 |   NO    |
-hs.chooser                            |   NO    |   NSView should be created on main thread only
+hs.chooser                            |   NO    | NSView should be created on main thread only
 hs.console                            |   NO    | Requires webview.toolbar
 hs.crash                              |   YES   |
 hs.distributednotifications           |   NO    |
-hs.doc                                |   YES   | Except for hsdocs submodule
-hs.doc.hsdocs                         |   NO    | Requires webview, httpserver, urlevent
+hs.doc                                |   YES   |
+hs.doc.hsdocs                         |   NO    | Lua Only, Requires webview, httpserver, urlevent
 hs.doc.markdown                       |   YES   |
 hs.dockicon                           |   YES   |
 hs.drawing                            | Partial | Non-drawing functions and constants only
 hs.drawing.color                      |   YES   |
 hs.eventtap                           |   NO    |
 hs.eventtap.event                     |   NO    |
-hs.expose                             |   NO    |   Needs thread safe drawing
-hs.fnutils                            |   YES   |
+hs.expose                             |   NO    | Lua Only, Needs thread safe drawing
+hs.fnutils                            |   YES   | Lua Only
 hs.fs                                 |   YES   |
 hs.fs.volume                          |   YES   |
-hs.geometry                           |   YES   |
-hs.grid                               |   NO    |   Needs thread safe drawing
+hs.geometry                           |   YES   | Lua Only
+hs.grid                               |   NO    | Lua Only, Needs thread safe drawing
 hs.hash                               |   YES   |
-hs.hints                              |   NO    |   NSView should be created on main thread only
+hs.hints                              |   NO    | NSView should be created on main thread only
 hs.host                               |   YES   |
 hs.hotkey                             |   NO    |
 hs.hotkey.modal                       |   NO    |
@@ -52,16 +52,16 @@ hs.httpserver.hsminweb.cgilua         |   NO    |
 hs.httpserver.hsminweb.cgilua.lp      |   NO    |
 hs.httpserver.hsminweb.cgilua.urlcode |   NO    |
 hs.image                              |   YES   |
-hs.inspect                            |   YES   |
+hs.inspect                            |   YES   | Lua Only
 hs.ipc                                |   NO    | Can we make MachPort selectable so can use cli to access different skins?
-hs.itunes                             |   NO    | Requires alert, applescript, application
-hs.javascript                         |   NO    | Requires osascript
+hs.itunes                             |   NO    | Lua Only, Requires alert, applescript, application
+hs.javascript                         |   NO    | Lua Only, Requires osascript
 hs.json                               |   YES   |
 hs.keycodes                           |   YES   |
-hs.layout                             |   NO    |
+hs.layout                             |   NO    | Lua Only, Requires window, application
 hs.location                           |   NO    |
 hs.location.geocoder                  |   NO    |
-hs.logger                             |   YES   |
+hs.logger                             |   YES   | Lua Only
 hs.menubar                            |   NO    |
 hs.messages                           |   NO    | Requires applescript
 hs.milight                            |   NO    |
@@ -89,9 +89,9 @@ hs.sound                              |   NO    |
 hs.spaces                             |   NO    |
 hs.speech                             |   NO    |
 hs.speech.listener                    |   NO    |
-hs.spotify                            |   NO    | Requires alert, applescript, application
+hs.spotify                            |   NO    | Lua Only, Requires alert, applescript, application
 hs.styledtext                         |   YES   |
-hs.tabs                               |   NO    |   Needs thread safe drawing
+hs.tabs                               |   NO    | Lua Only, Needs thread safe drawing
 hs.task                               |   NO    |
 hs.timer                              |   YES   |
 hs.timer.delayed                      |   YES   |
@@ -100,20 +100,20 @@ hs.uielement.watcher                  |   NO    |
 hs.urlevent                           |   NO    |
 hs.usb                                |   YES   |
 hs.usb.watcher                        |   YES   |
-hs.utf8                               |   YES   |
-hs.vox                                |   NO    | Requires alert, applescript, application
-hs.webview                            |   NO    |   NSView should be created on main thread only
+hs.utf8                               |   YES   | Lua Only
+hs.vox                                |   NO    | Lua Only, Requires alert, applescript, application
+hs.webview                            |   NO    | NSView should be created on main thread only
 hs.webview.datastore                  |   NO    |
 hs.webview.toolbar                    |   NO    |
 hs.webview.usercontent                |   NO    |
 hs.wifi                               |   YES   |
 hs.wifi.watcher                       |   YES   |
 hs.window                             |   NO    | Requires application
-hs.window.filter                      |   NO    | Requires application, window, uielement.watcher, spaces
-hs.window.highlight                   |   NO    |   Needs thread safe drawing
-hs.window.layout                      |   NO    | Requires window.filter, eventtap
-hs.window.switcher                    |   NO    |   Needs thread safe drawing
-hs.window.tiling                      |   YES   |
+hs.window.filter                      |   NO    | Lua Only, Requires application, window, uielement.watcher, spaces
+hs.window.highlight                   |   NO    | Lua Only, Needs thread safe drawing
+hs.window.layout                      |   NO    | Lua Only, Requires window.filter, eventtap
+hs.window.switcher                    |   NO    | Lua Only, Needs thread safe drawing
+hs.window.tiling                      |   YES   | Lua Only
 
 
 Members of `hs`                 | Status  | Notes

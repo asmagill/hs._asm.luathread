@@ -14,11 +14,11 @@ local knownThreadTypes = {
 --     luajit  = USERDATA_TAG..".luajit",
 }
 
-local wrapper = require(USERDATA_TAG..".supported")
-if not wrapper.supported() then
-    require("hs.alert")("This Hammerspoon Application does not support threads.", 10)
-    wrapper.injectPlaceholders()
-    return {}
+package.loadlib(package.searchpath(USERDATA_TAG..".threadSupportInjection", package.cpath), "*")
+local injector = require(USERDATA_TAG..".threadSupportInjection")
+if injector.onMainThread and not injector.injectionStatus then
+    error("injecting thread extensions into LuaSkin failed; Hammerspoon will probably crash soon unless you quit and restart", 2)
+    return nil
 end
 
 -- we have to open the internal library globally first so sub-modules can see it

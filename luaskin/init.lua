@@ -10,17 +10,14 @@ local objectMT = hs.getObjectMetatable(USERDATA_TAG)
 -- private variables and methods -----------------------------------------
 
 local threadInitFile = package.searchpath(USERDATA_TAG.."._threadinit", package.path)
-local configdir      = threadInitFile:gsub("/_threadinit.lua$", "")
+local overridesDir   = threadInitFile:gsub("/_threadinit.lua$", "")
 module._initialAssignments({
     coreinitfile         = threadInitFile,
     configdir            = hs.configdir,
     docstrings_json_file = hs.docstrings_json_file,
     processInfo          = hs.processInfo,
-    path                 = package.path,
-    cpath                = package.cpath,
---     -- if it turns out we need an overrides directory
---     path                 = configdir.."/?.lua"..";"..configdir.."/?/init.lua"..";"..package.path,
---     cpath                = configdir.."/?.so"..";"..package.cpath,
+    path                 = overridesDir.."/?.lua"..";"..overridesDir.."/?/init.lua"..";"..package.path,
+    cpath                = overridesDir.."/?.so"..";"..package.cpath,
 })
 module._initialAssignments = nil -- should only be called once, then never again
 

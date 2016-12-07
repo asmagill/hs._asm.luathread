@@ -1,6 +1,7 @@
 @import Cocoa ;
 @import LuaSkin ;
 #import "../HSLuaThread.h"
+#import "../LuaSkin+threaded.h"
 
 static const char *USERDATA_TAG = "hs.luathread.luaskin" ;
 static NSDictionary *initialAssignmentsForThread ;

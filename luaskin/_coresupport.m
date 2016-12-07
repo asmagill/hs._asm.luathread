@@ -1,5 +1,6 @@
 @import Cocoa ;
 @import LuaSkin ;
+#import "../LuaSkin+threaded.h"
 
 #pragma mark - Support Functions and Classes
 

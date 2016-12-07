@@ -1,0 +1,1508 @@
+rm -fr ../../luathread
+HS_APPLICATION=/Applications/Development PREFIX=luathread /Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../.. clean install
+rm -rf internal.so threadSupportInjection.so *.dSYM tmp
+Lua Compile Verification Passed
+In module 'LuaSkin' imported from threadSupportInjection.m:2:
+/Applications/Development/Hammerspoon.app/Contents/Frameworks/LuaSkin.framework/Headers/Skin.h:34:53: warning: token pasting of ',' and __VA_ARGS__ is a GNU extension [-Wgnu-zero-variadic-macro-arguments]
+#   define HSNSLOG(__FORMAT__, ...) NSLog(__FORMAT__, ##__VA_ARGS__)
+                                                    ^
+/Applications/Development/Hammerspoon.app/Contents/Frameworks/LuaSkin.framework/Headers/Skin.h:34:55: warning: token pasting of ',' and __VA_ARGS__ is a GNU extension [-Wgnu-zero-variadic-macro-arguments]
+#   define HSNSLOG(__FORMAT__, ...) NSLog(__FORMAT__, ##__VA_ARGS__)
+                                                      ^
+threadSupportInjection.m:5:13: warning: no previous extern declaration for non-static variable 'threadToRefTableMap' [-Wmissing-variable-declarations]
+NSMapTable *threadToRefTableMap ;
+            ^
+threadSupportInjection.m:6:13: warning: no previous extern declaration for non-static variable 'threadToSkinMap' [-Wmissing-variable-declarations]
+NSMapTable *threadToSkinMap ;
+            ^
+4 warnings generated.
+mkdir -p luathread/hs/luathread
+install -m 0644 internal.so threadSupportInjection.so luathread/hs/luathread
+cp -vpR internal.so.dSYM threadSupportInjection.so.dSYM luathread/hs/luathread
+internal.so.dSYM -> luathread/hs/luathread/internal.so.dSYM
+internal.so.dSYM/Contents -> luathread/hs/luathread/internal.so.dSYM/Contents
+internal.so.dSYM/Contents/Info.plist -> luathread/hs/luathread/internal.so.dSYM/Contents/Info.plist
+internal.so.dSYM/Contents/Resources -> luathread/hs/luathread/internal.so.dSYM/Contents/Resources
+internal.so.dSYM/Contents/Resources/DWARF -> luathread/hs/luathread/internal.so.dSYM/Contents/Resources/DWARF
+internal.so.dSYM/Contents/Resources/DWARF/internal.so -> luathread/hs/luathread/internal.so.dSYM/Contents/Resources/DWARF/internal.so
+threadSupportInjection.so.dSYM -> luathread/hs/luathread/threadSupportInjection.so.dSYM
+threadSupportInjection.so.dSYM/Contents -> luathread/hs/luathread/threadSupportInjection.so.dSYM/Contents
+threadSupportInjection.so.dSYM/Contents/Info.plist -> luathread/hs/luathread/threadSupportInjection.so.dSYM/Contents/Info.plist
+threadSupportInjection.so.dSYM/Contents/Resources -> luathread/hs/luathread/threadSupportInjection.so.dSYM/Contents/Resources
+threadSupportInjection.so.dSYM/Contents/Resources/DWARF -> luathread/hs/luathread/threadSupportInjection.so.dSYM/Contents/Resources/DWARF
+threadSupportInjection.so.dSYM/Contents/Resources/DWARF/threadSupportInjection.so -> luathread/hs/luathread/threadSupportInjection.so.dSYM/Contents/Resources/DWARF/threadSupportInjection.so
+mkdir -p luathread/hs/luathread
+install -m 0644 _sharedDictionaryBuilder.lua init.lua luathread/hs/luathread
+HS_APPLICATION=/Applications/Development PREFIX=../luathread /Applications/Xcode.app/Contents/Developer/usr/bin/make -C .. clean install
+rm -rf _coresupport.so internal.so skin.so *.dSYM tmp
+Lua Compile Verification Passed
+mkdir -p ../luathread/hs/luathread/luaskin
+install -m 0644 _coresupport.so internal.so skin.so ../luathread/hs/luathread/luaskin
+cp -vpR _coresupport.so.dSYM internal.so.dSYM skin.so.dSYM ../luathread/hs/luathread/luaskin
+_coresupport.so.dSYM -> ../luathread/hs/luathread/luaskin/_coresupport.so.dSYM
+_coresupport.so.dSYM/Contents -> ../luathread/hs/luathread/luaskin/_coresupport.so.dSYM/Contents
+_coresupport.so.dSYM/Contents/Info.plist -> ../luathread/hs/luathread/luaskin/_coresupport.so.dSYM/Contents/Info.plist
+_coresupport.so.dSYM/Contents/Resources -> ../luathread/hs/luathread/luaskin/_coresupport.so.dSYM/Contents/Resources
+_coresupport.so.dSYM/Contents/Resources/DWARF -> ../luathread/hs/luathread/luaskin/_coresupport.so.dSYM/Contents/Resources/DWARF
+_coresupport.so.dSYM/Contents/Resources/DWARF/_coresupport.so -> ../luathread/hs/luathread/luaskin/_coresupport.so.dSYM/Contents/Resources/DWARF/_coresupport.so
+internal.so.dSYM -> ../luathread/hs/luathread/luaskin/internal.so.dSYM
+internal.so.dSYM/Contents -> ../luathread/hs/luathread/luaskin/internal.so.dSYM/Contents
+internal.so.dSYM/Contents/Info.plist -> ../luathread/hs/luathread/luaskin/internal.so.dSYM/Contents/Info.plist
+internal.so.dSYM/Contents/Resources -> ../luathread/hs/luathread/luaskin/internal.so.dSYM/Contents/Resources
+internal.so.dSYM/Contents/Resources/DWARF -> ../luathread/hs/luathread/luaskin/internal.so.dSYM/Contents/Resources/DWARF
+internal.so.dSYM/Contents/Resources/DWARF/internal.so -> ../luathread/hs/luathread/luaskin/internal.so.dSYM/Contents/Resources/DWARF/internal.so
+skin.so.dSYM -> ../luathread/hs/luathread/luaskin/skin.so.dSYM
+skin.so.dSYM/Contents -> ../luathread/hs/luathread/luaskin/skin.so.dSYM/Contents
+skin.so.dSYM/Contents/Info.plist -> ../luathread/hs/luathread/luaskin/skin.so.dSYM/Contents/Info.plist
+skin.so.dSYM/Contents/Resources -> ../luathread/hs/luathread/luaskin/skin.so.dSYM/Contents/Resources
+skin.so.dSYM/Contents/Resources/DWARF -> ../luathread/hs/luathread/luaskin/skin.so.dSYM/Contents/Resources/DWARF
+skin.so.dSYM/Contents/Resources/DWARF/skin.so -> ../luathread/hs/luathread/luaskin/skin.so.dSYM/Contents/Resources/DWARF/skin.so
+mkdir -p ../luathread/hs/luathread/luaskin
+install -m 0644 _threadinit.lua _threadinit.minimal.lua init.lua ../luathread/hs/luathread/luaskin
+for f in [a-z_]* ; do [ -d $f ] && echo "-- $f --" && HS_APPLICATION=/Applications/Development PREFIX=../../../luathread /Applications/Xcode.app/Contents/Developer/usr/bin/make -C $f clean install ; done
+-- base64 --
+rm -rf internal.so *.dSYM tmp
+Lua Compile Verification Passed
+internal.m:1:1: warning: treating #import as an import of module 'Cocoa' [-Wauto-import]
+#import <Cocoa/Cocoa.h>
+^~~~~~~~~~~~~~~~~~~~~~~
+@import Cocoa;
+internal.m:2:1: warning: treating #import as an import of module 'LuaSkin' [-Wauto-import]
+#import <LuaSkin/LuaSkin.h>
+^~~~~~~~~~~~~~~~~~~~~~~~~~~
+@import LuaSkin;
+2 warnings generated.
+mkdir -p ../../../luathread/hs/luathread/luaskin/hs/base64
+install -m 0644 internal.so ../../../luathread/hs/luathread/luaskin/hs/base64
+cp -vpR internal.so.dSYM ../../../luathread/hs/luathread/luaskin/hs/base64
+internal.so.dSYM -> ../../../luathread/hs/luathread/luaskin/hs/base64/internal.so.dSYM
+internal.so.dSYM/Contents -> ../../../luathread/hs/luathread/luaskin/hs/base64/internal.so.dSYM/Contents
+internal.so.dSYM/Contents/Info.plist -> ../../../luathread/hs/luathread/luaskin/hs/base64/internal.so.dSYM/Contents/Info.plist
+internal.so.dSYM/Contents/Resources -> ../../../luathread/hs/luathread/luaskin/hs/base64/internal.so.dSYM/Contents/Resources
+internal.so.dSYM/Contents/Resources/DWARF -> ../../../luathread/hs/luathread/luaskin/hs/base64/internal.so.dSYM/Contents/Resources/DWARF
+internal.so.dSYM/Contents/Resources/DWARF/internal.so -> ../../../luathread/hs/luathread/luaskin/hs/base64/internal.so.dSYM/Contents/Resources/DWARF/internal.so
+mkdir -p ../../../luathread/hs/luathread/luaskin/hs/base64
+install -m 0644 init.lua test_base64.lua ../../../luathread/hs/luathread/luaskin/hs/base64
+-- battery --
+rm -rf internal.so watcher.so *.dSYM tmp
+Lua Compile Verification Passed
+internal.m:1:1: warning: treating #import as an import of module 'Cocoa' [-Wauto-import]
+#import <Cocoa/Cocoa.h>
+^~~~~~~~~~~~~~~~~~~~~~~
+@import Cocoa;
+internal.m:2:1: warning: treating #import as an import of module 'LuaSkin' [-Wauto-import]
+#import <LuaSkin/LuaSkin.h>
+^~~~~~~~~~~~~~~~~~~~~~~~~~~
+@import LuaSkin;
+internal.m:4:1: warning: treating #import as an import of module 'IOKit.ps' [-Wauto-import]
+#import <IOKit/ps/IOPowerSources.h>
+^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+@import IOKit.ps;
+internal.m:5:1: warning: treating #import as an import of module 'IOKit.ps' [-Wauto-import]
+#import <IOKit/ps/IOPSKeys.h>
+^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+@import IOKit.ps;
+internal.m:6:1: warning: treating #import as an import of module 'IOKit.pwr_mgt' [-Wauto-import]
+#import <IOKit/pwr_mgt/IOPM.h>
+^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+@import IOKit.pwr_mgt;
+internal.m:7:1: warning: treating #import as an import of module 'IOKit.pwr_mgt' [-Wauto-import]
+#import <IOKit/pwr_mgt/IOPMLib.h>
+^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+@import IOKit.pwr_mgt;
+internal.m:18:27: warning: cast from 'const struct __CFBoolean *' to 'id' drops const qualifier [-Wcast-qual]
+        if (number == (id)kCFBooleanTrue)
+                          ^
+internal.m:20:32: warning: cast from 'const struct __CFBoolean *' to 'id' drops const qualifier [-Wcast-qual]
+        else if (number == (id)kCFBooleanFalse)
+                               ^
+8 warnings generated.
+watcher.m:1:1: warning: treating #import as an import of module 'Cocoa' [-Wauto-import]
+#import <Cocoa/Cocoa.h>
+^~~~~~~~~~~~~~~~~~~~~~~
+@import Cocoa;
+watcher.m:2:1: warning: treating #import as an import of module 'LuaSkin' [-Wauto-import]
+#import <LuaSkin/LuaSkin.h>
+^~~~~~~~~~~~~~~~~~~~~~~~~~~
+@import LuaSkin;
+watcher.m:3:1: warning: treating #import as an import of module 'IOKit.ps' [-Wauto-import]
+#import <IOKit/ps/IOPowerSources.h>
+^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+@import IOKit.ps;
+watcher.m:4:1: warning: treating #import as an import of module 'IOKit.ps' [-Wauto-import]
+#import <IOKit/ps/IOPSKeys.h>
+^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+@import IOKit.ps;
+4 warnings generated.
+mkdir -p ../../../luathread/hs/luathread/luaskin/hs/battery
+install -m 0644 internal.so watcher.so ../../../luathread/hs/luathread/luaskin/hs/battery
+cp -vpR internal.so.dSYM watcher.so.dSYM ../../../luathread/hs/luathread/luaskin/hs/battery
+internal.so.dSYM -> ../../../luathread/hs/luathread/luaskin/hs/battery/internal.so.dSYM
+internal.so.dSYM/Contents -> ../../../luathread/hs/luathread/luaskin/hs/battery/internal.so.dSYM/Contents
+internal.so.dSYM/Contents/Info.plist -> ../../../luathread/hs/luathread/luaskin/hs/battery/internal.so.dSYM/Contents/Info.plist
+internal.so.dSYM/Contents/Resources -> ../../../luathread/hs/luathread/luaskin/hs/battery/internal.so.dSYM/Contents/Resources
+internal.so.dSYM/Contents/Resources/DWARF -> ../../../luathread/hs/luathread/luaskin/hs/battery/internal.so.dSYM/Contents/Resources/DWARF
+internal.so.dSYM/Contents/Resources/DWARF/internal.so -> ../../../luathread/hs/luathread/luaskin/hs/battery/internal.so.dSYM/Contents/Resources/DWARF/internal.so
+watcher.so.dSYM -> ../../../luathread/hs/luathread/luaskin/hs/battery/watcher.so.dSYM
+watcher.so.dSYM/Contents -> ../../../luathread/hs/luathread/luaskin/hs/battery/watcher.so.dSYM/Contents
+watcher.so.dSYM/Contents/Info.plist -> ../../../luathread/hs/luathread/luaskin/hs/battery/watcher.so.dSYM/Contents/Info.plist
+watcher.so.dSYM/Contents/Resources -> ../../../luathread/hs/luathread/luaskin/hs/battery/watcher.so.dSYM/Contents/Resources
+watcher.so.dSYM/Contents/Resources/DWARF -> ../../../luathread/hs/luathread/luaskin/hs/battery/watcher.so.dSYM/Contents/Resources/DWARF
+watcher.so.dSYM/Contents/Resources/DWARF/watcher.so -> ../../../luathread/hs/luathread/luaskin/hs/battery/watcher.so.dSYM/Contents/Resources/DWARF/watcher.so
+mkdir -p ../../../luathread/hs/luathread/luaskin/hs/battery
+install -m 0644 init.lua ../../../luathread/hs/luathread/luaskin/hs/battery
+-- brightness --
+rm -rf internal.so *.dSYM tmp
+Lua Compile Verification Passed
+internal.m:1:1: warning: treating #import as an import of module 'Cocoa' [-Wauto-import]
+#import <Cocoa/Cocoa.h>
+^~~~~~~~~~~~~~~~~~~~~~~
+@import Cocoa;
+internal.m:2:1: warning: treating #import as an import of module 'Carbon' [-Wauto-import]
+#import <Carbon/Carbon.h>
+^~~~~~~~~~~~~~~~~~~~~~~~~
+@import Carbon;
+internal.m:3:1: warning: treating #include as an import of module 'IOKit.graphics' [-Wauto-import]
+#include <IOKit/graphics/IOGraphicsLib.h>
+^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+@import IOKit.graphics;
+internal.m:4:1: warning: treating #import as an import of module 'LuaSkin' [-Wauto-import]
+#import <LuaSkin/LuaSkin.h>
+^~~~~~~~~~~~~~~~~~~~~~~~~~~
+@import LuaSkin;
+internal.m:5:1: warning: treating #import as an import of module 'Darwin.C.math' [-Wauto-import]
+#import "math.h"
+^~~~~~~~~~~~~~~~
+@import Darwin.C.math;
+internal.m:12:129: warning: implicit conversion turns floating-point number into integer: 'double' to 'uint64_t' (aka 'unsigned long long') [-Wfloat-conversion]
+  uint64_t lux = (-3*pow(10, -27))*pow(x, 4) + (2.6*pow(10, -19))*pow(x, 3) - (3.4*pow(10,-12))*pow(x, 2) + (3.9*pow(10, -5))*x - 0.19;
+           ~~~   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~
+internal.m:34:20: warning: variable length array used [-Wvla]
+    uint64_t values[outputs];
+                   ^
+internal.m:35:20: warning: implicit conversion changes signedness: 'int' to 'uint64_t' (aka 'unsigned long long') [-Wsign-conversion]
+    uint64_t lux = -1;
+             ~~~   ^~
+internal.m:52:24: warning: implicit conversion changes signedness: 'uint64_t' (aka 'unsigned long long') to 'lua_Integer' (aka 'long long') [-Wsign-conversion]
+    lua_pushinteger(L, lux);
+    ~~~~~~~~~~~~~~~    ^~~
+internal.m:66:20: warning: use of GNU statement expression extension [-Wgnu-statement-expression]
+    double level = MIN(MAX(luaL_checkinteger(L, 1) / 100.0, 0.0), 1.0);
+                   ^
+/System/Library/Frameworks/Foundation.framework/Headers/NSObjCRuntime.h:567:22: note: expanded from macro 'MIN'
+    #define MIN(A,B) __NSMIN_IMPL__(A,B,__COUNTER__)
+                     ^
+/System/Library/Frameworks/Foundation.framework/Headers/NSObjCRuntime.h:566:36: note: expanded from macro '__NSMIN_IMPL__'
+    #define __NSMIN_IMPL__(A,B,L) ({ __typeof__(A) __NSX_PASTE__(__a,L) = (A); __typeof__(B) __NSX_PASTE__(__b,L) = (B); (__NSX_PASTE__(__a,L) < __NSX_PASTE__(__b,L)) ? __NSX_PASTE__(__a,L) : __NSX_PASTE__(__b,L); })
+                                   ^
+internal.m:66:24: warning: use of GNU statement expression extension [-Wgnu-statement-expression]
+    double level = MIN(MAX(luaL_checkinteger(L, 1) / 100.0, 0.0), 1.0);
+                       ^
+/System/Library/Frameworks/Foundation.framework/Headers/NSObjCRuntime.h:572:22: note: expanded from macro 'MAX'
+    #define MAX(A,B) __NSMAX_IMPL__(A,B,__COUNTER__)
+                     ^
+/System/Library/Frameworks/Foundation.framework/Headers/NSObjCRuntime.h:571:36: note: expanded from macro '__NSMAX_IMPL__'
+    #define __NSMAX_IMPL__(A,B,L) ({ __typeof__(A) __NSX_PASTE__(__a,L) = (A); __typeof__(B) __NSX_PASTE__(__b,L) = (B); (__NSX_PASTE__(__a,L) < __NSX_PASTE__(__b,L)) ? __NSX_PASTE__(__b,L) : __NSX_PASTE__(__a,L); })
+                                   ^
+internal.m:66:24: warning: use of GNU statement expression extension [-Wgnu-statement-expression]
+/System/Library/Frameworks/Foundation.framework/Headers/NSObjCRuntime.h:572:22: note: expanded from macro 'MAX'
+    #define MAX(A,B) __NSMAX_IMPL__(A,B,__COUNTER__)
+                     ^
+/System/Library/Frameworks/Foundation.framework/Headers/NSObjCRuntime.h:571:36: note: expanded from macro '__NSMAX_IMPL__'
+    #define __NSMAX_IMPL__(A,B,L) ({ __typeof__(A) __NSX_PASTE__(__a,L) = (A); __typeof__(B) __NSX_PASTE__(__b,L) = (B); (__NSX_PASTE__(__a,L) < __NSX_PASTE__(__b,L)) ? __NSX_PASTE__(__b,L) : __NSX_PASTE__(__a,L); })
+                                   ^
+internal.m:77:94: warning: implicit conversion loses floating-point precision: 'double' to 'float' [-Wconversion]
+            IODisplaySetFloatParameter(service, kNilOptions, CFSTR(kIODisplayBrightnessKey), level);
+            ~~~~~~~~~~~~~~~~~~~~~~~~~~                                                       ^~~~~
+internal.m:111:38: warning: implicit conversion turns floating-point number into integer: 'double' to 'lua_Integer' (aka 'long long') [-Wfloat-conversion]
+            lua_pushinteger(L, level * 100.0);
+            ~~~~~~~~~~~~~~~    ~~~~~~^~~~~~~
+internal.m:111:32: warning: implicit conversion increases floating-point precision: 'float' to 'double' [-Wdouble-promotion]
+            lua_pushinteger(L, level * 100.0);
+                               ^~~~~ ~
+15 warnings generated.
+mkdir -p ../../../luathread/hs/luathread/luaskin/hs/brightness
+install -m 0644 internal.so ../../../luathread/hs/luathread/luaskin/hs/brightness
+cp -vpR internal.so.dSYM ../../../luathread/hs/luathread/luaskin/hs/brightness
+internal.so.dSYM -> ../../../luathread/hs/luathread/luaskin/hs/brightness/internal.so.dSYM
+internal.so.dSYM/Contents -> ../../../luathread/hs/luathread/luaskin/hs/brightness/internal.so.dSYM/Contents
+internal.so.dSYM/Contents/Info.plist -> ../../../luathread/hs/luathread/luaskin/hs/brightness/internal.so.dSYM/Contents/Info.plist
+internal.so.dSYM/Contents/Resources -> ../../../luathread/hs/luathread/luaskin/hs/brightness/internal.so.dSYM/Contents/Resources
+internal.so.dSYM/Contents/Resources/DWARF -> ../../../luathread/hs/luathread/luaskin/hs/brightness/internal.so.dSYM/Contents/Resources/DWARF
+internal.so.dSYM/Contents/Resources/DWARF/internal.so -> ../../../luathread/hs/luathread/luaskin/hs/brightness/internal.so.dSYM/Contents/Resources/DWARF/internal.so
+mkdir -p ../../../luathread/hs/luathread/luaskin/hs/brightness
+install -m 0644 init.lua ../../../luathread/hs/luathread/luaskin/hs/brightness
+-- crash --
+rm -rf internal.so *.dSYM tmp
+Lua Compile Verification Passed
+internal.m:1:1: warning: treating #import as an import of module 'Cocoa' [-Wauto-import]
+#import <Cocoa/Cocoa.h>
+^~~~~~~~~~~~~~~~~~~~~~~
+@import Cocoa;
+internal.m:2:1: warning: treating #import as an import of module 'Carbon' [-Wauto-import]
+#import <Carbon/Carbon.h>
+^~~~~~~~~~~~~~~~~~~~~~~~~
+@import Carbon;
+internal.m:3:1: warning: treating #import as an import of module 'LuaSkin' [-Wauto-import]
+#import <LuaSkin/LuaSkin.h>
+^~~~~~~~~~~~~~~~~~~~~~~~~~~
+@import LuaSkin;
+internal.m:40:37: warning: unused parameter 'L' [-Wunused-parameter]
+static int throwTheWorld(lua_State *L) {
+                                    ^
+internal.m:83:31: warning: unused parameter 'L' [-Wunused-parameter]
+static int crashKV(lua_State *L) {
+                              ^
+internal.m:113:33: warning: implicit conversion changes signedness: 'vm_size_t' (aka 'unsigned long') to 'lua_Integer' (aka 'long long') [-Wsign-conversion]
+        lua_pushinteger(L, info.resident_size);
+        ~~~~~~~~~~~~~~~    ~~~~~^~~~~~~~~~~~~
+6 warnings generated.
+mkdir -p ../../../luathread/hs/luathread/luaskin/hs/crash
+install -m 0644 internal.so ../../../luathread/hs/luathread/luaskin/hs/crash
+cp -vpR internal.so.dSYM ../../../luathread/hs/luathread/luaskin/hs/crash
+internal.so.dSYM -> ../../../luathread/hs/luathread/luaskin/hs/crash/internal.so.dSYM
+internal.so.dSYM/Contents -> ../../../luathread/hs/luathread/luaskin/hs/crash/internal.so.dSYM/Contents
+internal.so.dSYM/Contents/Info.plist -> ../../../luathread/hs/luathread/luaskin/hs/crash/internal.so.dSYM/Contents/Info.plist
+internal.so.dSYM/Contents/Resources -> ../../../luathread/hs/luathread/luaskin/hs/crash/internal.so.dSYM/Contents/Resources
+internal.so.dSYM/Contents/Resources/DWARF -> ../../../luathread/hs/luathread/luaskin/hs/crash/internal.so.dSYM/Contents/Resources/DWARF
+internal.so.dSYM/Contents/Resources/DWARF/internal.so -> ../../../luathread/hs/luathread/luaskin/hs/crash/internal.so.dSYM/Contents/Resources/DWARF/internal.so
+mkdir -p ../../../luathread/hs/luathread/luaskin/hs/crash
+install -m 0644 init.lua ../../../luathread/hs/luathread/luaskin/hs/crash
+-- doc --
+rm -rf markdown.so *.dSYM tmp
+Lua Compile Verification Passed
+autolink.c:98:10: warning: declaration shadows a local variable [-Wshadow]
+                size_t i = 0;
+                       ^
+autolink.c:55:9: note: previous declaration is here
+        size_t i;
+               ^
+1 warning generated.
+markdown.m:12:1: warning: treating #import as an import of module 'LuaSkin' [-Wauto-import]
+#import <LuaSkin/LuaSkin.h>
+^~~~~~~~~~~~~~~~~~~~~~~~~~~
+@import LuaSkin;
+In file included from markdown.m:13:
+In file included from ./markdown.h:22:
+./buffer.h:21:1: warning: treating #include as an import of module 'Darwin.C.stddef' [-Wauto-import]
+#include <stddef.h>
+^~~~~~~~~~~~~~~~~~~
+@import Darwin.C.stddef;
+./buffer.h:22:1: warning: treating #include as an import of module 'Darwin.C.stdarg' [-Wauto-import]
+#include <stdarg.h>
+^~~~~~~~~~~~~~~~~~~
+@import Darwin.C.stdarg;
+./buffer.h:23:1: warning: treating #include as an import of module 'Darwin.C.stdint' [-Wauto-import]
+#include <stdint.h>
+^~~~~~~~~~~~~~~~~~~
+@import Darwin.C.stdint;
+In file included from markdown.m:14:
+./html.h:22:1: warning: treating #include as an import of module 'Darwin.C.stdlib' [-Wauto-import]
+#include <stdlib.h>
+^~~~~~~~~~~~~~~~~~~
+@import Darwin.C.stdlib;
+In file included from markdown.m:15:
+./plaintext.h:22:1: warning: treating #include as an import of module 'Darwin.C.stdlib' [-Wauto-import]
+#include <stdlib.h>
+^~~~~~~~~~~~~~~~~~~
+@import Darwin.C.stdlib;
+6 warnings generated.
+mkdir -p ../../../luathread/hs/luathread/luaskin/hs/doc
+install -m 0644 markdown.so ../../../luathread/hs/luathread/luaskin/hs/doc
+cp -vpR markdown.so.dSYM ../../../luathread/hs/luathread/luaskin/hs/doc
+markdown.so.dSYM -> ../../../luathread/hs/luathread/luaskin/hs/doc/markdown.so.dSYM
+markdown.so.dSYM/Contents -> ../../../luathread/hs/luathread/luaskin/hs/doc/markdown.so.dSYM/Contents
+markdown.so.dSYM/Contents/Info.plist -> ../../../luathread/hs/luathread/luaskin/hs/doc/markdown.so.dSYM/Contents/Info.plist
+markdown.so.dSYM/Contents/Resources -> ../../../luathread/hs/luathread/luaskin/hs/doc/markdown.so.dSYM/Contents/Resources
+markdown.so.dSYM/Contents/Resources/DWARF -> ../../../luathread/hs/luathread/luaskin/hs/doc/markdown.so.dSYM/Contents/Resources/DWARF
+markdown.so.dSYM/Contents/Resources/DWARF/markdown.so -> ../../../luathread/hs/luathread/luaskin/hs/doc/markdown.so.dSYM/Contents/Resources/DWARF/markdown.so
+mkdir -p ../../../luathread/hs/luathread/luaskin/hs/doc
+install -m 0644 init.lua makeLuaDocs.lua ../../../luathread/hs/luathread/luaskin/hs/doc
+-- dockicon --
+rm -rf internal.so *.dSYM tmp
+Lua Compile Verification Passed
+internal.m:1:1: warning: treating #import as an import of module 'Cocoa' [-Wauto-import]
+#import <Cocoa/Cocoa.h>
+^~~~~~~~~~~~~~~~~~~~~~~
+@import Cocoa;
+internal.m:2:1: warning: treating #import as an import of module 'LuaSkin' [-Wauto-import]
+#import <LuaSkin/LuaSkin.h>
+^~~~~~~~~~~~~~~~~~~~~~~~~~~
+@import LuaSkin;
+2 warnings generated.
+mkdir -p ../../../luathread/hs/luathread/luaskin/hs/dockicon
+install -m 0644 internal.so ../../../luathread/hs/luathread/luaskin/hs/dockicon
+cp -vpR internal.so.dSYM ../../../luathread/hs/luathread/luaskin/hs/dockicon
+internal.so.dSYM -> ../../../luathread/hs/luathread/luaskin/hs/dockicon/internal.so.dSYM
+internal.so.dSYM/Contents -> ../../../luathread/hs/luathread/luaskin/hs/dockicon/internal.so.dSYM/Contents
+internal.so.dSYM/Contents/Info.plist -> ../../../luathread/hs/luathread/luaskin/hs/dockicon/internal.so.dSYM/Contents/Info.plist
+internal.so.dSYM/Contents/Resources -> ../../../luathread/hs/luathread/luaskin/hs/dockicon/internal.so.dSYM/Contents/Resources
+internal.so.dSYM/Contents/Resources/DWARF -> ../../../luathread/hs/luathread/luaskin/hs/dockicon/internal.so.dSYM/Contents/Resources/DWARF
+internal.so.dSYM/Contents/Resources/DWARF/internal.so -> ../../../luathread/hs/luathread/luaskin/hs/dockicon/internal.so.dSYM/Contents/Resources/DWARF/internal.so
+mkdir -p ../../../luathread/hs/luathread/luaskin/hs/dockicon
+install -m 0644 init.lua ../../../luathread/hs/luathread/luaskin/hs/dockicon
+-- drawing --
+rm -rf internal.so *.dSYM tmp
+Lua Compile Verification Passed
+In file included from internal.m:1:
+./drawing.h:1:1: warning: treating #import as an import of module 'Cocoa' [-Wauto-import]
+#import <Cocoa/Cocoa.h>
+^~~~~~~~~~~~~~~~~~~~~~~
+@import Cocoa;
+./drawing.h:2:1: warning: treating #import as an import of module 'Carbon' [-Wauto-import]
+#import <Carbon/Carbon.h>
+^~~~~~~~~~~~~~~~~~~~~~~~~
+@import Carbon;
+./drawing.h:3:1: warning: treating #import as an import of module 'LuaSkin' [-Wauto-import]
+#import <LuaSkin/LuaSkin.h>
+^~~~~~~~~~~~~~~~~~~~~~~~~~~
+@import LuaSkin;
+./drawing.h:18:16: warning: declaration of instance variables in the interface is deprecated [-Wobjc-interface-ivars]
+    lua_State *L;
+               ^
+internal.m:16:78: warning: conflicting parameter types in declaration of 'initWithContentRect:styleMask:backing:defer:': 'NSWindowStyleMask' (aka 'enum NSWindowStyleMask') vs 'NSUInteger' (aka 'unsigned long') [-Woverriding-method-mismatch]
+- (id)initWithContentRect:(NSRect)contentRect styleMask:(NSUInteger __unused)windowStyle backing:(NSBackingStoreType __unused)bufferingType defer:(BOOL __unused)deferCreation {
+                                                         ~~~~~~~~~~          ^
+/System/Library/Frameworks/AppKit.framework/Headers/NSWindow.h:297:86: note: previous declaration is here
+- (instancetype)initWithContentRect:(NSRect)contentRect styleMask:(NSWindowStyleMask)style backing:(NSBackingStoreType)bufferingType defer:(BOOL)flag NS_DESIGNATED_INITIALIZER;
+                                                                   ~~~~~~~~~~~~~~~~~ ^
+internal.m:68:25: warning: implicit conversion increases floating-point precision: 'float' to 'CGFloat' (aka 'double') [-Wdouble-promotion]
+    [self setAlphaValue:0.f];
+    ~                   ^~~
+internal.m:72:36: warning: implicit conversion increases floating-point precision: 'float' to 'CGFloat' (aka 'double') [-Wdouble-promotion]
+    [[self animator] setAlphaValue:1.f];
+    ~                              ^~~
+internal.m:83:34: warning: implicit conversion increases floating-point precision: 'float' to 'CGFloat' (aka 'double') [-Wdouble-promotion]
+            [bself setAlphaValue:1.f];
+            ~                    ^~~
+internal.m:86:36: warning: implicit conversion increases floating-point precision: 'float' to 'CGFloat' (aka 'double') [-Wdouble-promotion]
+    [[self animator] setAlphaValue:0.f];
+    ~                              ^~~
+internal.m:16:78: warning: conflicting parameter types in implementation of 'initWithContentRect:styleMask:backing:defer:': 'NSWindowStyleMask' (aka 'enum NSWindowStyleMask') vs 'NSUInteger' (aka 'unsigned long') [-Wmismatched-parameter-types]
+- (id)initWithContentRect:(NSRect)contentRect styleMask:(NSUInteger __unused)windowStyle backing:(NSBackingStoreType __unused)bufferingType defer:(BOOL __unused)deferCreation {
+                                                         ~~~~~~~~~~          ^
+/System/Library/Frameworks/AppKit.framework/Headers/NSWindow.h:297:86: note: previous definition is here
+- (instancetype)initWithContentRect:(NSRect)contentRect styleMask:(NSWindowStyleMask)style backing:(NSBackingStoreType)bufferingType defer:(BOOL)flag NS_DESIGNATED_INITIALIZER;
+                                                                   ~~~~~~~~~~~~~~~~~ ^
+internal.m:697:27: warning: use of GNU statement expression extension [-Wgnu-statement-expression]
+    windowRect.origin.x = MIN(origin.x, end.x);
+                          ^
+/System/Library/Frameworks/Foundation.framework/Headers/NSObjCRuntime.h:567:22: note: expanded from macro 'MIN'
+    #define MIN(A,B) __NSMIN_IMPL__(A,B,__COUNTER__)
+                     ^
+/System/Library/Frameworks/Foundation.framework/Headers/NSObjCRuntime.h:566:36: note: expanded from macro '__NSMIN_IMPL__'
+    #define __NSMIN_IMPL__(A,B,L) ({ __typeof__(A) __NSX_PASTE__(__a,L) = (A); __typeof__(B) __NSX_PASTE__(__b,L) = (B); (__NSX_PASTE__(__a,L) < __NSX_PASTE__(__b,L)) ? __NSX_PASTE__(__a,L) : __NSX_PASTE__(__b,L); })
+                                   ^
+internal.m:698:27: warning: use of GNU statement expression extension [-Wgnu-statement-expression]
+    windowRect.origin.y = MIN(origin.y, end.y);
+                          ^
+/System/Library/Frameworks/Foundation.framework/Headers/NSObjCRuntime.h:567:22: note: expanded from macro 'MIN'
+    #define MIN(A,B) __NSMIN_IMPL__(A,B,__COUNTER__)
+                     ^
+/System/Library/Frameworks/Foundation.framework/Headers/NSObjCRuntime.h:566:36: note: expanded from macro '__NSMIN_IMPL__'
+    #define __NSMIN_IMPL__(A,B,L) ({ __typeof__(A) __NSX_PASTE__(__a,L) = (A); __typeof__(B) __NSX_PASTE__(__b,L) = (B); (__NSX_PASTE__(__a,L) < __NSX_PASTE__(__b,L)) ? __NSX_PASTE__(__a,L) : __NSX_PASTE__(__b,L); })
+                                   ^
+internal.m:699:51: warning: use of GNU statement expression extension [-Wgnu-statement-expression]
+    windowRect.size.width = windowRect.origin.x + MAX(origin.x, end.x) - MIN(origin.x, end.x);
+                                                  ^
+/System/Library/Frameworks/Foundation.framework/Headers/NSObjCRuntime.h:572:22: note: expanded from macro 'MAX'
+    #define MAX(A,B) __NSMAX_IMPL__(A,B,__COUNTER__)
+                     ^
+/System/Library/Frameworks/Foundation.framework/Headers/NSObjCRuntime.h:571:36: note: expanded from macro '__NSMAX_IMPL__'
+    #define __NSMAX_IMPL__(A,B,L) ({ __typeof__(A) __NSX_PASTE__(__a,L) = (A); __typeof__(B) __NSX_PASTE__(__b,L) = (B); (__NSX_PASTE__(__a,L) < __NSX_PASTE__(__b,L)) ? __NSX_PASTE__(__b,L) : __NSX_PASTE__(__a,L); })
+                                   ^
+internal.m:699:74: warning: use of GNU statement expression extension [-Wgnu-statement-expression]
+    windowRect.size.width = windowRect.origin.x + MAX(origin.x, end.x) - MIN(origin.x, end.x);
+                                                                         ^
+/System/Library/Frameworks/Foundation.framework/Headers/NSObjCRuntime.h:567:22: note: expanded from macro 'MIN'
+    #define MIN(A,B) __NSMIN_IMPL__(A,B,__COUNTER__)
+                     ^
+/System/Library/Frameworks/Foundation.framework/Headers/NSObjCRuntime.h:566:36: note: expanded from macro '__NSMIN_IMPL__'
+    #define __NSMIN_IMPL__(A,B,L) ({ __typeof__(A) __NSX_PASTE__(__a,L) = (A); __typeof__(B) __NSX_PASTE__(__b,L) = (B); (__NSX_PASTE__(__a,L) < __NSX_PASTE__(__b,L)) ? __NSX_PASTE__(__a,L) : __NSX_PASTE__(__b,L); })
+                                   ^
+internal.m:700:52: warning: use of GNU statement expression extension [-Wgnu-statement-expression]
+    windowRect.size.height = windowRect.origin.y + MAX(origin.y, end.y) - MIN(origin.y, end.y);
+                                                   ^
+/System/Library/Frameworks/Foundation.framework/Headers/NSObjCRuntime.h:572:22: note: expanded from macro 'MAX'
+    #define MAX(A,B) __NSMAX_IMPL__(A,B,__COUNTER__)
+                     ^
+/System/Library/Frameworks/Foundation.framework/Headers/NSObjCRuntime.h:571:36: note: expanded from macro '__NSMAX_IMPL__'
+    #define __NSMAX_IMPL__(A,B,L) ({ __typeof__(A) __NSX_PASTE__(__a,L) = (A); __typeof__(B) __NSX_PASTE__(__b,L) = (B); (__NSX_PASTE__(__a,L) < __NSX_PASTE__(__b,L)) ? __NSX_PASTE__(__b,L) : __NSX_PASTE__(__a,L); })
+                                   ^
+internal.m:700:75: warning: use of GNU statement expression extension [-Wgnu-statement-expression]
+    windowRect.size.height = windowRect.origin.y + MAX(origin.y, end.y) - MIN(origin.y, end.y);
+                                                                          ^
+/System/Library/Frameworks/Foundation.framework/Headers/NSObjCRuntime.h:567:22: note: expanded from macro 'MIN'
+    #define MIN(A,B) __NSMIN_IMPL__(A,B,__COUNTER__)
+                     ^
+/System/Library/Frameworks/Foundation.framework/Headers/NSObjCRuntime.h:566:36: note: expanded from macro '__NSMIN_IMPL__'
+    #define __NSMIN_IMPL__(A,B,L) ({ __typeof__(A) __NSX_PASTE__(__a,L) = (A); __typeof__(B) __NSX_PASTE__(__b,L) = (B); (__NSX_PASTE__(__a,L) < __NSX_PASTE__(__b,L)) ? __NSX_PASTE__(__a,L) : __NSX_PASTE__(__b,L); })
+                                   ^
+internal.m:866:31: warning: unused exception parameter 'theException' [-Wunused-exception-parameter]
+        @catch ( NSException *theException ) {
+                              ^
+internal.m:1074:31: warning: unused exception parameter 'theException' [-Wunused-exception-parameter]
+        @catch ( NSException *theException ) {
+                              ^
+internal.m:2012:31: warning: implicit conversion increases floating-point precision: 'float' to 'NSTimeInterval' (aka 'double') [-Wdouble-promotion]
+    NSTimeInterval fadeTime = 0.f;
+                   ~~~~~~~~   ^~~
+internal.m:2038:31: warning: implicit conversion increases floating-point precision: 'float' to 'NSTimeInterval' (aka 'double') [-Wdouble-promotion]
+    NSTimeInterval fadeTime = 0.f;
+                   ~~~~~~~~   ^~~
+internal.m:12:17: warning: no previous extern declaration for non-static variable 'drawingWindows' [-Wmissing-variable-declarations]
+NSMutableArray *drawingWindows;
+                ^
+21 warnings generated.
+mkdir -p ../../../luathread/hs/luathread/luaskin/hs/drawing
+install -m 0644 internal.so ../../../luathread/hs/luathread/luaskin/hs/drawing
+cp -vpR internal.so.dSYM ../../../luathread/hs/luathread/luaskin/hs/drawing
+internal.so.dSYM -> ../../../luathread/hs/luathread/luaskin/hs/drawing/internal.so.dSYM
+internal.so.dSYM/Contents -> ../../../luathread/hs/luathread/luaskin/hs/drawing/internal.so.dSYM/Contents
+internal.so.dSYM/Contents/Info.plist -> ../../../luathread/hs/luathread/luaskin/hs/drawing/internal.so.dSYM/Contents/Info.plist
+internal.so.dSYM/Contents/Resources -> ../../../luathread/hs/luathread/luaskin/hs/drawing/internal.so.dSYM/Contents/Resources
+internal.so.dSYM/Contents/Resources/DWARF -> ../../../luathread/hs/luathread/luaskin/hs/drawing/internal.so.dSYM/Contents/Resources/DWARF
+internal.so.dSYM/Contents/Resources/DWARF/internal.so -> ../../../luathread/hs/luathread/luaskin/hs/drawing/internal.so.dSYM/Contents/Resources/DWARF/internal.so
+mkdir -p ../../../luathread/hs/luathread/luaskin/hs/drawing
+install -m 0644 init.lua ../../../luathread/hs/luathread/luaskin/hs/drawing
+-- fs --
+rm -rf internal.so volume.so *.dSYM tmp
+Lua Compile Verification Passed
+internal.m:24:1: warning: treating #include as an import of module 'LuaSkin' [-Wauto-import]
+#include <LuaSkin/LuaSkin.h>
+^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+@import LuaSkin;
+internal.m:25:1: warning: treating #include as an import of module 'Darwin.C.errno' [-Wauto-import]
+#include <errno.h>
+^~~~~~~~~~~~~~~~~~
+@import Darwin.C.errno;
+internal.m:26:1: warning: treating #include as an import of module 'Darwin.C.stdio' [-Wauto-import]
+#include <stdio.h>
+^~~~~~~~~~~~~~~~~~
+@import Darwin.C.stdio;
+internal.m:27:1: warning: treating #include as an import of module 'Darwin.C.string' [-Wauto-import]
+#include <string.h>
+^~~~~~~~~~~~~~~~~~~
+@import Darwin.C.string;
+internal.m:28:1: warning: treating #include as an import of module 'Darwin.C.stdlib' [-Wauto-import]
+#include <stdlib.h>
+^~~~~~~~~~~~~~~~~~~
+@import Darwin.C.stdlib;
+internal.m:29:1: warning: treating #include as an import of module 'Darwin.C.time' [-Wauto-import]
+#include <time.h>
+^~~~~~~~~~~~~~~~~
+@import Darwin.C.time;
+internal.m:30:1: warning: treating #include as an import of module 'Darwin.POSIX.sys.stat' [-Wauto-import]
+#include <sys/stat.h>
+^~~~~~~~~~~~~~~~~~~~~
+@import Darwin.POSIX.sys.stat;
+internal.m:31:1: warning: treating #include as an import of module 'Darwin.POSIX.unistd' [-Wauto-import]
+#include <unistd.h>
+^~~~~~~~~~~~~~~~~~~
+@import Darwin.POSIX.unistd;
+internal.m:32:1: warning: treating #include as an import of module 'Darwin.POSIX.dirent' [-Wauto-import]
+#include <dirent.h>
+^~~~~~~~~~~~~~~~~~~
+@import Darwin.POSIX.dirent;
+internal.m:33:1: warning: treating #include as an import of module 'Darwin.POSIX.fcntl' [-Wauto-import]
+#include <fcntl.h>
+^~~~~~~~~~~~~~~~~~
+@import Darwin.POSIX.fcntl;
+internal.m:34:1: warning: treating #include as an import of module 'Darwin.POSIX.sys.types' [-Wauto-import]
+#include <sys/types.h>
+^~~~~~~~~~~~~~~~~~~~~~
+@import Darwin.POSIX.sys.types;
+internal.m:35:1: warning: treating #include as an import of module 'Darwin.POSIX.utime' [-Wauto-import]
+#include <utime.h>
+^~~~~~~~~~~~~~~~~~
+@import Darwin.POSIX.utime;
+internal.m:43:1: warning: treating #include as an import of module 'Darwin.sys.param' [-Wauto-import]
+#include <sys/param.h>
+^~~~~~~~~~~~~~~~~~~~~~
+@import Darwin.sys.param;
+internal.m:65:38: warning: unused parameter 'L' [-Wunused-parameter]
+const char *path_at_index(lua_State *L, int i) {
+                                     ^
+internal.m:84:36: warning: unused parameter 'L' [-Wunused-parameter]
+NSArray *tags_from_file(lua_State *L, NSString *filePath) {
+                                   ^
+internal.m:99:30: warning: unused parameter 'L' [-Wunused-parameter]
+BOOL tags_to_file(lua_State *L, NSString *filePath, NSArray *tags) {
+                             ^
+internal.m:343:17: warning: implicit conversion loses integer precision: 'int' to 'BOOL' (aka 'signed char') [-Wconversion]
+        error = symlink(oldpath, newpath);
+              ~ ^~~~~~~~~~~~~~~~~~~~~~~~~
+internal.m:345:17: warning: implicit conversion loses integer precision: 'int' to 'BOOL' (aka 'signed char') [-Wconversion]
+        error = link(oldpath, newpath);
+              ~ ^~~~~~~~~~~~~~~~~~~~~~
+18 warnings generated.
+volume.m:1:1: warning: treating #import as an import of module 'Foundation' [-Wauto-import]
+#import <Foundation/Foundation.h>
+^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+@import Foundation;
+volume.m:2:1: warning: treating #import as an import of module 'Cocoa' [-Wauto-import]
+#import <Cocoa/Cocoa.h>
+^~~~~~~~~~~~~~~~~~~~~~~
+@import Cocoa;
+volume.m:3:1: warning: treating #import as an import of module 'LuaSkin' [-Wauto-import]
+#import <LuaSkin/LuaSkin.h>
+^~~~~~~~~~~~~~~~~~~~~~~~~~~
+@import LuaSkin;
+volume.m:55:14: warning: using the result of an assignment as a condition without parentheses [-Widiomatic-parentheses]
+    if (self = [super init]) {
+        ~~~~~^~~~~~~~~~~~~~
+volume.m:55:14: note: place parentheses around the assignment to silence this warning
+    if (self = [super init]) {
+             ^
+        (                  )
+volume.m:55:14: note: use '==' to turn this assignment into an equality comparison
+    if (self = [super init]) {
+             ^
+             ==
+volume.m:75:33: warning: implicit conversion from nullable pointer 'id _Nullable' to non-nullable pointer type 'id _Nonnull' [-Wnullable-to-nonnull-conversion]
+            [tableArg setObject:[dict objectForKey:@"NSDevicePath"] forKey:@"path"];
+                                ^
+volume.m:79:33: warning: implicit conversion from nullable pointer 'id _Nullable' to non-nullable pointer type 'id _Nonnull' [-Wnullable-to-nonnull-conversion]
+            [tableArg setObject:[dict objectForKey:NSWorkspaceVolumeURLKey] forKey:@"path"];
+                                ^
+volume.m:80:33: warning: implicit conversion from nullable pointer 'id _Nullable' to non-nullable pointer type 'id _Nonnull' [-Wnullable-to-nonnull-conversion]
+            [tableArg setObject:[dict objectForKey:NSWorkspaceVolumeLocalizedNameKey] forKey:@"name"];
+                                ^
+volume.m:81:33: warning: implicit conversion from nullable pointer 'id _Nullable' to non-nullable pointer type 'id _Nonnull' [-Wnullable-to-nonnull-conversion]
+            [tableArg setObject:[dict objectForKey:NSWorkspaceVolumeOldURLKey] forKey:@"oldPath"];
+                                ^
+volume.m:82:33: warning: implicit conversion from nullable pointer 'id _Nullable' to non-nullable pointer type 'id _Nonnull' [-Wnullable-to-nonnull-conversion]
+            [tableArg setObject:[dict objectForKey:NSWorkspaceVolumeOldLocalizedNameKey] forKey:@"oldName"];
+                                ^
+9 warnings generated.
+mkdir -p ../../../luathread/hs/luathread/luaskin/hs/fs
+install -m 0644 internal.so volume.so ../../../luathread/hs/luathread/luaskin/hs/fs
+cp -vpR internal.so.dSYM volume.so.dSYM ../../../luathread/hs/luathread/luaskin/hs/fs
+internal.so.dSYM -> ../../../luathread/hs/luathread/luaskin/hs/fs/internal.so.dSYM
+internal.so.dSYM/Contents -> ../../../luathread/hs/luathread/luaskin/hs/fs/internal.so.dSYM/Contents
+internal.so.dSYM/Contents/Info.plist -> ../../../luathread/hs/luathread/luaskin/hs/fs/internal.so.dSYM/Contents/Info.plist
+internal.so.dSYM/Contents/Resources -> ../../../luathread/hs/luathread/luaskin/hs/fs/internal.so.dSYM/Contents/Resources
+internal.so.dSYM/Contents/Resources/DWARF -> ../../../luathread/hs/luathread/luaskin/hs/fs/internal.so.dSYM/Contents/Resources/DWARF
+internal.so.dSYM/Contents/Resources/DWARF/internal.so -> ../../../luathread/hs/luathread/luaskin/hs/fs/internal.so.dSYM/Contents/Resources/DWARF/internal.so
+volume.so.dSYM -> ../../../luathread/hs/luathread/luaskin/hs/fs/volume.so.dSYM
+volume.so.dSYM/Contents -> ../../../luathread/hs/luathread/luaskin/hs/fs/volume.so.dSYM/Contents
+volume.so.dSYM/Contents/Info.plist -> ../../../luathread/hs/luathread/luaskin/hs/fs/volume.so.dSYM/Contents/Info.plist
+volume.so.dSYM/Contents/Resources -> ../../../luathread/hs/luathread/luaskin/hs/fs/volume.so.dSYM/Contents/Resources
+volume.so.dSYM/Contents/Resources/DWARF -> ../../../luathread/hs/luathread/luaskin/hs/fs/volume.so.dSYM/Contents/Resources/DWARF
+volume.so.dSYM/Contents/Resources/DWARF/volume.so -> ../../../luathread/hs/luathread/luaskin/hs/fs/volume.so.dSYM/Contents/Resources/DWARF/volume.so
+mkdir -p ../../../luathread/hs/luathread/luaskin/hs/fs
+install -m 0644 init.lua test_fs.lua ../../../luathread/hs/luathread/luaskin/hs/fs
+-- hash --
+rm -rf internal.so *.dSYM tmp
+Lua Compile Verification Passed
+internal.m:1:1: warning: treating #import as an import of module 'Cocoa' [-Wauto-import]
+#import <Cocoa/Cocoa.h>
+^~~~~~~~~~~~~~~~~~~~~~~
+@import Cocoa;
+internal.m:4:1: warning: treating #import as an import of module 'LuaSkin' [-Wauto-import]
+#import <LuaSkin/LuaSkin.h>
+^~~~~~~~~~~~~~~~~~~~~~~~~~~
+@import LuaSkin;
+internal.m:8:25: warning: variable length array used [-Wvla]
+    unsigned char digest[length + 1];
+                        ^
+internal.m:28:25: warning: variable length array used [-Wvla]
+    unsigned char digest[resultLength + 1];
+                        ^
+4 warnings generated.
+mkdir -p ../../../luathread/hs/luathread/luaskin/hs/hash
+install -m 0644 internal.so ../../../luathread/hs/luathread/luaskin/hs/hash
+cp -vpR internal.so.dSYM ../../../luathread/hs/luathread/luaskin/hs/hash
+internal.so.dSYM -> ../../../luathread/hs/luathread/luaskin/hs/hash/internal.so.dSYM
+internal.so.dSYM/Contents -> ../../../luathread/hs/luathread/luaskin/hs/hash/internal.so.dSYM/Contents
+internal.so.dSYM/Contents/Info.plist -> ../../../luathread/hs/luathread/luaskin/hs/hash/internal.so.dSYM/Contents/Info.plist
+internal.so.dSYM/Contents/Resources -> ../../../luathread/hs/luathread/luaskin/hs/hash/internal.so.dSYM/Contents/Resources
+internal.so.dSYM/Contents/Resources/DWARF -> ../../../luathread/hs/luathread/luaskin/hs/hash/internal.so.dSYM/Contents/Resources/DWARF
+internal.so.dSYM/Contents/Resources/DWARF/internal.so -> ../../../luathread/hs/luathread/luaskin/hs/hash/internal.so.dSYM/Contents/Resources/DWARF/internal.so
+mkdir -p ../../../luathread/hs/luathread/luaskin/hs/hash
+install -m 0644 init.lua ../../../luathread/hs/luathread/luaskin/hs/hash
+-- host --
+rm -rf internal.so *.dSYM tmp
+Lua Compile Verification Passed
+internal.m:1:1: warning: treating #import as an import of module 'Cocoa' [-Wauto-import]
+#import <Cocoa/Cocoa.h>
+^~~~~~~~~~~~~~~~~~~~~~~
+@import Cocoa;
+internal.m:2:1: warning: treating #import as an import of module 'LuaSkin' [-Wauto-import]
+#import <LuaSkin/LuaSkin.h>
+^~~~~~~~~~~~~~~~~~~~~~~~~~~
+@import LuaSkin;
+internal.m:3:1: warning: treating #import as an import of module 'Darwin.sys.sysctl' [-Wauto-import]
+#import <sys/sysctl.h>
+^~~~~~~~~~~~~~~~~~~~~~
+@import Darwin.sys.sysctl;
+internal.m:4:1: warning: treating #import as an import of module 'Darwin.POSIX.sys.types' [-Wauto-import]
+#import <sys/types.h>
+^~~~~~~~~~~~~~~~~~~~~
+@import Darwin.POSIX.sys.types;
+internal.m:5:1: warning: treating #import as an import of module 'Darwin.Mach' [-Wauto-import]
+#import <mach/mach.h>
+^~~~~~~~~~~~~~~~~~~~~
+@import Darwin.Mach;
+internal.m:6:1: warning: treating #import as an import of module 'Darwin.Mach.processor_info' [-Wauto-import]
+#import <mach/processor_info.h>
+^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+@import Darwin.Mach.processor_info;
+internal.m:7:1: warning: treating #import as an import of module 'Darwin.Mach.host_info' [-Wauto-import]
+#import <mach/host_info.h>
+^~~~~~~~~~~~~~~~~~~~~~~~~~
+@import Darwin.Mach.host_info;
+internal.m:8:1: warning: treating #import as an import of module 'Darwin.Mach.mach_host' [-Wauto-import]
+#import <mach/mach_host.h>
+^~~~~~~~~~~~~~~~~~~~~~~~~~
+@import Darwin.Mach.mach_host;
+internal.m:9:1: warning: treating #import as an import of module 'Darwin.Mach.task_info' [-Wauto-import]
+#import <mach/task_info.h>
+^~~~~~~~~~~~~~~~~~~~~~~~~~
+@import Darwin.Mach.task_info;
+internal.m:10:1: warning: treating #import as an import of module 'Darwin.Mach.task' [-Wauto-import]
+#import <mach/task.h>
+^~~~~~~~~~~~~~~~~~~~~
+@import Darwin.Mach.task;
+internal.m:165:28: warning: implicit conversion changes signedness: 'uint64_t' (aka 'unsigned long long') to 'lua_Integer' (aka 'long long') [-Wsign-conversion]
+        lua_pushinteger(L, (uint64_t) (vm_stat.free_count - vm_stat.speculative_count)) ; lua_setfield(L, -2, "pagesFree") ;
+        ~~~~~~~~~~~~~~~    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+internal.m:166:28: warning: implicit conversion changes signedness: 'uint64_t' (aka 'unsigned long long') to 'lua_Integer' (aka 'long long') [-Wsign-conversion]
+        lua_pushinteger(L, (uint64_t) (vm_stat.active_count))                           ; lua_setfield(L, -2, "pagesActive") ;
+        ~~~~~~~~~~~~~~~    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+internal.m:167:28: warning: implicit conversion changes signedness: 'uint64_t' (aka 'unsigned long long') to 'lua_Integer' (aka 'long long') [-Wsign-conversion]
+        lua_pushinteger(L, (uint64_t) (vm_stat.inactive_count))                         ; lua_setfield(L, -2, "pagesInactive") ;
+        ~~~~~~~~~~~~~~~    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+internal.m:168:28: warning: implicit conversion changes signedness: 'uint64_t' (aka 'unsigned long long') to 'lua_Integer' (aka 'long long') [-Wsign-conversion]
+        lua_pushinteger(L, (uint64_t) (vm_stat.speculative_count))                      ; lua_setfield(L, -2, "pagesSpeculative") ;
+        ~~~~~~~~~~~~~~~    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+internal.m:169:28: warning: implicit conversion changes signedness: 'uint64_t' (aka 'unsigned long long') to 'lua_Integer' (aka 'long long') [-Wsign-conversion]
+        lua_pushinteger(L, (uint64_t) (vm_stat.throttled_count))                        ; lua_setfield(L, -2, "pagesThrottled") ;
+        ~~~~~~~~~~~~~~~    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+internal.m:170:28: warning: implicit conversion changes signedness: 'uint64_t' (aka 'unsigned long long') to 'lua_Integer' (aka 'long long') [-Wsign-conversion]
+        lua_pushinteger(L, (uint64_t) (vm_stat.wire_count))                             ; lua_setfield(L, -2, "pagesWiredDown") ;
+        ~~~~~~~~~~~~~~~    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+internal.m:171:28: warning: implicit conversion changes signedness: 'uint64_t' (aka 'unsigned long long') to 'lua_Integer' (aka 'long long') [-Wsign-conversion]
+        lua_pushinteger(L, (uint64_t) (vm_stat.purgeable_count))                        ; lua_setfield(L, -2, "pagesPurgeable") ;
+        ~~~~~~~~~~~~~~~    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+internal.m:172:28: warning: implicit conversion changes signedness: 'uint64_t' (aka 'unsigned long long') to 'lua_Integer' (aka 'long long') [-Wsign-conversion]
+        lua_pushinteger(L, (uint64_t) (vm_stat.faults))                                 ; lua_setfield(L, -2, "translationFaults") ;
+        ~~~~~~~~~~~~~~~    ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+internal.m:173:28: warning: implicit conversion changes signedness: 'uint64_t' (aka 'unsigned long long') to 'lua_Integer' (aka 'long long') [-Wsign-conversion]
+        lua_pushinteger(L, (uint64_t) (vm_stat.cow_faults))                             ; lua_setfield(L, -2, "pagesCopyOnWrite") ;
+        ~~~~~~~~~~~~~~~    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+internal.m:174:28: warning: implicit conversion changes signedness: 'uint64_t' (aka 'unsigned long long') to 'lua_Integer' (aka 'long long') [-Wsign-conversion]
+        lua_pushinteger(L, (uint64_t) (vm_stat.zero_fill_count))                        ; lua_setfield(L, -2, "pagesZeroFilled") ;
+        ~~~~~~~~~~~~~~~    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+internal.m:175:28: warning: implicit conversion changes signedness: 'uint64_t' (aka 'unsigned long long') to 'lua_Integer' (aka 'long long') [-Wsign-conversion]
+        lua_pushinteger(L, (uint64_t) (vm_stat.reactivations))                          ; lua_setfield(L, -2, "pagesReactivated") ;
+        ~~~~~~~~~~~~~~~    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+internal.m:176:28: warning: implicit conversion changes signedness: 'uint64_t' (aka 'unsigned long long') to 'lua_Integer' (aka 'long long') [-Wsign-conversion]
+        lua_pushinteger(L, (uint64_t) (vm_stat.purges))                                 ; lua_setfield(L, -2, "pagesPurged") ;
+        ~~~~~~~~~~~~~~~    ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+internal.m:177:28: warning: implicit conversion changes signedness: 'uint64_t' (aka 'unsigned long long') to 'lua_Integer' (aka 'long long') [-Wsign-conversion]
+        lua_pushinteger(L, (uint64_t) (vm_stat.external_page_count))                    ; lua_setfield(L, -2, "fileBackedPages") ;
+        ~~~~~~~~~~~~~~~    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+internal.m:178:28: warning: implicit conversion changes signedness: 'uint64_t' (aka 'unsigned long long') to 'lua_Integer' (aka 'long long') [-Wsign-conversion]
+        lua_pushinteger(L, (uint64_t) (vm_stat.internal_page_count))                    ; lua_setfield(L, -2, "anonymousPages") ;
+        ~~~~~~~~~~~~~~~    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+internal.m:179:28: warning: implicit conversion changes signedness: 'uint64_t' (aka 'unsigned long long') to 'lua_Integer' (aka 'long long') [-Wsign-conversion]
+        lua_pushinteger(L, (uint64_t) (vm_stat.total_uncompressed_pages_in_compressor)) ; lua_setfield(L, -2, "uncompressedPages") ;
+        ~~~~~~~~~~~~~~~    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+internal.m:180:28: warning: implicit conversion changes signedness: 'uint64_t' (aka 'unsigned long long') to 'lua_Integer' (aka 'long long') [-Wsign-conversion]
+        lua_pushinteger(L, (uint64_t) (vm_stat.compressor_page_count))                  ; lua_setfield(L, -2, "pagesUsedByVMCompressor") ;
+        ~~~~~~~~~~~~~~~    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+internal.m:181:28: warning: implicit conversion changes signedness: 'uint64_t' (aka 'unsigned long long') to 'lua_Integer' (aka 'long long') [-Wsign-conversion]
+        lua_pushinteger(L, (uint64_t) (vm_stat.decompressions))                         ; lua_setfield(L, -2, "pagesDecompressed") ;
+        ~~~~~~~~~~~~~~~    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+internal.m:182:28: warning: implicit conversion changes signedness: 'uint64_t' (aka 'unsigned long long') to 'lua_Integer' (aka 'long long') [-Wsign-conversion]
+        lua_pushinteger(L, (uint64_t) (vm_stat.compressions))                           ; lua_setfield(L, -2, "pagesCompressed") ;
+        ~~~~~~~~~~~~~~~    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+internal.m:183:28: warning: implicit conversion changes signedness: 'uint64_t' (aka 'unsigned long long') to 'lua_Integer' (aka 'long long') [-Wsign-conversion]
+        lua_pushinteger(L, (uint64_t) (vm_stat.pageins))                                ; lua_setfield(L, -2, "pageIns") ;
+        ~~~~~~~~~~~~~~~    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+internal.m:184:28: warning: implicit conversion changes signedness: 'uint64_t' (aka 'unsigned long long') to 'lua_Integer' (aka 'long long') [-Wsign-conversion]
+        lua_pushinteger(L, (uint64_t) (vm_stat.pageouts))                               ; lua_setfield(L, -2, "pageOuts") ;
+        ~~~~~~~~~~~~~~~    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+internal.m:185:28: warning: implicit conversion changes signedness: 'uint64_t' (aka 'unsigned long long') to 'lua_Integer' (aka 'long long') [-Wsign-conversion]
+        lua_pushinteger(L, (uint64_t) (vm_stat.swapins))                                ; lua_setfield(L, -2, "swapIns") ;
+        ~~~~~~~~~~~~~~~    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+internal.m:186:28: warning: implicit conversion changes signedness: 'uint64_t' (aka 'unsigned long long') to 'lua_Integer' (aka 'long long') [-Wsign-conversion]
+        lua_pushinteger(L, (uint64_t) (vm_stat.swapouts))                               ; lua_setfield(L, -2, "swapOuts") ;
+        ~~~~~~~~~~~~~~~    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+internal.m:187:28: warning: implicit conversion changes signedness: 'uint64_t' (aka 'unsigned long long') to 'lua_Integer' (aka 'long long') [-Wsign-conversion]
+        lua_pushinteger(L, (uint64_t) (vm_stat.lookups))                                ; lua_setfield(L, -2, "cacheLookups") ;
+        ~~~~~~~~~~~~~~~    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+internal.m:188:28: warning: implicit conversion changes signedness: 'uint64_t' (aka 'unsigned long long') to 'lua_Integer' (aka 'long long') [-Wsign-conversion]
+        lua_pushinteger(L, (uint64_t) (vm_stat.hits))                                   ; lua_setfield(L, -2, "cacheHits") ;
+        ~~~~~~~~~~~~~~~    ^~~~~~~~~~~~~~~~~~~~~~~~~
+internal.m:190:28: warning: implicit conversion changes signedness: 'uint64_t' (aka 'unsigned long long') to 'lua_Integer' (aka 'long long') [-Wsign-conversion]
+        lua_pushinteger(L, (uint64_t) (memsize))                                        ; lua_setfield(L, -2, "memSize") ;
+        ~~~~~~~~~~~~~~~    ^~~~~~~~~~~~~~~~~~~~
+internal.m:245:54: warning: implicit conversion increases floating-point precision: 'float' to 'lua_Number' (aka 'double') [-Wdouble-promotion]
+                lua_pushnumber(L, (  inUser / total) * 100) ; lua_setfield(L, -2, "user") ;
+                ~~~~~~~~~~~~~~    ~~~~~~~~~~~~~~~~~~~^~~~~
+internal.m:246:54: warning: implicit conversion increases floating-point precision: 'float' to 'lua_Number' (aka 'double') [-Wdouble-promotion]
+                lua_pushnumber(L, (inSystem / total) * 100) ; lua_setfield(L, -2, "system") ;
+                ~~~~~~~~~~~~~~    ~~~~~~~~~~~~~~~~~~~^~~~~
+internal.m:247:54: warning: implicit conversion increases floating-point precision: 'float' to 'lua_Number' (aka 'double') [-Wdouble-promotion]
+                lua_pushnumber(L, (  inNice / total) * 100) ; lua_setfield(L, -2, "nice") ;
+                ~~~~~~~~~~~~~~    ~~~~~~~~~~~~~~~~~~~^~~~~
+internal.m:248:54: warning: implicit conversion increases floating-point precision: 'float' to 'lua_Number' (aka 'double') [-Wdouble-promotion]
+                lua_pushnumber(L, (   inUse / total) * 100) ; lua_setfield(L, -2, "active") ;
+                ~~~~~~~~~~~~~~    ~~~~~~~~~~~~~~~~~~~^~~~~
+internal.m:249:54: warning: implicit conversion increases floating-point precision: 'float' to 'lua_Number' (aka 'double') [-Wdouble-promotion]
+                lua_pushnumber(L, (  inIdle / total) * 100) ; lua_setfield(L, -2, "idle") ;
+                ~~~~~~~~~~~~~~    ~~~~~~~~~~~~~~~~~~~^~~~~
+internal.m:253:64: warning: implicit conversion increases floating-point precision: 'float' to 'lua_Number' (aka 'double') [-Wdouble-promotion]
+            lua_pushnumber(L, (  overallInUser / overallTotal) * 100) ; lua_setfield(L, -2, "user") ;
+            ~~~~~~~~~~~~~~    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~
+internal.m:254:64: warning: implicit conversion increases floating-point precision: 'float' to 'lua_Number' (aka 'double') [-Wdouble-promotion]
+            lua_pushnumber(L, (overallInSystem / overallTotal) * 100) ; lua_setfield(L, -2, "system") ;
+            ~~~~~~~~~~~~~~    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~
+internal.m:255:64: warning: implicit conversion increases floating-point precision: 'float' to 'lua_Number' (aka 'double') [-Wdouble-promotion]
+            lua_pushnumber(L, (  overallInNice / overallTotal) * 100) ; lua_setfield(L, -2, "nice") ;
+            ~~~~~~~~~~~~~~    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~
+internal.m:256:64: warning: implicit conversion increases floating-point precision: 'float' to 'lua_Number' (aka 'double') [-Wdouble-promotion]
+            lua_pushnumber(L, (   overallInUse / overallTotal) * 100) ; lua_setfield(L, -2, "active") ;
+            ~~~~~~~~~~~~~~    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~
+internal.m:257:64: warning: implicit conversion increases floating-point precision: 'float' to 'lua_Number' (aka 'double') [-Wdouble-promotion]
+            lua_pushnumber(L, (  overallInIdle / overallTotal) * 100) ; lua_setfield(L, -2, "idle") ;
+            ~~~~~~~~~~~~~~    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~
+internal.m:511:19: warning: integer constant not in range of enumerated type 'NSVolumeEnumerationOptions' (aka 'enum NSVolumeEnumerationOptions') [-Wassign-enum]
+        options = 0;
+                  ^
+internal.m:519:65: warning: implicit conversion from nullable pointer 'NSString * _Nullable' to non-nullable pointer type 'id<NSCopying> _Nonnull' [-Wnullable-to-nonnull-conversion]
+                if (result) [volumeInfo setObject:result forKey:[url path]];
+                                                                ^
+internal.m:521:47: warning: implicit conversion from nullable pointer 'NSDictionary<NSURLResourceKey,id> * _Nullable' to non-nullable pointer type 'id _Nonnull' [-Wnullable-to-nonnull-conversion]
+                        [volumeInfo setObject:[url resourceValuesForKeys:urlResourceKeys error:nil] forKey:[url path]];
+                                              ^
+internal.m:521:108: warning: implicit conversion from nullable pointer 'NSString * _Nullable' to non-nullable pointer type 'id<NSCopying> _Nonnull' [-Wnullable-to-nonnull-conversion]
+                        [volumeInfo setObject:[url resourceValuesForKeys:urlResourceKeys error:nil] forKey:[url path]];
+                                                                                                           ^
+49 warnings generated.
+mkdir -p ../../../luathread/hs/luathread/luaskin/hs/host
+install -m 0644 internal.so ../../../luathread/hs/luathread/luaskin/hs/host
+cp -vpR internal.so.dSYM ../../../luathread/hs/luathread/luaskin/hs/host
+internal.so.dSYM -> ../../../luathread/hs/luathread/luaskin/hs/host/internal.so.dSYM
+internal.so.dSYM/Contents -> ../../../luathread/hs/luathread/luaskin/hs/host/internal.so.dSYM/Contents
+internal.so.dSYM/Contents/Info.plist -> ../../../luathread/hs/luathread/luaskin/hs/host/internal.so.dSYM/Contents/Info.plist
+internal.so.dSYM/Contents/Resources -> ../../../luathread/hs/luathread/luaskin/hs/host/internal.so.dSYM/Contents/Resources
+internal.so.dSYM/Contents/Resources/DWARF -> ../../../luathread/hs/luathread/luaskin/hs/host/internal.so.dSYM/Contents/Resources/DWARF
+internal.so.dSYM/Contents/Resources/DWARF/internal.so -> ../../../luathread/hs/luathread/luaskin/hs/host/internal.so.dSYM/Contents/Resources/DWARF/internal.so
+mkdir -p ../../../luathread/hs/luathread/luaskin/hs/host
+install -m 0644 init.lua ../../../luathread/hs/luathread/luaskin/hs/host
+-- image --
+rm -rf internal.so *.dSYM tmp
+Lua Compile Verification Passed
+mkdir -p ../../../luathread/hs/luathread/luaskin/hs/image
+install -m 0644 internal.so ../../../luathread/hs/luathread/luaskin/hs/image
+cp -vpR internal.so.dSYM ../../../luathread/hs/luathread/luaskin/hs/image
+internal.so.dSYM -> ../../../luathread/hs/luathread/luaskin/hs/image/internal.so.dSYM
+internal.so.dSYM/Contents -> ../../../luathread/hs/luathread/luaskin/hs/image/internal.so.dSYM/Contents
+internal.so.dSYM/Contents/Info.plist -> ../../../luathread/hs/luathread/luaskin/hs/image/internal.so.dSYM/Contents/Info.plist
+internal.so.dSYM/Contents/Resources -> ../../../luathread/hs/luathread/luaskin/hs/image/internal.so.dSYM/Contents/Resources
+internal.so.dSYM/Contents/Resources/DWARF -> ../../../luathread/hs/luathread/luaskin/hs/image/internal.so.dSYM/Contents/Resources/DWARF
+internal.so.dSYM/Contents/Resources/DWARF/internal.so -> ../../../luathread/hs/luathread/luaskin/hs/image/internal.so.dSYM/Contents/Resources/DWARF/internal.so
+mkdir -p ../../../luathread/hs/luathread/luaskin/hs/image
+install -m 0644 init.lua ../../../luathread/hs/luathread/luaskin/hs/image
+-- json --
+rm -rf internal.so *.dSYM tmp
+Lua Compile Verification Passed
+mkdir -p ../../../luathread/hs/luathread/luaskin/hs/json
+install -m 0644 internal.so ../../../luathread/hs/luathread/luaskin/hs/json
+cp -vpR internal.so.dSYM ../../../luathread/hs/luathread/luaskin/hs/json
+internal.so.dSYM -> ../../../luathread/hs/luathread/luaskin/hs/json/internal.so.dSYM
+internal.so.dSYM/Contents -> ../../../luathread/hs/luathread/luaskin/hs/json/internal.so.dSYM/Contents
+internal.so.dSYM/Contents/Info.plist -> ../../../luathread/hs/luathread/luaskin/hs/json/internal.so.dSYM/Contents/Info.plist
+internal.so.dSYM/Contents/Resources -> ../../../luathread/hs/luathread/luaskin/hs/json/internal.so.dSYM/Contents/Resources
+internal.so.dSYM/Contents/Resources/DWARF -> ../../../luathread/hs/luathread/luaskin/hs/json/internal.so.dSYM/Contents/Resources/DWARF
+internal.so.dSYM/Contents/Resources/DWARF/internal.so -> ../../../luathread/hs/luathread/luaskin/hs/json/internal.so.dSYM/Contents/Resources/DWARF/internal.so
+mkdir -p ../../../luathread/hs/luathread/luaskin/hs/json
+install -m 0644 init.lua ../../../luathread/hs/luathread/luaskin/hs/json
+-- keycodes --
+rm -rf internal.so *.dSYM tmp
+Lua Compile Verification Passed
+internal.m:316:66: warning: cast from 'const void *' to 'struct __TISInputSource *' drops const qualifier [-Wcast-qual]
+                found = (TISSelectInputSource((TISInputSourceRef)CFArrayGetValueAtIndex(sources, 0)) == noErr) ;
+                                                                 ^
+internal.m:380:59: warning: cast from 'const void *' to 'struct __TISInputSource *' drops const qualifier [-Wcast-qual]
+            TISInputSourceRef layout = (TISInputSourceRef)(CFArrayGetValueAtIndex(layoutRefs, i));
+                                                          ^
+internal.m:415:59: warning: cast from 'const void *' to 'struct __TISInputSource *' drops const qualifier [-Wcast-qual]
+            TISInputSourceRef method = (TISInputSourceRef)(CFArrayGetValueAtIndex(methodRefs, i));
+                                                          ^
+internal.m:444:59: warning: cast from 'const void *' to 'struct __TISInputSource *' drops const qualifier [-Wcast-qual]
+            TISInputSourceRef method = (TISInputSourceRef)(CFArrayGetValueAtIndex(methodRefs, i));
+                                                          ^
+internal.m:476:59: warning: cast from 'const void *' to 'struct __TISInputSource *' drops const qualifier [-Wcast-qual]
+            TISInputSourceRef layout = (TISInputSourceRef)(CFArrayGetValueAtIndex(layoutRefs, i));
+                                                          ^
+internal.m:508:59: warning: cast from 'const void *' to 'struct __TISInputSource *' drops const qualifier [-Wcast-qual]
+            TISInputSourceRef layout = (TISInputSourceRef)(CFArrayGetValueAtIndex(layoutRefs, i));
+                                                          ^
+internal.m:544:59: warning: cast from 'const void *' to 'struct __TISInputSource *' drops const qualifier [-Wcast-qual]
+            TISInputSourceRef layout = (TISInputSourceRef)(CFArrayGetValueAtIndex(layoutRefs, i));
+                                                          ^
+internal.m:557:63: warning: cast from 'const void *' to 'struct __TISInputSource *' drops const qualifier [-Wcast-qual]
+                TISInputSourceRef layout = (TISInputSourceRef)(CFArrayGetValueAtIndex(methodRefs, i));
+                                                              ^
+8 warnings generated.
+mkdir -p ../../../luathread/hs/luathread/luaskin/hs/keycodes
+install -m 0644 internal.so ../../../luathread/hs/luathread/luaskin/hs/keycodes
+cp -vpR internal.so.dSYM ../../../luathread/hs/luathread/luaskin/hs/keycodes
+internal.so.dSYM -> ../../../luathread/hs/luathread/luaskin/hs/keycodes/internal.so.dSYM
+internal.so.dSYM/Contents -> ../../../luathread/hs/luathread/luaskin/hs/keycodes/internal.so.dSYM/Contents
+internal.so.dSYM/Contents/Info.plist -> ../../../luathread/hs/luathread/luaskin/hs/keycodes/internal.so.dSYM/Contents/Info.plist
+internal.so.dSYM/Contents/Resources -> ../../../luathread/hs/luathread/luaskin/hs/keycodes/internal.so.dSYM/Contents/Resources
+internal.so.dSYM/Contents/Resources/DWARF -> ../../../luathread/hs/luathread/luaskin/hs/keycodes/internal.so.dSYM/Contents/Resources/DWARF
+internal.so.dSYM/Contents/Resources/DWARF/internal.so -> ../../../luathread/hs/luathread/luaskin/hs/keycodes/internal.so.dSYM/Contents/Resources/DWARF/internal.so
+mkdir -p ../../../luathread/hs/luathread/luaskin/hs/keycodes
+install -m 0644 init.lua ../../../luathread/hs/luathread/luaskin/hs/keycodes
+-- pathwatcher --
+rm -rf internal.so *.dSYM tmp
+Lua Compile Verification Passed
+internal.m:1:1: warning: treating #import as an import of module 'Cocoa' [-Wauto-import]
+#import <Cocoa/Cocoa.h>
+^~~~~~~~~~~~~~~~~~~~~~~
+@import Cocoa;
+internal.m:2:1: warning: treating #import as an import of module 'LuaSkin' [-Wauto-import]
+#import <LuaSkin/LuaSkin.h>
+^~~~~~~~~~~~~~~~~~~~~~~~~~~
+@import LuaSkin;
+internal.m:31:30: warning: implicit conversion changes signedness: 'unsigned long' to 'lua_Integer' (aka 'long long') [-Wsign-conversion]
+        lua_rawseti(L, -2, i + 1);
+        ~~~~~~~~~~~        ~~^~~
+3 warnings generated.
+mkdir -p ../../../luathread/hs/luathread/luaskin/hs/pathwatcher
+install -m 0644 internal.so ../../../luathread/hs/luathread/luaskin/hs/pathwatcher
+cp -vpR internal.so.dSYM ../../../luathread/hs/luathread/luaskin/hs/pathwatcher
+internal.so.dSYM -> ../../../luathread/hs/luathread/luaskin/hs/pathwatcher/internal.so.dSYM
+internal.so.dSYM/Contents -> ../../../luathread/hs/luathread/luaskin/hs/pathwatcher/internal.so.dSYM/Contents
+internal.so.dSYM/Contents/Info.plist -> ../../../luathread/hs/luathread/luaskin/hs/pathwatcher/internal.so.dSYM/Contents/Info.plist
+internal.so.dSYM/Contents/Resources -> ../../../luathread/hs/luathread/luaskin/hs/pathwatcher/internal.so.dSYM/Contents/Resources
+internal.so.dSYM/Contents/Resources/DWARF -> ../../../luathread/hs/luathread/luaskin/hs/pathwatcher/internal.so.dSYM/Contents/Resources/DWARF
+internal.so.dSYM/Contents/Resources/DWARF/internal.so -> ../../../luathread/hs/luathread/luaskin/hs/pathwatcher/internal.so.dSYM/Contents/Resources/DWARF/internal.so
+mkdir -p ../../../luathread/hs/luathread/luaskin/hs/pathwatcher
+install -m 0644 init.lua ../../../luathread/hs/luathread/luaskin/hs/pathwatcher
+-- screen --
+rm -rf internal.so watcher.so *.dSYM tmp
+Lua Compile Verification Passed
+internal.m:1:1: warning: treating #import as an import of module 'Carbon' [-Wauto-import]
+#import <Carbon/Carbon.h>
+^~~~~~~~~~~~~~~~~~~~~~~~~
+@import Carbon;
+internal.m:2:1: warning: treating #import as an import of module 'Cocoa' [-Wauto-import]
+#import <Cocoa/Cocoa.h>
+^~~~~~~~~~~~~~~~~~~~~~~
+@import Cocoa;
+internal.m:3:1: warning: treating #import as an import of module 'IOKit.graphics' [-Wauto-import]
+#import <IOKit/graphics/IOGraphicsLib.h>
+^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+@import IOKit.graphics;
+internal.m:4:1: warning: treating #import as an import of module 'LuaSkin' [-Wauto-import]
+#import <LuaSkin/LuaSkin.h>
+^~~~~~~~~~~~~~~~~~~~~~~~~~~
+@import LuaSkin;
+internal.m:68:35: warning: implicit conversion changes signedness: 'int _Nullable' to 'CGDirectDisplayID' (aka 'unsigned int') [-Wsign-conversion]
+    CGDirectDisplayID screen_id = [[[screen deviceDescription] objectForKey:@"NSScreenNumber"] intValue];
+                      ~~~~~~~~~   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+internal.m:129:35: warning: implicit conversion changes signedness: 'int _Nullable' to 'CGDirectDisplayID' (aka 'unsigned int') [-Wsign-conversion]
+    CGDirectDisplayID screen_id = [[[screen deviceDescription] objectForKey:@"NSScreenNumber"] intValue];
+                      ~~~~~~~~~   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+internal.m:173:35: warning: implicit conversion changes signedness: 'int _Nullable' to 'CGDirectDisplayID' (aka 'unsigned int') [-Wsign-conversion]
+    CGDirectDisplayID screen_id = [[[screen deviceDescription] objectForKey:@"NSScreenNumber"] intValue];
+                      ~~~~~~~~~   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+internal.m:228:35: warning: implicit conversion changes signedness: 'int _Nullable' to 'CGDirectDisplayID' (aka 'unsigned int') [-Wsign-conversion]
+    CGDirectDisplayID screen_id = [[[screen deviceDescription] objectForKey:@"NSScreenNumber"] intValue];
+                      ~~~~~~~~~   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+internal.m:295:35: warning: implicit conversion changes signedness: 'int _Nullable' to 'CGDirectDisplayID' (aka 'unsigned int') [-Wsign-conversion]
+    CGDirectDisplayID screen_id = [[[screen deviceDescription] objectForKey:@"NSScreenNumber"] intValue];
+                      ~~~~~~~~~   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+internal.m:371:78: warning: implicit conversion changes signedness: 'int' to 'NSUInteger' (aka 'unsigned long') [-Wsign-conversion]
+            [red insertObject:[NSNumber numberWithFloat:redTable[i]] atIndex:i];
+            ~                                                                ^
+internal.m:372:82: warning: implicit conversion changes signedness: 'int' to 'NSUInteger' (aka 'unsigned long') [-Wsign-conversion]
+            [green insertObject:[NSNumber numberWithFloat:greenTable[i]] atIndex:i];
+            ~                                                                    ^
+internal.m:373:80: warning: implicit conversion changes signedness: 'int' to 'NSUInteger' (aka 'unsigned long') [-Wsign-conversion]
+            [blue insertObject:[NSNumber numberWithFloat:blueTable[i]] atIndex:i];
+            ~                                                                  ^
+internal.m:380:73: warning: implicit conversion changes signedness: 'CGDirectDisplayID' (aka 'unsigned int') to 'int' [-Wsign-conversion]
+        [originalGammas setObject:gammas forKey:[NSNumber numberWithInt:display]];
+                                                ~                       ^~~~~~~
+internal.m:456:68: warning: implicit conversion changes signedness: 'CGDirectDisplayID' (aka 'unsigned int') to 'int' [-Wsign-conversion]
+        [originalGammas removeObjectForKey:[NSNumber numberWithInt:display]];
+                                           ~                       ^~~~~~~
+internal.m:457:67: warning: implicit conversion changes signedness: 'CGDirectDisplayID' (aka 'unsigned int') to 'int' [-Wsign-conversion]
+        [currentGammas removeObjectForKey:[NSNumber numberWithInt:display]];
+                                          ~                       ^~~~~~~
+internal.m:460:67: warning: implicit conversion changes signedness: 'CGDirectDisplayID' (aka 'unsigned int') to 'int' [-Wsign-conversion]
+        [currentGammas removeObjectForKey:[NSNumber numberWithInt:display]];
+                                          ~                       ^~~~~~~
+internal.m:499:35: warning: implicit conversion changes signedness: 'int _Nullable' to 'CGDirectDisplayID' (aka 'unsigned int') [-Wsign-conversion]
+    CGDirectDisplayID screen_id = [[[screen deviceDescription] objectForKey:@"NSScreenNumber"] intValue];
+                      ~~~~~~~~~   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+internal.m:506:21: warning: implicit conversion loses floating-point precision: 'lua_Number' (aka 'double') to 'float' [-Wconversion]
+    whitePoint[0] = lua_tonumber(L, -1);
+                  ~ ^~~~~~~~~~~~~~~~~~~
+/Applications/Development/Hammerspoon.app/Contents/Frameworks/LuaSkin.framework/Headers/lua.h:341:27: note: expanded from macro 'lua_tonumber'
+#define lua_tonumber(L,i)       lua_tonumberx(L,(i),NULL)
+                                ^~~~~~~~~~~~~~~~~~~~~~~~~
+internal.m:510:21: warning: implicit conversion loses floating-point precision: 'lua_Number' (aka 'double') to 'float' [-Wconversion]
+    whitePoint[1] = lua_tonumber(L, -1);
+                  ~ ^~~~~~~~~~~~~~~~~~~
+/Applications/Development/Hammerspoon.app/Contents/Frameworks/LuaSkin.framework/Headers/lua.h:341:27: note: expanded from macro 'lua_tonumber'
+#define lua_tonumber(L,i)       lua_tonumberx(L,(i),NULL)
+                                ^~~~~~~~~~~~~~~~~~~~~~~~~
+internal.m:514:21: warning: implicit conversion loses floating-point precision: 'lua_Number' (aka 'double') to 'float' [-Wconversion]
+    whitePoint[2] = lua_tonumber(L, -1);
+                  ~ ^~~~~~~~~~~~~~~~~~~
+/Applications/Development/Hammerspoon.app/Contents/Frameworks/LuaSkin.framework/Headers/lua.h:341:27: note: expanded from macro 'lua_tonumber'
+#define lua_tonumber(L,i)       lua_tonumberx(L,(i),NULL)
+                                ^~~~~~~~~~~~~~~~~~~~~~~~~
+internal.m:518:21: warning: implicit conversion loses floating-point precision: 'lua_Number' (aka 'double') to 'float' [-Wconversion]
+    blackPoint[0] = lua_tonumber(L, -1);
+                  ~ ^~~~~~~~~~~~~~~~~~~
+/Applications/Development/Hammerspoon.app/Contents/Frameworks/LuaSkin.framework/Headers/lua.h:341:27: note: expanded from macro 'lua_tonumber'
+#define lua_tonumber(L,i)       lua_tonumberx(L,(i),NULL)
+                                ^~~~~~~~~~~~~~~~~~~~~~~~~
+internal.m:522:21: warning: implicit conversion loses floating-point precision: 'lua_Number' (aka 'double') to 'float' [-Wconversion]
+    blackPoint[1] = lua_tonumber(L, -1);
+                  ~ ^~~~~~~~~~~~~~~~~~~
+/Applications/Development/Hammerspoon.app/Contents/Frameworks/LuaSkin.framework/Headers/lua.h:341:27: note: expanded from macro 'lua_tonumber'
+#define lua_tonumber(L,i)       lua_tonumberx(L,(i),NULL)
+                                ^~~~~~~~~~~~~~~~~~~~~~~~~
+internal.m:526:21: warning: implicit conversion loses floating-point precision: 'lua_Number' (aka 'double') to 'float' [-Wconversion]
+    blackPoint[2] = lua_tonumber(L, -1);
+                  ~ ^~~~~~~~~~~~~~~~~~~
+/Applications/Development/Hammerspoon.app/Contents/Frameworks/LuaSkin.framework/Headers/lua.h:341:27: note: expanded from macro 'lua_tonumber'
+#define lua_tonumber(L,i)       lua_tonumberx(L,(i),NULL)
+                                ^~~~~~~~~~~~~~~~~~~~~~~~~
+internal.m:530:88: warning: implicit conversion changes signedness: 'CGDirectDisplayID' (aka 'unsigned int') to 'int' [-Wsign-conversion]
+    NSDictionary *originalGamma = [originalGammas objectForKey:[NSNumber numberWithInt:screen_id]];
+                                                               ~                       ^~~~~~~~~
+internal.m:542:60: warning: implicit conversion changes signedness: 'int' to 'unsigned long' [-Wsign-conversion]
+    CGGammaValue *redTable = malloc(sizeof(CGGammaValue) * count);
+                                                         ~ ^~~~~
+internal.m:543:62: warning: implicit conversion changes signedness: 'int' to 'unsigned long' [-Wsign-conversion]
+    CGGammaValue *greenTable = malloc(sizeof(CGGammaValue) * count);
+                                                           ~ ^~~~~
+internal.m:544:61: warning: implicit conversion changes signedness: 'int' to 'unsigned long' [-Wsign-conversion]
+    CGGammaValue *blueTable = malloc(sizeof(CGGammaValue) * count);
+                                                          ~ ^~~~~
+internal.m:546:63: warning: implicit conversion changes signedness: 'int' to 'NSUInteger' (aka 'unsigned long') [-Wsign-conversion]
+    NSMutableArray *red   = [NSMutableArray arrayWithCapacity:count];
+                            ~                                 ^~~~~
+internal.m:547:63: warning: implicit conversion changes signedness: 'int' to 'NSUInteger' (aka 'unsigned long') [-Wsign-conversion]
+    NSMutableArray *green = [NSMutableArray arrayWithCapacity:count];
+                            ~                                 ^~~~~
+internal.m:548:63: warning: implicit conversion changes signedness: 'int' to 'NSUInteger' (aka 'unsigned long') [-Wsign-conversion]
+    NSMutableArray *blue  = [NSMutableArray arrayWithCapacity:count];
+                            ~                                 ^~~~~
+internal.m:551:52: warning: implicit conversion changes signedness: 'int' to 'NSUInteger' (aka 'unsigned long') [-Wsign-conversion]
+        float origRed   = [[redArray objectAtIndex:i] floatValue];
+                           ~                       ^
+internal.m:552:54: warning: implicit conversion changes signedness: 'int' to 'NSUInteger' (aka 'unsigned long') [-Wsign-conversion]
+        float origGreen = [[greenArray objectAtIndex:i] floatValue];
+                           ~                         ^
+internal.m:553:53: warning: implicit conversion changes signedness: 'int' to 'NSUInteger' (aka 'unsigned long') [-Wsign-conversion]
+        float origBlue  = [[blueArray objectAtIndex:i] floatValue];
+                           ~                        ^
+internal.m:563:74: warning: implicit conversion changes signedness: 'int' to 'NSUInteger' (aka 'unsigned long') [-Wsign-conversion]
+        [red insertObject:[NSNumber numberWithFloat:redTable[i]] atIndex:i];
+        ~                                                                ^
+internal.m:564:78: warning: implicit conversion changes signedness: 'int' to 'NSUInteger' (aka 'unsigned long') [-Wsign-conversion]
+        [green insertObject:[NSNumber numberWithFloat:greenTable[i]] atIndex:i];
+        ~                                                                    ^
+internal.m:565:76: warning: implicit conversion changes signedness: 'int' to 'NSUInteger' (aka 'unsigned long') [-Wsign-conversion]
+        [blue insertObject:[NSNumber numberWithFloat:blueTable[i]] atIndex:i];
+        ~                                                                  ^
+internal.m:571:72: warning: implicit conversion changes signedness: 'CGDirectDisplayID' (aka 'unsigned int') to 'int' [-Wsign-conversion]
+        [currentGammas setObject:gammas forKey:[NSNumber numberWithInt:screen_id]];
+                                               ~                       ^~~~~~~~~
+internal.m:576:61: warning: implicit conversion changes signedness: 'int' to 'uint32_t' (aka 'unsigned int') [-Wsign-conversion]
+    CGError result = CGSetDisplayTransferByTable(screen_id, count, redTable, greenTable, blueTable);
+                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~            ^~~~~
+internal.m:606:35: warning: implicit conversion changes signedness: 'int _Nullable' to 'CGDirectDisplayID' (aka 'unsigned int') [-Wsign-conversion]
+    CGDirectDisplayID screen_id = [[[screen deviceDescription] objectForKey:@"NSScreenNumber"] intValue];
+                      ~~~~~~~~~   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+internal.m:637:35: warning: implicit conversion changes signedness: 'int _Nullable' to 'CGDirectDisplayID' (aka 'unsigned int') [-Wsign-conversion]
+    CGDirectDisplayID screen_id = [[[screen deviceDescription] objectForKey:@"NSScreenNumber"] intValue];
+                      ~~~~~~~~~   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+internal.m:643:86: warning: implicit conversion loses floating-point precision: 'lua_Number' (aka 'double') to 'float' [-Wconversion]
+    IODisplaySetFloatParameter(service, kNilOptions, CFSTR(kIODisplayBrightnessKey), lua_tonumber(L, 2));
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~                                                       ^~~~~~~~~~~~~~~~~~
+/Applications/Development/Hammerspoon.app/Contents/Frameworks/LuaSkin.framework/Headers/lua.h:341:27: note: expanded from macro 'lua_tonumber'
+#define lua_tonumber(L,i)       lua_tonumberx(L,(i),NULL)
+                                ^~~~~~~~~~~~~~~~~~~~~~~~~
+internal.m:651:80: warning: implicit conversion changes signedness: 'CGDirectDisplayID' (aka 'unsigned int') to 'int' [-Wsign-conversion]
+    NSDictionary *gammas = [currentGammas objectForKey:[NSNumber numberWithInt:display]];
+                                                       ~                       ^~~~~~~
+internal.m:662:60: warning: implicit conversion changes signedness: 'int' to 'unsigned long' [-Wsign-conversion]
+    CGGammaValue *redTable = malloc(sizeof(CGGammaValue) * count);
+                                                         ~ ^~~~~
+internal.m:663:62: warning: implicit conversion changes signedness: 'int' to 'unsigned long' [-Wsign-conversion]
+    CGGammaValue *greenTable = malloc(sizeof(CGGammaValue) * count);
+                                                           ~ ^~~~~
+internal.m:664:61: warning: implicit conversion changes signedness: 'int' to 'unsigned long' [-Wsign-conversion]
+    CGGammaValue *blueTable = malloc(sizeof(CGGammaValue) * count);
+                                                          ~ ^~~~~
+internal.m:667:45: warning: implicit conversion changes signedness: 'int' to 'NSUInteger' (aka 'unsigned long') [-Wsign-conversion]
+        redTable[i]   = [[red objectAtIndex:i] floatValue];
+                         ~                  ^
+internal.m:668:47: warning: implicit conversion changes signedness: 'int' to 'NSUInteger' (aka 'unsigned long') [-Wsign-conversion]
+        greenTable[i] = [[green objectAtIndex:i] floatValue];
+                         ~                    ^
+internal.m:669:46: warning: implicit conversion changes signedness: 'int' to 'NSUInteger' (aka 'unsigned long') [-Wsign-conversion]
+        blueTable[i]  = [[blue objectAtIndex:i] floatValue];
+                         ~                   ^
+internal.m:672:59: warning: implicit conversion changes signedness: 'int' to 'uint32_t' (aka 'unsigned int') [-Wsign-conversion]
+    CGError result = CGSetDisplayTransferByTable(display, count, redTable, greenTable, blueTable);
+                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~          ^~~~~
+internal.m:790:14: warning: implicit conversion turns floating-point number into integer: 'CGFloat' (aka 'double') to 'int' [-Wfloat-conversion]
+    deltaX = -CGRectGetMinX(CGDisplayBounds(targetDisplay));
+           ~ ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+internal.m:791:14: warning: implicit conversion turns floating-point number into integer: 'CGFloat' (aka 'double') to 'int' [-Wfloat-conversion]
+    deltaY = -CGRectGetMinY(CGDisplayBounds(targetDisplay));
+           ~ ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+internal.m:804:77: warning: implicit conversion turns floating-point number into integer: 'double' to 'int32_t' (aka 'int') [-Wfloat-conversion]
+                                        CGRectGetMinX(CGDisplayBounds(dID)) + deltaX,
+                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~
+internal.m:805:77: warning: implicit conversion turns floating-point number into integer: 'double' to 'int32_t' (aka 'int') [-Wfloat-conversion]
+                                        CGRectGetMinY(CGDisplayBounds(dID)) + deltaY
+                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~
+internal.m:885:55: warning: implicit conversion changes signedness: 'int' to 'IOOptionBits' (aka 'unsigned int') [-Wsign-conversion]
+            IOOptionBits options = (kIOFBSetTransform | (rotation) << 16);
+                         ~~~~~~~    ~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~
+internal.m:1040:35: warning: implicit conversion changes signedness: 'int _Nullable' to 'CGDirectDisplayID' (aka 'unsigned int') [-Wsign-conversion]
+    CGDirectDisplayID screen_id = [[[screen deviceDescription] objectForKey:@"NSScreenNumber"] intValue];
+                      ~~~~~~~~~   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+55 warnings generated.
+watcher.m:1:1: warning: treating #import as an import of module 'Foundation' [-Wauto-import]
+#import <Foundation/Foundation.h>
+^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+@import Foundation;
+watcher.m:2:1: warning: treating #import as an import of module 'Cocoa' [-Wauto-import]
+#import <Cocoa/Cocoa.h>
+^~~~~~~~~~~~~~~~~~~~~~~
+@import Cocoa;
+watcher.m:3:1: warning: treating #import as an import of module 'LuaSkin' [-Wauto-import]
+#import <LuaSkin/LuaSkin.h>
+^~~~~~~~~~~~~~~~~~~~~~~~~~~
+@import LuaSkin;
+3 warnings generated.
+mkdir -p ../../../luathread/hs/luathread/luaskin/hs/screen
+install -m 0644 internal.so watcher.so ../../../luathread/hs/luathread/luaskin/hs/screen
+cp -vpR internal.so.dSYM watcher.so.dSYM ../../../luathread/hs/luathread/luaskin/hs/screen
+internal.so.dSYM -> ../../../luathread/hs/luathread/luaskin/hs/screen/internal.so.dSYM
+internal.so.dSYM/Contents -> ../../../luathread/hs/luathread/luaskin/hs/screen/internal.so.dSYM/Contents
+internal.so.dSYM/Contents/Info.plist -> ../../../luathread/hs/luathread/luaskin/hs/screen/internal.so.dSYM/Contents/Info.plist
+internal.so.dSYM/Contents/Resources -> ../../../luathread/hs/luathread/luaskin/hs/screen/internal.so.dSYM/Contents/Resources
+internal.so.dSYM/Contents/Resources/DWARF -> ../../../luathread/hs/luathread/luaskin/hs/screen/internal.so.dSYM/Contents/Resources/DWARF
+internal.so.dSYM/Contents/Resources/DWARF/internal.so -> ../../../luathread/hs/luathread/luaskin/hs/screen/internal.so.dSYM/Contents/Resources/DWARF/internal.so
+watcher.so.dSYM -> ../../../luathread/hs/luathread/luaskin/hs/screen/watcher.so.dSYM
+watcher.so.dSYM/Contents -> ../../../luathread/hs/luathread/luaskin/hs/screen/watcher.so.dSYM/Contents
+watcher.so.dSYM/Contents/Info.plist -> ../../../luathread/hs/luathread/luaskin/hs/screen/watcher.so.dSYM/Contents/Info.plist
+watcher.so.dSYM/Contents/Resources -> ../../../luathread/hs/luathread/luaskin/hs/screen/watcher.so.dSYM/Contents/Resources
+watcher.so.dSYM/Contents/Resources/DWARF -> ../../../luathread/hs/luathread/luaskin/hs/screen/watcher.so.dSYM/Contents/Resources/DWARF
+watcher.so.dSYM/Contents/Resources/DWARF/watcher.so -> ../../../luathread/hs/luathread/luaskin/hs/screen/watcher.so.dSYM/Contents/Resources/DWARF/watcher.so
+mkdir -p ../../../luathread/hs/luathread/luaskin/hs/screen
+install -m 0644 init.lua test_screen.lua ../../../luathread/hs/luathread/luaskin/hs/screen
+-- settings --
+rm -rf internal.so *.dSYM tmp
+Lua Compile Verification Passed
+internal.m:1:1: warning: treating #import as an import of module 'Cocoa' [-Wauto-import]
+#import <Cocoa/Cocoa.h>
+^~~~~~~~~~~~~~~~~~~~~~~
+@import Cocoa;
+internal.m:2:1: warning: treating #import as an import of module 'LuaSkin' [-Wauto-import]
+#import <LuaSkin/LuaSkin.h>
+^~~~~~~~~~~~~~~~~~~~~~~~~~~
+@import LuaSkin;
+internal.m:172:86: warning: implicit conversion from nullable pointer 'NSString * _Nullable' to non-nullable pointer type 'NSString * _Nonnull' [-Wnullable-to-nonnull-conversion]
+    NSArray *keys = [[[NSUserDefaults standardUserDefaults] persistentDomainForName: [[NSBundle mainBundle] bundleIdentifier]] allKeys];
+                                                                                     ^
+3 warnings generated.
+mkdir -p ../../../luathread/hs/luathread/luaskin/hs/settings
+install -m 0644 internal.so ../../../luathread/hs/luathread/luaskin/hs/settings
+cp -vpR internal.so.dSYM ../../../luathread/hs/luathread/luaskin/hs/settings
+internal.so.dSYM -> ../../../luathread/hs/luathread/luaskin/hs/settings/internal.so.dSYM
+internal.so.dSYM/Contents -> ../../../luathread/hs/luathread/luaskin/hs/settings/internal.so.dSYM/Contents
+internal.so.dSYM/Contents/Info.plist -> ../../../luathread/hs/luathread/luaskin/hs/settings/internal.so.dSYM/Contents/Info.plist
+internal.so.dSYM/Contents/Resources -> ../../../luathread/hs/luathread/luaskin/hs/settings/internal.so.dSYM/Contents/Resources
+internal.so.dSYM/Contents/Resources/DWARF -> ../../../luathread/hs/luathread/luaskin/hs/settings/internal.so.dSYM/Contents/Resources/DWARF
+internal.so.dSYM/Contents/Resources/DWARF/internal.so -> ../../../luathread/hs/luathread/luaskin/hs/settings/internal.so.dSYM/Contents/Resources/DWARF/internal.so
+mkdir -p ../../../luathread/hs/luathread/luaskin/hs/settings
+install -m 0644 init.lua ../../../luathread/hs/luathread/luaskin/hs/settings
+-- styledtext --
+rm -rf internal.so *.dSYM tmp
+Lua Compile Verification Passed
+internal.m:1:1: warning: treating #import as an import of module 'Cocoa' [-Wauto-import]
+#import <Cocoa/Cocoa.h>
+^~~~~~~~~~~~~~~~~~~~~~~
+@import Cocoa;
+internal.m:2:1: warning: treating #import as an import of module 'LuaSkin' [-Wauto-import]
+#import <LuaSkin/LuaSkin.h>
+^~~~~~~~~~~~~~~~~~~~~~~~~~~
+@import LuaSkin;
+internal.m:88:20: warning: 'L' was marked unused but was used [-Wused-but-marked-unused]
+    if (lua_gettop(L) == 2) {
+                   ^
+internal.m:295:92: warning: cast from function call of type 'lua_Integer' (aka 'long long') to non-matching type 'NSFontTraitMask' (aka 'enum NSFontTraitMask') [-Wbad-function-cast]
+                                                              toHaveTrait:(NSFontTraitMask)luaL_checkinteger(L, 2)]];
+                                                                                           ^~~~~~~~~~~~~~~~~~~~~~~
+internal.m:319:33: warning: integer constant not in range of enumerated type 'NSFontTraitMask' (aka 'enum NSFontTraitMask') [-Wassign-enum]
+    NSFontTraitMask theTraits = 0;
+                                ^
+internal.m:326:47: warning: cast from function call of type 'lua_Integer' (aka 'long long') to non-matching type 'enum NSFontTraitMask' [-Wbad-function-cast]
+            theTraits = (enum NSFontTraitMask)luaL_checkinteger(L, 1);
+                                              ^~~~~~~~~~~~~~~~~~~~~~~
+internal.m:330:52: warning: cast from function call of type 'lua_Integer' (aka 'long long') to non-matching type 'enum NSFontTraitMask' [-Wbad-function-cast]
+                theTraits |= (enum NSFontTraitMask)lua_tointeger(L, -1);
+                                                   ^~~~~~~~~~~~~~~~~~~~
+/Applications/Development/Hammerspoon.app/Contents/Frameworks/LuaSkin.framework/Headers/lua.h:342:28: note: expanded from macro 'lua_tointeger'
+#define lua_tointeger(L,i)      lua_tointegerx(L,(i),NULL)
+                                ^~~~~~~~~~~~~~~~~~~~~~~~~~
+internal.m:1760:23: warning: implicit conversion increases floating-point precision: 'float' to 'lua_Number' (aka 'double') [-Wdouble-promotion]
+    lua_pushnumber(L, [thePS hyphenationFactor]);
+    ~~~~~~~~~~~~~~    ^~~~~~~~~~~~~~~~~~~~~~~~~
+internal.m:1762:23: warning: implicit conversion increases floating-point precision: 'float' to 'lua_Number' (aka 'double') [-Wdouble-promotion]
+    lua_pushnumber(L, [thePS tighteningFactorForTruncation]);
+    ~~~~~~~~~~~~~~    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+internal.m:2205:49: warning: implicit conversion from nullable pointer 'NSString * _Nullable' to non-nullable pointer type 'NSString * _Nonnull' [-Wnullable-to-nonnull-conversion]
+                                     withString:[NSString stringWithUTF8String:lua_tostring(L, 2)]];
+                                                ^
+internal.m:2334:16: warning: 'L' was marked unused but was used [-Wused-but-marked-unused]
+    fontTraits(L);
+               ^
+internal.m:2335:18: warning: 'L' was marked unused but was used [-Wused-but-marked-unused]
+    lua_setfield(L, -2, "fontTraits");
+                 ^
+internal.m:2337:24: warning: 'L' was marked unused but was used [-Wused-but-marked-unused]
+    defineLinePatterns(L);
+                       ^
+internal.m:2338:18: warning: 'L' was marked unused but was used [-Wused-but-marked-unused]
+    lua_setfield(L, -2, "linePatterns");
+                 ^
+internal.m:2339:22: warning: 'L' was marked unused but was used [-Wused-but-marked-unused]
+    defineLineStyles(L);
+                     ^
+internal.m:2340:18: warning: 'L' was marked unused but was used [-Wused-but-marked-unused]
+    lua_setfield(L, -2, "lineStyles");
+                 ^
+internal.m:2341:25: warning: 'L' was marked unused but was used [-Wused-but-marked-unused]
+    defineLineAppliesTo(L);
+                        ^
+internal.m:2342:18: warning: 'L' was marked unused but was used [-Wused-but-marked-unused]
+    lua_setfield(L, -2, "lineAppliesTo");
+                 ^
+18 warnings generated.
+mkdir -p ../../../luathread/hs/luathread/luaskin/hs/styledtext
+install -m 0644 internal.so ../../../luathread/hs/luathread/luaskin/hs/styledtext
+cp -vpR internal.so.dSYM ../../../luathread/hs/luathread/luaskin/hs/styledtext
+internal.so.dSYM -> ../../../luathread/hs/luathread/luaskin/hs/styledtext/internal.so.dSYM
+internal.so.dSYM/Contents -> ../../../luathread/hs/luathread/luaskin/hs/styledtext/internal.so.dSYM/Contents
+internal.so.dSYM/Contents/Info.plist -> ../../../luathread/hs/luathread/luaskin/hs/styledtext/internal.so.dSYM/Contents/Info.plist
+internal.so.dSYM/Contents/Resources -> ../../../luathread/hs/luathread/luaskin/hs/styledtext/internal.so.dSYM/Contents/Resources
+internal.so.dSYM/Contents/Resources/DWARF -> ../../../luathread/hs/luathread/luaskin/hs/styledtext/internal.so.dSYM/Contents/Resources/DWARF
+internal.so.dSYM/Contents/Resources/DWARF/internal.so -> ../../../luathread/hs/luathread/luaskin/hs/styledtext/internal.so.dSYM/Contents/Resources/DWARF/internal.so
+mkdir -p ../../../luathread/hs/luathread/luaskin/hs/styledtext
+install -m 0644 init.lua ../../../luathread/hs/luathread/luaskin/hs/styledtext
+-- timer --
+rm -rf internal.so *.dSYM tmp
+Lua Compile Verification Passed
+internal.m:3:1: warning: treating #import as an import of module 'LuaSkin' [-Wauto-import]
+#import <LuaSkin/LuaSkin.h>
+^~~~~~~~~~~~~~~~~~~~~~~~~~~
+@import LuaSkin;
+internal.m:64:12: warning: implicit conversion changes signedness: 'Boolean' (aka 'unsigned char') to 'BOOL' (aka 'signed char') [-Wsign-conversion]
+    return CFRunLoopContainsTimer(CFRunLoopGetCurrent(), (__bridge CFRunLoopTimerRef)self.t, kCFRunLoopDefaultMode);
+    ~~~~~~ ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+internal.m:87:18: warning: implicit conversion turns floating-point number into integer: 'double' to 'int' [-Wfloat-conversion]
+    return (next - now);
+    ~~~~~~  ~~~~~^~~~~
+3 warnings generated.
+mkdir -p ../../../luathread/hs/luathread/luaskin/hs/timer
+install -m 0644 internal.so ../../../luathread/hs/luathread/luaskin/hs/timer
+cp -vpR internal.so.dSYM ../../../luathread/hs/luathread/luaskin/hs/timer
+internal.so.dSYM -> ../../../luathread/hs/luathread/luaskin/hs/timer/internal.so.dSYM
+internal.so.dSYM/Contents -> ../../../luathread/hs/luathread/luaskin/hs/timer/internal.so.dSYM/Contents
+internal.so.dSYM/Contents/Info.plist -> ../../../luathread/hs/luathread/luaskin/hs/timer/internal.so.dSYM/Contents/Info.plist
+internal.so.dSYM/Contents/Resources -> ../../../luathread/hs/luathread/luaskin/hs/timer/internal.so.dSYM/Contents/Resources
+internal.so.dSYM/Contents/Resources/DWARF -> ../../../luathread/hs/luathread/luaskin/hs/timer/internal.so.dSYM/Contents/Resources/DWARF
+internal.so.dSYM/Contents/Resources/DWARF/internal.so -> ../../../luathread/hs/luathread/luaskin/hs/timer/internal.so.dSYM/Contents/Resources/DWARF/internal.so
+mkdir -p ../../../luathread/hs/luathread/luaskin/hs/timer
+install -m 0644 init.lua test_timer.lua ../../../luathread/hs/luathread/luaskin/hs/timer
+-- usb --
+rm -rf internal.so watcher.so *.dSYM tmp
+Lua Compile Verification Passed
+internal.m:1:1: warning: treating #import as an import of module 'Cocoa' [-Wauto-import]
+#import <Cocoa/Cocoa.h>
+^~~~~~~~~~~~~~~~~~~~~~~
+@import Cocoa;
+internal.m:2:1: warning: treating #import as an import of module 'IOKit.usb.IOUSBLib' [-Wauto-import]
+#import <IOKit/usb/IOUSBLib.h>
+^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+@import IOKit.usb.IOUSBLib;
+internal.m:3:1: warning: treating #import as an import of module 'LuaSkin' [-Wauto-import]
+#import <LuaSkin/LuaSkin.h>
+^~~~~~~~~~~~~~~~~~~~~~~~~~~
+@import LuaSkin;
+internal.m:6:13: warning: no previous extern declaration for non-static variable 'productNameKey' [-Wmissing-variable-declarations]
+CFStringRef productNameKey = CFSTR(kUSBProductString);
+            ^
+internal.m:7:13: warning: no previous extern declaration for non-static variable 'vendorNameKey' [-Wmissing-variable-declarations]
+CFStringRef vendorNameKey = CFSTR(kUSBVendorString);
+            ^
+internal.m:8:13: warning: no previous extern declaration for non-static variable 'productIDKey' [-Wmissing-variable-declarations]
+CFStringRef productIDKey = CFSTR(kUSBProductID);
+            ^
+internal.m:9:13: warning: no previous extern declaration for non-static variable 'vendorIDKey' [-Wmissing-variable-declarations]
+CFStringRef vendorIDKey = CFSTR(kUSBVendorID);
+            ^
+7 warnings generated.
+watcher.m:1:1: warning: treating #import as an import of module 'Foundation' [-Wauto-import]
+#import <Foundation/Foundation.h>
+^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+@import Foundation;
+watcher.m:2:1: warning: treating #import as an import of module 'Cocoa' [-Wauto-import]
+#import <Cocoa/Cocoa.h>
+^~~~~~~~~~~~~~~~~~~~~~~
+@import Cocoa;
+watcher.m:3:1: warning: treating #import as an import of module 'IOKit' [-Wauto-import]
+#import <IOKit/IOKitLib.h>
+^~~~~~~~~~~~~~~~~~~~~~~~~~
+@import IOKit;
+watcher.m:4:1: warning: treating #import as an import of module 'IOKit' [-Wauto-import]
+#import <IOKit/IOMessage.h>
+^~~~~~~~~~~~~~~~~~~~~~~~~~~
+@import IOKit;
+watcher.m:5:1: warning: treating #import as an import of module 'IOKit' [-Wauto-import]
+#import <IOKit/IOCFPlugIn.h>
+^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+@import IOKit;
+watcher.m:6:1: warning: treating #import as an import of module 'IOKit.usb.IOUSBLib' [-Wauto-import]
+#import <IOKit/usb/IOUSBLib.h>
+^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+@import IOKit.usb.IOUSBLib;
+watcher.m:7:1: warning: treating #import as an import of module 'LuaSkin' [-Wauto-import]
+#import <LuaSkin/LuaSkin.h>
+^~~~~~~~~~~~~~~~~~~~~~~~~~~
+@import LuaSkin;
+watcher.m:45:24: warning: signed shift result (0xE0000000) sets the sign bit of the shift expression's type ('int') and becomes negative [-Wshift-sign-overflow]
+    if (messageType == kIOMessageServiceIsTerminated) {
+                       ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/System/Library/Frameworks/IOKit.framework/Headers/IOMessage.h:55:44: note: expanded from macro 'kIOMessageServiceIsTerminated'
+#define kIOMessageServiceIsTerminated      iokit_common_msg(0x010)
+                                           ^~~~~~~~~~~~~~~~~~~~~~~
+/System/Library/Frameworks/IOKit.framework/Headers/IOMessage.h:44:53: note: expanded from macro 'iokit_common_msg'
+#define iokit_common_msg(message)          (UInt32)(sys_iokit|sub_iokit_common|message)
+                                                    ^~~~~~~~~
+/System/Library/Frameworks/IOKit.framework/Headers/IOReturn.h:48:43: note: expanded from macro 'sys_iokit'
+#define sys_iokit                         err_system(0x38)
+                                          ^~~~~~~~~~~~~~~~
+/usr/include/mach/error.h:83:35: note: expanded from macro 'err_system'
+#define err_system(x)           (((x)&0x3f)<<26)
+                                 ~~~~~~~~~~^ ~~
+watcher.m:108:46: warning: implicit conversion changes signedness: 'int' to 'unsigned long' [-Wsign-conversion]
+        privateDataRef->productName = malloc(length);
+                                      ~~~~~~ ^~~~~~
+watcher.m:109:76: warning: implicit conversion changes signedness: 'int' to 'NSUInteger' (aka 'unsigned long') [-Wsign-conversion]
+        if (![productName getCString:privateDataRef->productName maxLength:length encoding:NSUTF8StringEncoding]) {
+             ~                                                             ^~~~~~
+watcher.m:116:45: warning: implicit conversion changes signedness: 'int' to 'unsigned long' [-Wsign-conversion]
+        privateDataRef->vendorName = malloc(length);
+                                     ~~~~~~ ^~~~~~
+watcher.m:117:74: warning: implicit conversion changes signedness: 'int' to 'NSUInteger' (aka 'unsigned long') [-Wsign-conversion]
+        if (![vendorName getCString:privateDataRef->vendorName maxLength:length encoding:NSUTF8StringEncoding]) {
+             ~                                                           ^~~~~~
+watcher.m:137:22: warning: declaration shadows a local variable [-Wshadow]
+            LuaSkin *skin = [LuaSkin threaded];
+                     ^
+watcher.m:86:14: note: previous declaration is here
+    LuaSkin *skin = [LuaSkin threaded];
+             ^
+13 warnings generated.
+mkdir -p ../../../luathread/hs/luathread/luaskin/hs/usb
+install -m 0644 internal.so watcher.so ../../../luathread/hs/luathread/luaskin/hs/usb
+cp -vpR internal.so.dSYM watcher.so.dSYM ../../../luathread/hs/luathread/luaskin/hs/usb
+internal.so.dSYM -> ../../../luathread/hs/luathread/luaskin/hs/usb/internal.so.dSYM
+internal.so.dSYM/Contents -> ../../../luathread/hs/luathread/luaskin/hs/usb/internal.so.dSYM/Contents
+internal.so.dSYM/Contents/Info.plist -> ../../../luathread/hs/luathread/luaskin/hs/usb/internal.so.dSYM/Contents/Info.plist
+internal.so.dSYM/Contents/Resources -> ../../../luathread/hs/luathread/luaskin/hs/usb/internal.so.dSYM/Contents/Resources
+internal.so.dSYM/Contents/Resources/DWARF -> ../../../luathread/hs/luathread/luaskin/hs/usb/internal.so.dSYM/Contents/Resources/DWARF
+internal.so.dSYM/Contents/Resources/DWARF/internal.so -> ../../../luathread/hs/luathread/luaskin/hs/usb/internal.so.dSYM/Contents/Resources/DWARF/internal.so
+watcher.so.dSYM -> ../../../luathread/hs/luathread/luaskin/hs/usb/watcher.so.dSYM
+watcher.so.dSYM/Contents -> ../../../luathread/hs/luathread/luaskin/hs/usb/watcher.so.dSYM/Contents
+watcher.so.dSYM/Contents/Info.plist -> ../../../luathread/hs/luathread/luaskin/hs/usb/watcher.so.dSYM/Contents/Info.plist
+watcher.so.dSYM/Contents/Resources -> ../../../luathread/hs/luathread/luaskin/hs/usb/watcher.so.dSYM/Contents/Resources
+watcher.so.dSYM/Contents/Resources/DWARF -> ../../../luathread/hs/luathread/luaskin/hs/usb/watcher.so.dSYM/Contents/Resources/DWARF
+watcher.so.dSYM/Contents/Resources/DWARF/watcher.so -> ../../../luathread/hs/luathread/luaskin/hs/usb/watcher.so.dSYM/Contents/Resources/DWARF/watcher.so
+mkdir -p ../../../luathread/hs/luathread/luaskin/hs/usb
+install -m 0644 init.lua ../../../luathread/hs/luathread/luaskin/hs/usb
+-- wifi --
+rm -rf internal.so watcher.so *.dSYM tmp
+Lua Compile Verification Passed
+internal.m:115:13: warning: 'log_to_console' was marked unused but was used [-Wused-but-marked-unused]
+            log_to_console(L, _cINFO, [(NSError *)object localizedDescription]) ;
+            ^
+internal.m:122:13: warning: 'log_to_console' was marked unused but was used [-Wused-but-marked-unused]
+            log_to_console(L, _cERROR, [skin toNSObjectAtIndex:-1]) ;
+            ^
+internal.m:265:20: warning: 'L' was marked unused but was used [-Wused-but-marked-unused]
+    if (lua_gettop(L) == 1)
+                   ^
+internal.m:266:67: warning: 'L' was marked unused but was used [-Wused-but-marked-unused]
+        theName = [NSString stringWithUTF8String:luaL_checkstring(L, 1)] ;
+                                                                  ^
+internal.m:271:21: warning: 'L' was marked unused but was used [-Wused-but-marked-unused]
+        lua_pushnil(L);
+                    ^
+internal.m:275:18: warning: 'L' was marked unused but was used [-Wused-but-marked-unused]
+    lua_newtable(L);
+                 ^
+internal.m:278:25: warning: 'L' was marked unused but was used [-Wused-but-marked-unused]
+        lua_pushinteger(L, i++);
+                        ^
+internal.m:279:24: warning: 'L' was marked unused but was used [-Wused-but-marked-unused]
+        lua_pushstring(L, [[network ssid] UTF8String]);
+                       ^
+internal.m:280:22: warning: 'L' was marked unused but was used [-Wused-but-marked-unused]
+        lua_settable(L, -3);
+                     ^
+internal.m:347:18: warning: 'L' was marked unused but was used [-Wused-but-marked-unused]
+    if (lua_type(L, 1) != LUA_TNIL) {
+                 ^
+internal.m:348:23: warning: 'L' was marked unused but was used [-Wused-but-marked-unused]
+        lua_pushvalue(L, 1);
+                      ^
+internal.m:353:20: warning: 'L' was marked unused but was used [-Wused-but-marked-unused]
+    if (lua_gettop(L) == 2)
+                   ^
+internal.m:354:67: warning: 'L' was marked unused but was used [-Wused-but-marked-unused]
+        theName = [NSString stringWithUTF8String:luaL_checkstring(L, 2)] ;
+                                                                  ^
+internal.m:357:41: warning: 'L' was marked unused but was used [-Wused-but-marked-unused]
+    void** scannerPtr = lua_newuserdata(L, sizeof(HSWifiScan *));
+                                        ^
+internal.m:359:23: warning: 'L' was marked unused but was used [-Wused-but-marked-unused]
+    luaL_getmetatable(L, USERDATA_TAG);
+                      ^
+internal.m:360:22: warning: 'L' was marked unused but was used [-Wused-but-marked-unused]
+    lua_setmetatable(L, -2);
+                     ^
+internal.m:486:12: warning: enumeration value 'kCWSecurityUnknown' not explicitly handled in switch [-Wswitch-enum]
+    switch([theInterface security]) {
+           ^
+internal.m:699:12: warning: enumeration value 'kCWSecurityUnknown' not explicitly handled in switch [-Wswitch-enum]
+    switch([theProfile security]) {
+           ^
+internal.m:18:9: warning: macro is not used [-Wunused-macros]
+#define _cVERBOSE "vf"
+        ^
+internal.m:15:9: warning: macro is not used [-Wunused-macros]
+#define _cWARN    "wf"
+        ^
+internal.m:17:9: warning: macro is not used [-Wunused-macros]
+#define _cDEBUG   "df"
+        ^
+21 warnings generated.
+watcher.m:1:1: warning: treating #import as an import of module 'Foundation' [-Wauto-import]
+#import <Foundation/Foundation.h>
+^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+@import Foundation;
+watcher.m:2:1: warning: treating #import as an import of module 'Cocoa' [-Wauto-import]
+#import <Cocoa/Cocoa.h>
+^~~~~~~~~~~~~~~~~~~~~~~
+@import Cocoa;
+watcher.m:3:1: warning: treating #import as an import of module 'CoreWLAN' [-Wauto-import]
+#import <CoreWLAN/CoreWLAN.h>
+^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+@import CoreWLAN;
+watcher.m:4:1: warning: treating #import as an import of module 'LuaSkin' [-Wauto-import]
+#import <LuaSkin/LuaSkin.h>
+^~~~~~~~~~~~~~~~~~~~~~~~~~~
+@import LuaSkin;
+watcher.m:27:14: warning: using the result of an assignment as a condition without parentheses [-Widiomatic-parentheses]
+    if (self = [super init]) {
+        ~~~~~^~~~~~~~~~~~~~
+watcher.m:27:14: note: place parentheses around the assignment to silence this warning
+    if (self = [super init]) {
+             ^
+        (                  )
+watcher.m:27:14: note: use '==' to turn this assignment into an equality comparison
+    if (self = [super init]) {
+             ^
+             ==
+watcher.m:29:39: warning: 'interface' is deprecated: first deprecated in macOS 10.10 - Use -[CWWiFiClient interface] instead [-Wdeprecated-declarations]
+        self.interface = [CWInterface interface];
+                                      ^
+/System/Library/Frameworks/CoreWLAN.framework/Headers/CWInterface.h:307:1: note: 'interface' has been explicitly marked deprecated here
++ (instancetype)interface NS_DEPRECATED_MAC(10_6, 10_10, "Use -[CWWiFiClient interface] instead");
+^
+watcher.m:115:55: warning: 'CWSSIDDidChangeNotification' is deprecated: first deprecated in macOS 10.10 - Use -[CWWiFiClient startMonitoringEventWithType:error:] with the CWEventTypeSSIDDidChange event type [-Wdeprecated-declarations]
+                                                 name:CWSSIDDidChangeNotification
+                                                      ^
+/System/Library/Frameworks/CoreWLAN.framework/Headers/CoreWLANConstants.h:46:36: note: 'CWSSIDDidChangeNotification' has been explicitly marked deprecated here
+FOUNDATION_EXTERN NSString * const CWSSIDDidChangeNotification NS_DEPRECATED_MAC(10_6, 10_10, "Use -[CWWiFiClient startMonitoringEventWithType:error:] with the CWEventTypeSSIDDidChange event type");
+                                   ^
+watcher.m:138:58: warning: 'CWSSIDDidChangeNotification' is deprecated: first deprecated in macOS 10.10 - Use -[CWWiFiClient startMonitoringEventWithType:error:] with the CWEventTypeSSIDDidChange event type [-Wdeprecated-declarations]
+                                                    name:CWSSIDDidChangeNotification
+                                                         ^
+/System/Library/Frameworks/CoreWLAN.framework/Headers/CoreWLANConstants.h:46:36: note: 'CWSSIDDidChangeNotification' has been explicitly marked deprecated here
+FOUNDATION_EXTERN NSString * const CWSSIDDidChangeNotification NS_DEPRECATED_MAC(10_6, 10_10, "Use -[CWWiFiClient startMonitoringEventWithType:error:] with the CWEventTypeSSIDDidChange event type");
+                                   ^
+8 warnings generated.
+mkdir -p ../../../luathread/hs/luathread/luaskin/hs/wifi
+install -m 0644 internal.so watcher.so ../../../luathread/hs/luathread/luaskin/hs/wifi
+cp -vpR internal.so.dSYM watcher.so.dSYM ../../../luathread/hs/luathread/luaskin/hs/wifi
+internal.so.dSYM -> ../../../luathread/hs/luathread/luaskin/hs/wifi/internal.so.dSYM
+internal.so.dSYM/Contents -> ../../../luathread/hs/luathread/luaskin/hs/wifi/internal.so.dSYM/Contents
+internal.so.dSYM/Contents/Info.plist -> ../../../luathread/hs/luathread/luaskin/hs/wifi/internal.so.dSYM/Contents/Info.plist
+internal.so.dSYM/Contents/Resources -> ../../../luathread/hs/luathread/luaskin/hs/wifi/internal.so.dSYM/Contents/Resources
+internal.so.dSYM/Contents/Resources/DWARF -> ../../../luathread/hs/luathread/luaskin/hs/wifi/internal.so.dSYM/Contents/Resources/DWARF
+internal.so.dSYM/Contents/Resources/DWARF/internal.so -> ../../../luathread/hs/luathread/luaskin/hs/wifi/internal.so.dSYM/Contents/Resources/DWARF/internal.so
+watcher.so.dSYM -> ../../../luathread/hs/luathread/luaskin/hs/wifi/watcher.so.dSYM
+watcher.so.dSYM/Contents -> ../../../luathread/hs/luathread/luaskin/hs/wifi/watcher.so.dSYM/Contents
+watcher.so.dSYM/Contents/Info.plist -> ../../../luathread/hs/luathread/luaskin/hs/wifi/watcher.so.dSYM/Contents/Info.plist
+watcher.so.dSYM/Contents/Resources -> ../../../luathread/hs/luathread/luaskin/hs/wifi/watcher.so.dSYM/Contents/Resources
+watcher.so.dSYM/Contents/Resources/DWARF -> ../../../luathread/hs/luathread/luaskin/hs/wifi/watcher.so.dSYM/Contents/Resources/DWARF
+watcher.so.dSYM/Contents/Resources/DWARF/watcher.so -> ../../../luathread/hs/luathread/luaskin/hs/wifi/watcher.so.dSYM/Contents/Resources/DWARF/watcher.so
+mkdir -p ../../../luathread/hs/luathread/luaskin/hs/wifi
+install -m 0644 init.lua ../../../luathread/hs/luathread/luaskin/hs/wifi
+HS_APPLICATION=/Applications/Development PREFIX=../../../../luathread /Applications/Xcode.app/Contents/Developer/usr/bin/make -C drawing/color clean install
+rm -rf internal.so *.dSYM tmp
+Lua Compile Verification Passed
+In file included from internal.m:1:
+./../drawing.h:1:1: warning: treating #import as an import of module 'Cocoa' [-Wauto-import]
+#import <Cocoa/Cocoa.h>
+^~~~~~~~~~~~~~~~~~~~~~~
+@import Cocoa;
+./../drawing.h:2:1: warning: treating #import as an import of module 'Carbon' [-Wauto-import]
+#import <Carbon/Carbon.h>
+^~~~~~~~~~~~~~~~~~~~~~~~~
+@import Carbon;
+./../drawing.h:3:1: warning: treating #import as an import of module 'LuaSkin' [-Wauto-import]
+#import <LuaSkin/LuaSkin.h>
+^~~~~~~~~~~~~~~~~~~~~~~~~~~
+@import LuaSkin;
+./../drawing.h:18:16: warning: declaration of instance variables in the interface is deprecated [-Wobjc-interface-ivars]
+    lua_State *L;
+               ^
+4 warnings generated.
+mkdir -p ../../../../luathread/hs/luathread/luaskin/hs/drawing/color
+install -m 0644 internal.so ../../../../luathread/hs/luathread/luaskin/hs/drawing/color
+cp -vpR internal.so.dSYM ../../../../luathread/hs/luathread/luaskin/hs/drawing/color
+internal.so.dSYM -> ../../../../luathread/hs/luathread/luaskin/hs/drawing/color/internal.so.dSYM
+internal.so.dSYM/Contents -> ../../../../luathread/hs/luathread/luaskin/hs/drawing/color/internal.so.dSYM/Contents
+internal.so.dSYM/Contents/Info.plist -> ../../../../luathread/hs/luathread/luaskin/hs/drawing/color/internal.so.dSYM/Contents/Info.plist
+internal.so.dSYM/Contents/Resources -> ../../../../luathread/hs/luathread/luaskin/hs/drawing/color/internal.so.dSYM/Contents/Resources
+internal.so.dSYM/Contents/Resources/DWARF -> ../../../../luathread/hs/luathread/luaskin/hs/drawing/color/internal.so.dSYM/Contents/Resources/DWARF
+internal.so.dSYM/Contents/Resources/DWARF/internal.so -> ../../../../luathread/hs/luathread/luaskin/hs/drawing/color/internal.so.dSYM/Contents/Resources/DWARF/internal.so
+mkdir -p ../../../../luathread/hs/luathread/luaskin/hs/drawing/color
+install -m 0644 init.lua ../../../../luathread/hs/luathread/luaskin/hs/drawing/color
+pushd ../../luathread ; tar -cf ../luathread-v0.1.tar hs ; gzip -9 ../luathread-v0.1.tar ; popd
+/opt/amagill/src/hammerspoon/_asm/wip/luathread/luathread /opt/amagill/src/hammerspoon/_asm/wip/luathread/luaskin/modules
+/opt/amagill/src/hammerspoon/_asm/wip/luathread/luaskin/modules

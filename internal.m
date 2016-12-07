@@ -1,5 +1,6 @@
 @import Cocoa ;
 @import LuaSkin ;
+#import "LuaSkin+threaded.h"
 #import "HSLuaThread.h"
 
 static const char *USERDATA_TAG    = "hs.luathread" ;
