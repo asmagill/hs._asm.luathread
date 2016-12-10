@@ -2,63 +2,49 @@ rm -fr ../../luathread
 HS_APPLICATION=/Applications/Development PREFIX=luathread /Applications/Xcode.app/Contents/Developer/usr/bin/make -C ../.. clean install
 rm -rf internal.so threadSupportInjection.so *.dSYM tmp
 Lua Compile Verification Passed
-In module 'LuaSkin' imported from threadSupportInjection.m:2:
-/Applications/Development/Hammerspoon.app/Contents/Frameworks/LuaSkin.framework/Headers/Skin.h:34:53: warning: token pasting of ',' and __VA_ARGS__ is a GNU extension [-Wgnu-zero-variadic-macro-arguments]
-#   define HSNSLOG(__FORMAT__, ...) NSLog(__FORMAT__, ##__VA_ARGS__)
-                                                    ^
-/Applications/Development/Hammerspoon.app/Contents/Frameworks/LuaSkin.framework/Headers/Skin.h:34:55: warning: token pasting of ',' and __VA_ARGS__ is a GNU extension [-Wgnu-zero-variadic-macro-arguments]
-#   define HSNSLOG(__FORMAT__, ...) NSLog(__FORMAT__, ##__VA_ARGS__)
-                                                      ^
-threadSupportInjection.m:5:13: warning: no previous extern declaration for non-static variable 'threadToRefTableMap' [-Wmissing-variable-declarations]
-NSMapTable *threadToRefTableMap ;
-            ^
-threadSupportInjection.m:6:13: warning: no previous extern declaration for non-static variable 'threadToSkinMap' [-Wmissing-variable-declarations]
-NSMapTable *threadToSkinMap ;
-            ^
-4 warnings generated.
-mkdir -p luathread/hs/luathread
-install -m 0644 internal.so threadSupportInjection.so luathread/hs/luathread
-cp -vpR internal.so.dSYM threadSupportInjection.so.dSYM luathread/hs/luathread
-internal.so.dSYM -> luathread/hs/luathread/internal.so.dSYM
-internal.so.dSYM/Contents -> luathread/hs/luathread/internal.so.dSYM/Contents
-internal.so.dSYM/Contents/Info.plist -> luathread/hs/luathread/internal.so.dSYM/Contents/Info.plist
-internal.so.dSYM/Contents/Resources -> luathread/hs/luathread/internal.so.dSYM/Contents/Resources
-internal.so.dSYM/Contents/Resources/DWARF -> luathread/hs/luathread/internal.so.dSYM/Contents/Resources/DWARF
-internal.so.dSYM/Contents/Resources/DWARF/internal.so -> luathread/hs/luathread/internal.so.dSYM/Contents/Resources/DWARF/internal.so
-threadSupportInjection.so.dSYM -> luathread/hs/luathread/threadSupportInjection.so.dSYM
-threadSupportInjection.so.dSYM/Contents -> luathread/hs/luathread/threadSupportInjection.so.dSYM/Contents
-threadSupportInjection.so.dSYM/Contents/Info.plist -> luathread/hs/luathread/threadSupportInjection.so.dSYM/Contents/Info.plist
-threadSupportInjection.so.dSYM/Contents/Resources -> luathread/hs/luathread/threadSupportInjection.so.dSYM/Contents/Resources
-threadSupportInjection.so.dSYM/Contents/Resources/DWARF -> luathread/hs/luathread/threadSupportInjection.so.dSYM/Contents/Resources/DWARF
-threadSupportInjection.so.dSYM/Contents/Resources/DWARF/threadSupportInjection.so -> luathread/hs/luathread/threadSupportInjection.so.dSYM/Contents/Resources/DWARF/threadSupportInjection.so
-mkdir -p luathread/hs/luathread
-install -m 0644 _sharedDictionaryBuilder.lua init.lua luathread/hs/luathread
+mkdir -p luathread/hs/_asm/luathread
+install -m 0644 internal.so threadSupportInjection.so luathread/hs/_asm/luathread
+cp -vpR internal.so.dSYM threadSupportInjection.so.dSYM luathread/hs/_asm/luathread
+internal.so.dSYM -> luathread/hs/_asm/luathread/internal.so.dSYM
+internal.so.dSYM/Contents -> luathread/hs/_asm/luathread/internal.so.dSYM/Contents
+internal.so.dSYM/Contents/Info.plist -> luathread/hs/_asm/luathread/internal.so.dSYM/Contents/Info.plist
+internal.so.dSYM/Contents/Resources -> luathread/hs/_asm/luathread/internal.so.dSYM/Contents/Resources
+internal.so.dSYM/Contents/Resources/DWARF -> luathread/hs/_asm/luathread/internal.so.dSYM/Contents/Resources/DWARF
+internal.so.dSYM/Contents/Resources/DWARF/internal.so -> luathread/hs/_asm/luathread/internal.so.dSYM/Contents/Resources/DWARF/internal.so
+threadSupportInjection.so.dSYM -> luathread/hs/_asm/luathread/threadSupportInjection.so.dSYM
+threadSupportInjection.so.dSYM/Contents -> luathread/hs/_asm/luathread/threadSupportInjection.so.dSYM/Contents
+threadSupportInjection.so.dSYM/Contents/Info.plist -> luathread/hs/_asm/luathread/threadSupportInjection.so.dSYM/Contents/Info.plist
+threadSupportInjection.so.dSYM/Contents/Resources -> luathread/hs/_asm/luathread/threadSupportInjection.so.dSYM/Contents/Resources
+threadSupportInjection.so.dSYM/Contents/Resources/DWARF -> luathread/hs/_asm/luathread/threadSupportInjection.so.dSYM/Contents/Resources/DWARF
+threadSupportInjection.so.dSYM/Contents/Resources/DWARF/threadSupportInjection.so -> luathread/hs/_asm/luathread/threadSupportInjection.so.dSYM/Contents/Resources/DWARF/threadSupportInjection.so
+mkdir -p luathread/hs/_asm/luathread
+install -m 0644 _sharedDictionaryBuilder.lua init.lua luathread/hs/_asm/luathread
 HS_APPLICATION=/Applications/Development PREFIX=../luathread /Applications/Xcode.app/Contents/Developer/usr/bin/make -C .. clean install
 rm -rf _coresupport.so internal.so skin.so *.dSYM tmp
 Lua Compile Verification Passed
-mkdir -p ../luathread/hs/luathread/luaskin
-install -m 0644 _coresupport.so internal.so skin.so ../luathread/hs/luathread/luaskin
-cp -vpR _coresupport.so.dSYM internal.so.dSYM skin.so.dSYM ../luathread/hs/luathread/luaskin
-_coresupport.so.dSYM -> ../luathread/hs/luathread/luaskin/_coresupport.so.dSYM
-_coresupport.so.dSYM/Contents -> ../luathread/hs/luathread/luaskin/_coresupport.so.dSYM/Contents
-_coresupport.so.dSYM/Contents/Info.plist -> ../luathread/hs/luathread/luaskin/_coresupport.so.dSYM/Contents/Info.plist
-_coresupport.so.dSYM/Contents/Resources -> ../luathread/hs/luathread/luaskin/_coresupport.so.dSYM/Contents/Resources
-_coresupport.so.dSYM/Contents/Resources/DWARF -> ../luathread/hs/luathread/luaskin/_coresupport.so.dSYM/Contents/Resources/DWARF
-_coresupport.so.dSYM/Contents/Resources/DWARF/_coresupport.so -> ../luathread/hs/luathread/luaskin/_coresupport.so.dSYM/Contents/Resources/DWARF/_coresupport.so
-internal.so.dSYM -> ../luathread/hs/luathread/luaskin/internal.so.dSYM
-internal.so.dSYM/Contents -> ../luathread/hs/luathread/luaskin/internal.so.dSYM/Contents
-internal.so.dSYM/Contents/Info.plist -> ../luathread/hs/luathread/luaskin/internal.so.dSYM/Contents/Info.plist
-internal.so.dSYM/Contents/Resources -> ../luathread/hs/luathread/luaskin/internal.so.dSYM/Contents/Resources
-internal.so.dSYM/Contents/Resources/DWARF -> ../luathread/hs/luathread/luaskin/internal.so.dSYM/Contents/Resources/DWARF
-internal.so.dSYM/Contents/Resources/DWARF/internal.so -> ../luathread/hs/luathread/luaskin/internal.so.dSYM/Contents/Resources/DWARF/internal.so
-skin.so.dSYM -> ../luathread/hs/luathread/luaskin/skin.so.dSYM
-skin.so.dSYM/Contents -> ../luathread/hs/luathread/luaskin/skin.so.dSYM/Contents
-skin.so.dSYM/Contents/Info.plist -> ../luathread/hs/luathread/luaskin/skin.so.dSYM/Contents/Info.plist
-skin.so.dSYM/Contents/Resources -> ../luathread/hs/luathread/luaskin/skin.so.dSYM/Contents/Resources
-skin.so.dSYM/Contents/Resources/DWARF -> ../luathread/hs/luathread/luaskin/skin.so.dSYM/Contents/Resources/DWARF
-skin.so.dSYM/Contents/Resources/DWARF/skin.so -> ../luathread/hs/luathread/luaskin/skin.so.dSYM/Contents/Resources/DWARF/skin.so
-mkdir -p ../luathread/hs/luathread/luaskin
-install -m 0644 _threadinit.lua _threadinit.minimal.lua init.lua ../luathread/hs/luathread/luaskin
+mkdir -p ../luathread/hs/_asm/luathread/luaskin
+install -m 0644 _coresupport.so internal.so skin.so ../luathread/hs/_asm/luathread/luaskin
+cp -vpR _coresupport.so.dSYM internal.so.dSYM skin.so.dSYM ../luathread/hs/_asm/luathread/luaskin
+_coresupport.so.dSYM -> ../luathread/hs/_asm/luathread/luaskin/_coresupport.so.dSYM
+_coresupport.so.dSYM/Contents -> ../luathread/hs/_asm/luathread/luaskin/_coresupport.so.dSYM/Contents
+_coresupport.so.dSYM/Contents/Info.plist -> ../luathread/hs/_asm/luathread/luaskin/_coresupport.so.dSYM/Contents/Info.plist
+_coresupport.so.dSYM/Contents/Resources -> ../luathread/hs/_asm/luathread/luaskin/_coresupport.so.dSYM/Contents/Resources
+_coresupport.so.dSYM/Contents/Resources/DWARF -> ../luathread/hs/_asm/luathread/luaskin/_coresupport.so.dSYM/Contents/Resources/DWARF
+_coresupport.so.dSYM/Contents/Resources/DWARF/_coresupport.so -> ../luathread/hs/_asm/luathread/luaskin/_coresupport.so.dSYM/Contents/Resources/DWARF/_coresupport.so
+internal.so.dSYM -> ../luathread/hs/_asm/luathread/luaskin/internal.so.dSYM
+internal.so.dSYM/Contents -> ../luathread/hs/_asm/luathread/luaskin/internal.so.dSYM/Contents
+internal.so.dSYM/Contents/Info.plist -> ../luathread/hs/_asm/luathread/luaskin/internal.so.dSYM/Contents/Info.plist
+internal.so.dSYM/Contents/Resources -> ../luathread/hs/_asm/luathread/luaskin/internal.so.dSYM/Contents/Resources
+internal.so.dSYM/Contents/Resources/DWARF -> ../luathread/hs/_asm/luathread/luaskin/internal.so.dSYM/Contents/Resources/DWARF
+internal.so.dSYM/Contents/Resources/DWARF/internal.so -> ../luathread/hs/_asm/luathread/luaskin/internal.so.dSYM/Contents/Resources/DWARF/internal.so
+skin.so.dSYM -> ../luathread/hs/_asm/luathread/luaskin/skin.so.dSYM
+skin.so.dSYM/Contents -> ../luathread/hs/_asm/luathread/luaskin/skin.so.dSYM/Contents
+skin.so.dSYM/Contents/Info.plist -> ../luathread/hs/_asm/luathread/luaskin/skin.so.dSYM/Contents/Info.plist
+skin.so.dSYM/Contents/Resources -> ../luathread/hs/_asm/luathread/luaskin/skin.so.dSYM/Contents/Resources
+skin.so.dSYM/Contents/Resources/DWARF -> ../luathread/hs/_asm/luathread/luaskin/skin.so.dSYM/Contents/Resources/DWARF
+skin.so.dSYM/Contents/Resources/DWARF/skin.so -> ../luathread/hs/_asm/luathread/luaskin/skin.so.dSYM/Contents/Resources/DWARF/skin.so
+mkdir -p ../luathread/hs/_asm/luathread/luaskin
+install -m 0644 _threadinit.lua _threadinit.minimal.lua init.lua ../luathread/hs/_asm/luathread/luaskin
 for f in [a-z_]* ; do [ -d $f ] && echo "-- $f --" && HS_APPLICATION=/Applications/Development PREFIX=../../../luathread /Applications/Xcode.app/Contents/Developer/usr/bin/make -C $f clean install ; done
 -- base64 --
 rm -rf internal.so *.dSYM tmp
@@ -72,17 +58,17 @@ internal.m:2:1: warning: treating #import as an import of module 'LuaSkin' [-Wau
 ^~~~~~~~~~~~~~~~~~~~~~~~~~~
 @import LuaSkin;
 2 warnings generated.
-mkdir -p ../../../luathread/hs/luathread/luaskin/hs/base64
-install -m 0644 internal.so ../../../luathread/hs/luathread/luaskin/hs/base64
-cp -vpR internal.so.dSYM ../../../luathread/hs/luathread/luaskin/hs/base64
-internal.so.dSYM -> ../../../luathread/hs/luathread/luaskin/hs/base64/internal.so.dSYM
-internal.so.dSYM/Contents -> ../../../luathread/hs/luathread/luaskin/hs/base64/internal.so.dSYM/Contents
-internal.so.dSYM/Contents/Info.plist -> ../../../luathread/hs/luathread/luaskin/hs/base64/internal.so.dSYM/Contents/Info.plist
-internal.so.dSYM/Contents/Resources -> ../../../luathread/hs/luathread/luaskin/hs/base64/internal.so.dSYM/Contents/Resources
-internal.so.dSYM/Contents/Resources/DWARF -> ../../../luathread/hs/luathread/luaskin/hs/base64/internal.so.dSYM/Contents/Resources/DWARF
-internal.so.dSYM/Contents/Resources/DWARF/internal.so -> ../../../luathread/hs/luathread/luaskin/hs/base64/internal.so.dSYM/Contents/Resources/DWARF/internal.so
-mkdir -p ../../../luathread/hs/luathread/luaskin/hs/base64
-install -m 0644 init.lua test_base64.lua ../../../luathread/hs/luathread/luaskin/hs/base64
+mkdir -p ../../../luathread/hs/_asm/luathread/luaskin/hs/base64
+install -m 0644 internal.so ../../../luathread/hs/_asm/luathread/luaskin/hs/base64
+cp -vpR internal.so.dSYM ../../../luathread/hs/_asm/luathread/luaskin/hs/base64
+internal.so.dSYM -> ../../../luathread/hs/_asm/luathread/luaskin/hs/base64/internal.so.dSYM
+internal.so.dSYM/Contents -> ../../../luathread/hs/_asm/luathread/luaskin/hs/base64/internal.so.dSYM/Contents
+internal.so.dSYM/Contents/Info.plist -> ../../../luathread/hs/_asm/luathread/luaskin/hs/base64/internal.so.dSYM/Contents/Info.plist
+internal.so.dSYM/Contents/Resources -> ../../../luathread/hs/_asm/luathread/luaskin/hs/base64/internal.so.dSYM/Contents/Resources
+internal.so.dSYM/Contents/Resources/DWARF -> ../../../luathread/hs/_asm/luathread/luaskin/hs/base64/internal.so.dSYM/Contents/Resources/DWARF
+internal.so.dSYM/Contents/Resources/DWARF/internal.so -> ../../../luathread/hs/_asm/luathread/luaskin/hs/base64/internal.so.dSYM/Contents/Resources/DWARF/internal.so
+mkdir -p ../../../luathread/hs/_asm/luathread/luaskin/hs/base64
+install -m 0644 init.lua test_base64.lua ../../../luathread/hs/_asm/luathread/luaskin/hs/base64
 -- battery --
 rm -rf internal.so watcher.so *.dSYM tmp
 Lua Compile Verification Passed
@@ -134,23 +120,23 @@ watcher.m:4:1: warning: treating #import as an import of module 'IOKit.ps' [-Wau
 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 @import IOKit.ps;
 4 warnings generated.
-mkdir -p ../../../luathread/hs/luathread/luaskin/hs/battery
-install -m 0644 internal.so watcher.so ../../../luathread/hs/luathread/luaskin/hs/battery
-cp -vpR internal.so.dSYM watcher.so.dSYM ../../../luathread/hs/luathread/luaskin/hs/battery
-internal.so.dSYM -> ../../../luathread/hs/luathread/luaskin/hs/battery/internal.so.dSYM
-internal.so.dSYM/Contents -> ../../../luathread/hs/luathread/luaskin/hs/battery/internal.so.dSYM/Contents
-internal.so.dSYM/Contents/Info.plist -> ../../../luathread/hs/luathread/luaskin/hs/battery/internal.so.dSYM/Contents/Info.plist
-internal.so.dSYM/Contents/Resources -> ../../../luathread/hs/luathread/luaskin/hs/battery/internal.so.dSYM/Contents/Resources
-internal.so.dSYM/Contents/Resources/DWARF -> ../../../luathread/hs/luathread/luaskin/hs/battery/internal.so.dSYM/Contents/Resources/DWARF
-internal.so.dSYM/Contents/Resources/DWARF/internal.so -> ../../../luathread/hs/luathread/luaskin/hs/battery/internal.so.dSYM/Contents/Resources/DWARF/internal.so
-watcher.so.dSYM -> ../../../luathread/hs/luathread/luaskin/hs/battery/watcher.so.dSYM
-watcher.so.dSYM/Contents -> ../../../luathread/hs/luathread/luaskin/hs/battery/watcher.so.dSYM/Contents
-watcher.so.dSYM/Contents/Info.plist -> ../../../luathread/hs/luathread/luaskin/hs/battery/watcher.so.dSYM/Contents/Info.plist
-watcher.so.dSYM/Contents/Resources -> ../../../luathread/hs/luathread/luaskin/hs/battery/watcher.so.dSYM/Contents/Resources
-watcher.so.dSYM/Contents/Resources/DWARF -> ../../../luathread/hs/luathread/luaskin/hs/battery/watcher.so.dSYM/Contents/Resources/DWARF
-watcher.so.dSYM/Contents/Resources/DWARF/watcher.so -> ../../../luathread/hs/luathread/luaskin/hs/battery/watcher.so.dSYM/Contents/Resources/DWARF/watcher.so
-mkdir -p ../../../luathread/hs/luathread/luaskin/hs/battery
-install -m 0644 init.lua ../../../luathread/hs/luathread/luaskin/hs/battery
+mkdir -p ../../../luathread/hs/_asm/luathread/luaskin/hs/battery
+install -m 0644 internal.so watcher.so ../../../luathread/hs/_asm/luathread/luaskin/hs/battery
+cp -vpR internal.so.dSYM watcher.so.dSYM ../../../luathread/hs/_asm/luathread/luaskin/hs/battery
+internal.so.dSYM -> ../../../luathread/hs/_asm/luathread/luaskin/hs/battery/internal.so.dSYM
+internal.so.dSYM/Contents -> ../../../luathread/hs/_asm/luathread/luaskin/hs/battery/internal.so.dSYM/Contents
+internal.so.dSYM/Contents/Info.plist -> ../../../luathread/hs/_asm/luathread/luaskin/hs/battery/internal.so.dSYM/Contents/Info.plist
+internal.so.dSYM/Contents/Resources -> ../../../luathread/hs/_asm/luathread/luaskin/hs/battery/internal.so.dSYM/Contents/Resources
+internal.so.dSYM/Contents/Resources/DWARF -> ../../../luathread/hs/_asm/luathread/luaskin/hs/battery/internal.so.dSYM/Contents/Resources/DWARF
+internal.so.dSYM/Contents/Resources/DWARF/internal.so -> ../../../luathread/hs/_asm/luathread/luaskin/hs/battery/internal.so.dSYM/Contents/Resources/DWARF/internal.so
+watcher.so.dSYM -> ../../../luathread/hs/_asm/luathread/luaskin/hs/battery/watcher.so.dSYM
+watcher.so.dSYM/Contents -> ../../../luathread/hs/_asm/luathread/luaskin/hs/battery/watcher.so.dSYM/Contents
+watcher.so.dSYM/Contents/Info.plist -> ../../../luathread/hs/_asm/luathread/luaskin/hs/battery/watcher.so.dSYM/Contents/Info.plist
+watcher.so.dSYM/Contents/Resources -> ../../../luathread/hs/_asm/luathread/luaskin/hs/battery/watcher.so.dSYM/Contents/Resources
+watcher.so.dSYM/Contents/Resources/DWARF -> ../../../luathread/hs/_asm/luathread/luaskin/hs/battery/watcher.so.dSYM/Contents/Resources/DWARF
+watcher.so.dSYM/Contents/Resources/DWARF/watcher.so -> ../../../luathread/hs/_asm/luathread/luaskin/hs/battery/watcher.so.dSYM/Contents/Resources/DWARF/watcher.so
+mkdir -p ../../../luathread/hs/_asm/luathread/luaskin/hs/battery
+install -m 0644 init.lua ../../../luathread/hs/_asm/luathread/luaskin/hs/battery
 -- brightness --
 rm -rf internal.so *.dSYM tmp
 Lua Compile Verification Passed
@@ -221,17 +207,17 @@ internal.m:111:32: warning: implicit conversion increases floating-point precisi
             lua_pushinteger(L, level * 100.0);
                                ^~~~~ ~
 15 warnings generated.
-mkdir -p ../../../luathread/hs/luathread/luaskin/hs/brightness
-install -m 0644 internal.so ../../../luathread/hs/luathread/luaskin/hs/brightness
-cp -vpR internal.so.dSYM ../../../luathread/hs/luathread/luaskin/hs/brightness
-internal.so.dSYM -> ../../../luathread/hs/luathread/luaskin/hs/brightness/internal.so.dSYM
-internal.so.dSYM/Contents -> ../../../luathread/hs/luathread/luaskin/hs/brightness/internal.so.dSYM/Contents
-internal.so.dSYM/Contents/Info.plist -> ../../../luathread/hs/luathread/luaskin/hs/brightness/internal.so.dSYM/Contents/Info.plist
-internal.so.dSYM/Contents/Resources -> ../../../luathread/hs/luathread/luaskin/hs/brightness/internal.so.dSYM/Contents/Resources
-internal.so.dSYM/Contents/Resources/DWARF -> ../../../luathread/hs/luathread/luaskin/hs/brightness/internal.so.dSYM/Contents/Resources/DWARF
-internal.so.dSYM/Contents/Resources/DWARF/internal.so -> ../../../luathread/hs/luathread/luaskin/hs/brightness/internal.so.dSYM/Contents/Resources/DWARF/internal.so
-mkdir -p ../../../luathread/hs/luathread/luaskin/hs/brightness
-install -m 0644 init.lua ../../../luathread/hs/luathread/luaskin/hs/brightness
+mkdir -p ../../../luathread/hs/_asm/luathread/luaskin/hs/brightness
+install -m 0644 internal.so ../../../luathread/hs/_asm/luathread/luaskin/hs/brightness
+cp -vpR internal.so.dSYM ../../../luathread/hs/_asm/luathread/luaskin/hs/brightness
+internal.so.dSYM -> ../../../luathread/hs/_asm/luathread/luaskin/hs/brightness/internal.so.dSYM
+internal.so.dSYM/Contents -> ../../../luathread/hs/_asm/luathread/luaskin/hs/brightness/internal.so.dSYM/Contents
+internal.so.dSYM/Contents/Info.plist -> ../../../luathread/hs/_asm/luathread/luaskin/hs/brightness/internal.so.dSYM/Contents/Info.plist
+internal.so.dSYM/Contents/Resources -> ../../../luathread/hs/_asm/luathread/luaskin/hs/brightness/internal.so.dSYM/Contents/Resources
+internal.so.dSYM/Contents/Resources/DWARF -> ../../../luathread/hs/_asm/luathread/luaskin/hs/brightness/internal.so.dSYM/Contents/Resources/DWARF
+internal.so.dSYM/Contents/Resources/DWARF/internal.so -> ../../../luathread/hs/_asm/luathread/luaskin/hs/brightness/internal.so.dSYM/Contents/Resources/DWARF/internal.so
+mkdir -p ../../../luathread/hs/_asm/luathread/luaskin/hs/brightness
+install -m 0644 init.lua ../../../luathread/hs/_asm/luathread/luaskin/hs/brightness
 -- crash --
 rm -rf internal.so *.dSYM tmp
 Lua Compile Verification Passed
@@ -257,17 +243,17 @@ internal.m:113:33: warning: implicit conversion changes signedness: 'vm_size_t' 
         lua_pushinteger(L, info.resident_size);
         ~~~~~~~~~~~~~~~    ~~~~~^~~~~~~~~~~~~
 6 warnings generated.
-mkdir -p ../../../luathread/hs/luathread/luaskin/hs/crash
-install -m 0644 internal.so ../../../luathread/hs/luathread/luaskin/hs/crash
-cp -vpR internal.so.dSYM ../../../luathread/hs/luathread/luaskin/hs/crash
-internal.so.dSYM -> ../../../luathread/hs/luathread/luaskin/hs/crash/internal.so.dSYM
-internal.so.dSYM/Contents -> ../../../luathread/hs/luathread/luaskin/hs/crash/internal.so.dSYM/Contents
-internal.so.dSYM/Contents/Info.plist -> ../../../luathread/hs/luathread/luaskin/hs/crash/internal.so.dSYM/Contents/Info.plist
-internal.so.dSYM/Contents/Resources -> ../../../luathread/hs/luathread/luaskin/hs/crash/internal.so.dSYM/Contents/Resources
-internal.so.dSYM/Contents/Resources/DWARF -> ../../../luathread/hs/luathread/luaskin/hs/crash/internal.so.dSYM/Contents/Resources/DWARF
-internal.so.dSYM/Contents/Resources/DWARF/internal.so -> ../../../luathread/hs/luathread/luaskin/hs/crash/internal.so.dSYM/Contents/Resources/DWARF/internal.so
-mkdir -p ../../../luathread/hs/luathread/luaskin/hs/crash
-install -m 0644 init.lua ../../../luathread/hs/luathread/luaskin/hs/crash
+mkdir -p ../../../luathread/hs/_asm/luathread/luaskin/hs/crash
+install -m 0644 internal.so ../../../luathread/hs/_asm/luathread/luaskin/hs/crash
+cp -vpR internal.so.dSYM ../../../luathread/hs/_asm/luathread/luaskin/hs/crash
+internal.so.dSYM -> ../../../luathread/hs/_asm/luathread/luaskin/hs/crash/internal.so.dSYM
+internal.so.dSYM/Contents -> ../../../luathread/hs/_asm/luathread/luaskin/hs/crash/internal.so.dSYM/Contents
+internal.so.dSYM/Contents/Info.plist -> ../../../luathread/hs/_asm/luathread/luaskin/hs/crash/internal.so.dSYM/Contents/Info.plist
+internal.so.dSYM/Contents/Resources -> ../../../luathread/hs/_asm/luathread/luaskin/hs/crash/internal.so.dSYM/Contents/Resources
+internal.so.dSYM/Contents/Resources/DWARF -> ../../../luathread/hs/_asm/luathread/luaskin/hs/crash/internal.so.dSYM/Contents/Resources/DWARF
+internal.so.dSYM/Contents/Resources/DWARF/internal.so -> ../../../luathread/hs/_asm/luathread/luaskin/hs/crash/internal.so.dSYM/Contents/Resources/DWARF/internal.so
+mkdir -p ../../../luathread/hs/_asm/luathread/luaskin/hs/crash
+install -m 0644 init.lua ../../../luathread/hs/_asm/luathread/luaskin/hs/crash
 -- doc --
 rm -rf markdown.so *.dSYM tmp
 Lua Compile Verification Passed
@@ -307,17 +293,17 @@ In file included from markdown.m:15:
 ^~~~~~~~~~~~~~~~~~~
 @import Darwin.C.stdlib;
 6 warnings generated.
-mkdir -p ../../../luathread/hs/luathread/luaskin/hs/doc
-install -m 0644 markdown.so ../../../luathread/hs/luathread/luaskin/hs/doc
-cp -vpR markdown.so.dSYM ../../../luathread/hs/luathread/luaskin/hs/doc
-markdown.so.dSYM -> ../../../luathread/hs/luathread/luaskin/hs/doc/markdown.so.dSYM
-markdown.so.dSYM/Contents -> ../../../luathread/hs/luathread/luaskin/hs/doc/markdown.so.dSYM/Contents
-markdown.so.dSYM/Contents/Info.plist -> ../../../luathread/hs/luathread/luaskin/hs/doc/markdown.so.dSYM/Contents/Info.plist
-markdown.so.dSYM/Contents/Resources -> ../../../luathread/hs/luathread/luaskin/hs/doc/markdown.so.dSYM/Contents/Resources
-markdown.so.dSYM/Contents/Resources/DWARF -> ../../../luathread/hs/luathread/luaskin/hs/doc/markdown.so.dSYM/Contents/Resources/DWARF
-markdown.so.dSYM/Contents/Resources/DWARF/markdown.so -> ../../../luathread/hs/luathread/luaskin/hs/doc/markdown.so.dSYM/Contents/Resources/DWARF/markdown.so
-mkdir -p ../../../luathread/hs/luathread/luaskin/hs/doc
-install -m 0644 init.lua makeLuaDocs.lua ../../../luathread/hs/luathread/luaskin/hs/doc
+mkdir -p ../../../luathread/hs/_asm/luathread/luaskin/hs/doc
+install -m 0644 markdown.so ../../../luathread/hs/_asm/luathread/luaskin/hs/doc
+cp -vpR markdown.so.dSYM ../../../luathread/hs/_asm/luathread/luaskin/hs/doc
+markdown.so.dSYM -> ../../../luathread/hs/_asm/luathread/luaskin/hs/doc/markdown.so.dSYM
+markdown.so.dSYM/Contents -> ../../../luathread/hs/_asm/luathread/luaskin/hs/doc/markdown.so.dSYM/Contents
+markdown.so.dSYM/Contents/Info.plist -> ../../../luathread/hs/_asm/luathread/luaskin/hs/doc/markdown.so.dSYM/Contents/Info.plist
+markdown.so.dSYM/Contents/Resources -> ../../../luathread/hs/_asm/luathread/luaskin/hs/doc/markdown.so.dSYM/Contents/Resources
+markdown.so.dSYM/Contents/Resources/DWARF -> ../../../luathread/hs/_asm/luathread/luaskin/hs/doc/markdown.so.dSYM/Contents/Resources/DWARF
+markdown.so.dSYM/Contents/Resources/DWARF/markdown.so -> ../../../luathread/hs/_asm/luathread/luaskin/hs/doc/markdown.so.dSYM/Contents/Resources/DWARF/markdown.so
+mkdir -p ../../../luathread/hs/_asm/luathread/luaskin/hs/doc
+install -m 0644 init.lua makeLuaDocs.lua ../../../luathread/hs/_asm/luathread/luaskin/hs/doc
 -- dockicon --
 rm -rf internal.so *.dSYM tmp
 Lua Compile Verification Passed
@@ -330,17 +316,17 @@ internal.m:2:1: warning: treating #import as an import of module 'LuaSkin' [-Wau
 ^~~~~~~~~~~~~~~~~~~~~~~~~~~
 @import LuaSkin;
 2 warnings generated.
-mkdir -p ../../../luathread/hs/luathread/luaskin/hs/dockicon
-install -m 0644 internal.so ../../../luathread/hs/luathread/luaskin/hs/dockicon
-cp -vpR internal.so.dSYM ../../../luathread/hs/luathread/luaskin/hs/dockicon
-internal.so.dSYM -> ../../../luathread/hs/luathread/luaskin/hs/dockicon/internal.so.dSYM
-internal.so.dSYM/Contents -> ../../../luathread/hs/luathread/luaskin/hs/dockicon/internal.so.dSYM/Contents
-internal.so.dSYM/Contents/Info.plist -> ../../../luathread/hs/luathread/luaskin/hs/dockicon/internal.so.dSYM/Contents/Info.plist
-internal.so.dSYM/Contents/Resources -> ../../../luathread/hs/luathread/luaskin/hs/dockicon/internal.so.dSYM/Contents/Resources
-internal.so.dSYM/Contents/Resources/DWARF -> ../../../luathread/hs/luathread/luaskin/hs/dockicon/internal.so.dSYM/Contents/Resources/DWARF
-internal.so.dSYM/Contents/Resources/DWARF/internal.so -> ../../../luathread/hs/luathread/luaskin/hs/dockicon/internal.so.dSYM/Contents/Resources/DWARF/internal.so
-mkdir -p ../../../luathread/hs/luathread/luaskin/hs/dockicon
-install -m 0644 init.lua ../../../luathread/hs/luathread/luaskin/hs/dockicon
+mkdir -p ../../../luathread/hs/_asm/luathread/luaskin/hs/dockicon
+install -m 0644 internal.so ../../../luathread/hs/_asm/luathread/luaskin/hs/dockicon
+cp -vpR internal.so.dSYM ../../../luathread/hs/_asm/luathread/luaskin/hs/dockicon
+internal.so.dSYM -> ../../../luathread/hs/_asm/luathread/luaskin/hs/dockicon/internal.so.dSYM
+internal.so.dSYM/Contents -> ../../../luathread/hs/_asm/luathread/luaskin/hs/dockicon/internal.so.dSYM/Contents
+internal.so.dSYM/Contents/Info.plist -> ../../../luathread/hs/_asm/luathread/luaskin/hs/dockicon/internal.so.dSYM/Contents/Info.plist
+internal.so.dSYM/Contents/Resources -> ../../../luathread/hs/_asm/luathread/luaskin/hs/dockicon/internal.so.dSYM/Contents/Resources
+internal.so.dSYM/Contents/Resources/DWARF -> ../../../luathread/hs/_asm/luathread/luaskin/hs/dockicon/internal.so.dSYM/Contents/Resources/DWARF
+internal.so.dSYM/Contents/Resources/DWARF/internal.so -> ../../../luathread/hs/_asm/luathread/luaskin/hs/dockicon/internal.so.dSYM/Contents/Resources/DWARF/internal.so
+mkdir -p ../../../luathread/hs/_asm/luathread/luaskin/hs/dockicon
+install -m 0644 init.lua ../../../luathread/hs/_asm/luathread/luaskin/hs/dockicon
 -- drawing --
 rm -rf internal.so *.dSYM tmp
 Lua Compile Verification Passed
@@ -454,17 +440,17 @@ internal.m:12:17: warning: no previous extern declaration for non-static variabl
 NSMutableArray *drawingWindows;
                 ^
 21 warnings generated.
-mkdir -p ../../../luathread/hs/luathread/luaskin/hs/drawing
-install -m 0644 internal.so ../../../luathread/hs/luathread/luaskin/hs/drawing
-cp -vpR internal.so.dSYM ../../../luathread/hs/luathread/luaskin/hs/drawing
-internal.so.dSYM -> ../../../luathread/hs/luathread/luaskin/hs/drawing/internal.so.dSYM
-internal.so.dSYM/Contents -> ../../../luathread/hs/luathread/luaskin/hs/drawing/internal.so.dSYM/Contents
-internal.so.dSYM/Contents/Info.plist -> ../../../luathread/hs/luathread/luaskin/hs/drawing/internal.so.dSYM/Contents/Info.plist
-internal.so.dSYM/Contents/Resources -> ../../../luathread/hs/luathread/luaskin/hs/drawing/internal.so.dSYM/Contents/Resources
-internal.so.dSYM/Contents/Resources/DWARF -> ../../../luathread/hs/luathread/luaskin/hs/drawing/internal.so.dSYM/Contents/Resources/DWARF
-internal.so.dSYM/Contents/Resources/DWARF/internal.so -> ../../../luathread/hs/luathread/luaskin/hs/drawing/internal.so.dSYM/Contents/Resources/DWARF/internal.so
-mkdir -p ../../../luathread/hs/luathread/luaskin/hs/drawing
-install -m 0644 init.lua ../../../luathread/hs/luathread/luaskin/hs/drawing
+mkdir -p ../../../luathread/hs/_asm/luathread/luaskin/hs/drawing
+install -m 0644 internal.so ../../../luathread/hs/_asm/luathread/luaskin/hs/drawing
+cp -vpR internal.so.dSYM ../../../luathread/hs/_asm/luathread/luaskin/hs/drawing
+internal.so.dSYM -> ../../../luathread/hs/_asm/luathread/luaskin/hs/drawing/internal.so.dSYM
+internal.so.dSYM/Contents -> ../../../luathread/hs/_asm/luathread/luaskin/hs/drawing/internal.so.dSYM/Contents
+internal.so.dSYM/Contents/Info.plist -> ../../../luathread/hs/_asm/luathread/luaskin/hs/drawing/internal.so.dSYM/Contents/Info.plist
+internal.so.dSYM/Contents/Resources -> ../../../luathread/hs/_asm/luathread/luaskin/hs/drawing/internal.so.dSYM/Contents/Resources
+internal.so.dSYM/Contents/Resources/DWARF -> ../../../luathread/hs/_asm/luathread/luaskin/hs/drawing/internal.so.dSYM/Contents/Resources/DWARF
+internal.so.dSYM/Contents/Resources/DWARF/internal.so -> ../../../luathread/hs/_asm/luathread/luaskin/hs/drawing/internal.so.dSYM/Contents/Resources/DWARF/internal.so
+mkdir -p ../../../luathread/hs/_asm/luathread/luaskin/hs/drawing
+install -m 0644 init.lua ../../../luathread/hs/_asm/luathread/luaskin/hs/drawing
 -- fs --
 rm -rf internal.so volume.so *.dSYM tmp
 Lua Compile Verification Passed
@@ -575,23 +561,23 @@ volume.m:82:33: warning: implicit conversion from nullable pointer 'id _Nullable
             [tableArg setObject:[dict objectForKey:NSWorkspaceVolumeOldLocalizedNameKey] forKey:@"oldName"];
                                 ^
 9 warnings generated.
-mkdir -p ../../../luathread/hs/luathread/luaskin/hs/fs
-install -m 0644 internal.so volume.so ../../../luathread/hs/luathread/luaskin/hs/fs
-cp -vpR internal.so.dSYM volume.so.dSYM ../../../luathread/hs/luathread/luaskin/hs/fs
-internal.so.dSYM -> ../../../luathread/hs/luathread/luaskin/hs/fs/internal.so.dSYM
-internal.so.dSYM/Contents -> ../../../luathread/hs/luathread/luaskin/hs/fs/internal.so.dSYM/Contents
-internal.so.dSYM/Contents/Info.plist -> ../../../luathread/hs/luathread/luaskin/hs/fs/internal.so.dSYM/Contents/Info.plist
-internal.so.dSYM/Contents/Resources -> ../../../luathread/hs/luathread/luaskin/hs/fs/internal.so.dSYM/Contents/Resources
-internal.so.dSYM/Contents/Resources/DWARF -> ../../../luathread/hs/luathread/luaskin/hs/fs/internal.so.dSYM/Contents/Resources/DWARF
-internal.so.dSYM/Contents/Resources/DWARF/internal.so -> ../../../luathread/hs/luathread/luaskin/hs/fs/internal.so.dSYM/Contents/Resources/DWARF/internal.so
-volume.so.dSYM -> ../../../luathread/hs/luathread/luaskin/hs/fs/volume.so.dSYM
-volume.so.dSYM/Contents -> ../../../luathread/hs/luathread/luaskin/hs/fs/volume.so.dSYM/Contents
-volume.so.dSYM/Contents/Info.plist -> ../../../luathread/hs/luathread/luaskin/hs/fs/volume.so.dSYM/Contents/Info.plist
-volume.so.dSYM/Contents/Resources -> ../../../luathread/hs/luathread/luaskin/hs/fs/volume.so.dSYM/Contents/Resources
-volume.so.dSYM/Contents/Resources/DWARF -> ../../../luathread/hs/luathread/luaskin/hs/fs/volume.so.dSYM/Contents/Resources/DWARF
-volume.so.dSYM/Contents/Resources/DWARF/volume.so -> ../../../luathread/hs/luathread/luaskin/hs/fs/volume.so.dSYM/Contents/Resources/DWARF/volume.so
-mkdir -p ../../../luathread/hs/luathread/luaskin/hs/fs
-install -m 0644 init.lua test_fs.lua ../../../luathread/hs/luathread/luaskin/hs/fs
+mkdir -p ../../../luathread/hs/_asm/luathread/luaskin/hs/fs
+install -m 0644 internal.so volume.so ../../../luathread/hs/_asm/luathread/luaskin/hs/fs
+cp -vpR internal.so.dSYM volume.so.dSYM ../../../luathread/hs/_asm/luathread/luaskin/hs/fs
+internal.so.dSYM -> ../../../luathread/hs/_asm/luathread/luaskin/hs/fs/internal.so.dSYM
+internal.so.dSYM/Contents -> ../../../luathread/hs/_asm/luathread/luaskin/hs/fs/internal.so.dSYM/Contents
+internal.so.dSYM/Contents/Info.plist -> ../../../luathread/hs/_asm/luathread/luaskin/hs/fs/internal.so.dSYM/Contents/Info.plist
+internal.so.dSYM/Contents/Resources -> ../../../luathread/hs/_asm/luathread/luaskin/hs/fs/internal.so.dSYM/Contents/Resources
+internal.so.dSYM/Contents/Resources/DWARF -> ../../../luathread/hs/_asm/luathread/luaskin/hs/fs/internal.so.dSYM/Contents/Resources/DWARF
+internal.so.dSYM/Contents/Resources/DWARF/internal.so -> ../../../luathread/hs/_asm/luathread/luaskin/hs/fs/internal.so.dSYM/Contents/Resources/DWARF/internal.so
+volume.so.dSYM -> ../../../luathread/hs/_asm/luathread/luaskin/hs/fs/volume.so.dSYM
+volume.so.dSYM/Contents -> ../../../luathread/hs/_asm/luathread/luaskin/hs/fs/volume.so.dSYM/Contents
+volume.so.dSYM/Contents/Info.plist -> ../../../luathread/hs/_asm/luathread/luaskin/hs/fs/volume.so.dSYM/Contents/Info.plist
+volume.so.dSYM/Contents/Resources -> ../../../luathread/hs/_asm/luathread/luaskin/hs/fs/volume.so.dSYM/Contents/Resources
+volume.so.dSYM/Contents/Resources/DWARF -> ../../../luathread/hs/_asm/luathread/luaskin/hs/fs/volume.so.dSYM/Contents/Resources/DWARF
+volume.so.dSYM/Contents/Resources/DWARF/volume.so -> ../../../luathread/hs/_asm/luathread/luaskin/hs/fs/volume.so.dSYM/Contents/Resources/DWARF/volume.so
+mkdir -p ../../../luathread/hs/_asm/luathread/luaskin/hs/fs
+install -m 0644 init.lua test_fs.lua ../../../luathread/hs/_asm/luathread/luaskin/hs/fs
 -- hash --
 rm -rf internal.so *.dSYM tmp
 Lua Compile Verification Passed
@@ -610,17 +596,17 @@ internal.m:28:25: warning: variable length array used [-Wvla]
     unsigned char digest[resultLength + 1];
                         ^
 4 warnings generated.
-mkdir -p ../../../luathread/hs/luathread/luaskin/hs/hash
-install -m 0644 internal.so ../../../luathread/hs/luathread/luaskin/hs/hash
-cp -vpR internal.so.dSYM ../../../luathread/hs/luathread/luaskin/hs/hash
-internal.so.dSYM -> ../../../luathread/hs/luathread/luaskin/hs/hash/internal.so.dSYM
-internal.so.dSYM/Contents -> ../../../luathread/hs/luathread/luaskin/hs/hash/internal.so.dSYM/Contents
-internal.so.dSYM/Contents/Info.plist -> ../../../luathread/hs/luathread/luaskin/hs/hash/internal.so.dSYM/Contents/Info.plist
-internal.so.dSYM/Contents/Resources -> ../../../luathread/hs/luathread/luaskin/hs/hash/internal.so.dSYM/Contents/Resources
-internal.so.dSYM/Contents/Resources/DWARF -> ../../../luathread/hs/luathread/luaskin/hs/hash/internal.so.dSYM/Contents/Resources/DWARF
-internal.so.dSYM/Contents/Resources/DWARF/internal.so -> ../../../luathread/hs/luathread/luaskin/hs/hash/internal.so.dSYM/Contents/Resources/DWARF/internal.so
-mkdir -p ../../../luathread/hs/luathread/luaskin/hs/hash
-install -m 0644 init.lua ../../../luathread/hs/luathread/luaskin/hs/hash
+mkdir -p ../../../luathread/hs/_asm/luathread/luaskin/hs/hash
+install -m 0644 internal.so ../../../luathread/hs/_asm/luathread/luaskin/hs/hash
+cp -vpR internal.so.dSYM ../../../luathread/hs/_asm/luathread/luaskin/hs/hash
+internal.so.dSYM -> ../../../luathread/hs/_asm/luathread/luaskin/hs/hash/internal.so.dSYM
+internal.so.dSYM/Contents -> ../../../luathread/hs/_asm/luathread/luaskin/hs/hash/internal.so.dSYM/Contents
+internal.so.dSYM/Contents/Info.plist -> ../../../luathread/hs/_asm/luathread/luaskin/hs/hash/internal.so.dSYM/Contents/Info.plist
+internal.so.dSYM/Contents/Resources -> ../../../luathread/hs/_asm/luathread/luaskin/hs/hash/internal.so.dSYM/Contents/Resources
+internal.so.dSYM/Contents/Resources/DWARF -> ../../../luathread/hs/_asm/luathread/luaskin/hs/hash/internal.so.dSYM/Contents/Resources/DWARF
+internal.so.dSYM/Contents/Resources/DWARF/internal.so -> ../../../luathread/hs/_asm/luathread/luaskin/hs/hash/internal.so.dSYM/Contents/Resources/DWARF/internal.so
+mkdir -p ../../../luathread/hs/_asm/luathread/luaskin/hs/hash
+install -m 0644 init.lua ../../../luathread/hs/_asm/luathread/luaskin/hs/hash
 -- host --
 rm -rf internal.so *.dSYM tmp
 Lua Compile Verification Passed
@@ -782,45 +768,45 @@ internal.m:521:108: warning: implicit conversion from nullable pointer 'NSString
                         [volumeInfo setObject:[url resourceValuesForKeys:urlResourceKeys error:nil] forKey:[url path]];
                                                                                                            ^
 49 warnings generated.
-mkdir -p ../../../luathread/hs/luathread/luaskin/hs/host
-install -m 0644 internal.so ../../../luathread/hs/luathread/luaskin/hs/host
-cp -vpR internal.so.dSYM ../../../luathread/hs/luathread/luaskin/hs/host
-internal.so.dSYM -> ../../../luathread/hs/luathread/luaskin/hs/host/internal.so.dSYM
-internal.so.dSYM/Contents -> ../../../luathread/hs/luathread/luaskin/hs/host/internal.so.dSYM/Contents
-internal.so.dSYM/Contents/Info.plist -> ../../../luathread/hs/luathread/luaskin/hs/host/internal.so.dSYM/Contents/Info.plist
-internal.so.dSYM/Contents/Resources -> ../../../luathread/hs/luathread/luaskin/hs/host/internal.so.dSYM/Contents/Resources
-internal.so.dSYM/Contents/Resources/DWARF -> ../../../luathread/hs/luathread/luaskin/hs/host/internal.so.dSYM/Contents/Resources/DWARF
-internal.so.dSYM/Contents/Resources/DWARF/internal.so -> ../../../luathread/hs/luathread/luaskin/hs/host/internal.so.dSYM/Contents/Resources/DWARF/internal.so
-mkdir -p ../../../luathread/hs/luathread/luaskin/hs/host
-install -m 0644 init.lua ../../../luathread/hs/luathread/luaskin/hs/host
+mkdir -p ../../../luathread/hs/_asm/luathread/luaskin/hs/host
+install -m 0644 internal.so ../../../luathread/hs/_asm/luathread/luaskin/hs/host
+cp -vpR internal.so.dSYM ../../../luathread/hs/_asm/luathread/luaskin/hs/host
+internal.so.dSYM -> ../../../luathread/hs/_asm/luathread/luaskin/hs/host/internal.so.dSYM
+internal.so.dSYM/Contents -> ../../../luathread/hs/_asm/luathread/luaskin/hs/host/internal.so.dSYM/Contents
+internal.so.dSYM/Contents/Info.plist -> ../../../luathread/hs/_asm/luathread/luaskin/hs/host/internal.so.dSYM/Contents/Info.plist
+internal.so.dSYM/Contents/Resources -> ../../../luathread/hs/_asm/luathread/luaskin/hs/host/internal.so.dSYM/Contents/Resources
+internal.so.dSYM/Contents/Resources/DWARF -> ../../../luathread/hs/_asm/luathread/luaskin/hs/host/internal.so.dSYM/Contents/Resources/DWARF
+internal.so.dSYM/Contents/Resources/DWARF/internal.so -> ../../../luathread/hs/_asm/luathread/luaskin/hs/host/internal.so.dSYM/Contents/Resources/DWARF/internal.so
+mkdir -p ../../../luathread/hs/_asm/luathread/luaskin/hs/host
+install -m 0644 init.lua ../../../luathread/hs/_asm/luathread/luaskin/hs/host
 -- image --
 rm -rf internal.so *.dSYM tmp
 Lua Compile Verification Passed
-mkdir -p ../../../luathread/hs/luathread/luaskin/hs/image
-install -m 0644 internal.so ../../../luathread/hs/luathread/luaskin/hs/image
-cp -vpR internal.so.dSYM ../../../luathread/hs/luathread/luaskin/hs/image
-internal.so.dSYM -> ../../../luathread/hs/luathread/luaskin/hs/image/internal.so.dSYM
-internal.so.dSYM/Contents -> ../../../luathread/hs/luathread/luaskin/hs/image/internal.so.dSYM/Contents
-internal.so.dSYM/Contents/Info.plist -> ../../../luathread/hs/luathread/luaskin/hs/image/internal.so.dSYM/Contents/Info.plist
-internal.so.dSYM/Contents/Resources -> ../../../luathread/hs/luathread/luaskin/hs/image/internal.so.dSYM/Contents/Resources
-internal.so.dSYM/Contents/Resources/DWARF -> ../../../luathread/hs/luathread/luaskin/hs/image/internal.so.dSYM/Contents/Resources/DWARF
-internal.so.dSYM/Contents/Resources/DWARF/internal.so -> ../../../luathread/hs/luathread/luaskin/hs/image/internal.so.dSYM/Contents/Resources/DWARF/internal.so
-mkdir -p ../../../luathread/hs/luathread/luaskin/hs/image
-install -m 0644 init.lua ../../../luathread/hs/luathread/luaskin/hs/image
+mkdir -p ../../../luathread/hs/_asm/luathread/luaskin/hs/image
+install -m 0644 internal.so ../../../luathread/hs/_asm/luathread/luaskin/hs/image
+cp -vpR internal.so.dSYM ../../../luathread/hs/_asm/luathread/luaskin/hs/image
+internal.so.dSYM -> ../../../luathread/hs/_asm/luathread/luaskin/hs/image/internal.so.dSYM
+internal.so.dSYM/Contents -> ../../../luathread/hs/_asm/luathread/luaskin/hs/image/internal.so.dSYM/Contents
+internal.so.dSYM/Contents/Info.plist -> ../../../luathread/hs/_asm/luathread/luaskin/hs/image/internal.so.dSYM/Contents/Info.plist
+internal.so.dSYM/Contents/Resources -> ../../../luathread/hs/_asm/luathread/luaskin/hs/image/internal.so.dSYM/Contents/Resources
+internal.so.dSYM/Contents/Resources/DWARF -> ../../../luathread/hs/_asm/luathread/luaskin/hs/image/internal.so.dSYM/Contents/Resources/DWARF
+internal.so.dSYM/Contents/Resources/DWARF/internal.so -> ../../../luathread/hs/_asm/luathread/luaskin/hs/image/internal.so.dSYM/Contents/Resources/DWARF/internal.so
+mkdir -p ../../../luathread/hs/_asm/luathread/luaskin/hs/image
+install -m 0644 init.lua ../../../luathread/hs/_asm/luathread/luaskin/hs/image
 -- json --
 rm -rf internal.so *.dSYM tmp
 Lua Compile Verification Passed
-mkdir -p ../../../luathread/hs/luathread/luaskin/hs/json
-install -m 0644 internal.so ../../../luathread/hs/luathread/luaskin/hs/json
-cp -vpR internal.so.dSYM ../../../luathread/hs/luathread/luaskin/hs/json
-internal.so.dSYM -> ../../../luathread/hs/luathread/luaskin/hs/json/internal.so.dSYM
-internal.so.dSYM/Contents -> ../../../luathread/hs/luathread/luaskin/hs/json/internal.so.dSYM/Contents
-internal.so.dSYM/Contents/Info.plist -> ../../../luathread/hs/luathread/luaskin/hs/json/internal.so.dSYM/Contents/Info.plist
-internal.so.dSYM/Contents/Resources -> ../../../luathread/hs/luathread/luaskin/hs/json/internal.so.dSYM/Contents/Resources
-internal.so.dSYM/Contents/Resources/DWARF -> ../../../luathread/hs/luathread/luaskin/hs/json/internal.so.dSYM/Contents/Resources/DWARF
-internal.so.dSYM/Contents/Resources/DWARF/internal.so -> ../../../luathread/hs/luathread/luaskin/hs/json/internal.so.dSYM/Contents/Resources/DWARF/internal.so
-mkdir -p ../../../luathread/hs/luathread/luaskin/hs/json
-install -m 0644 init.lua ../../../luathread/hs/luathread/luaskin/hs/json
+mkdir -p ../../../luathread/hs/_asm/luathread/luaskin/hs/json
+install -m 0644 internal.so ../../../luathread/hs/_asm/luathread/luaskin/hs/json
+cp -vpR internal.so.dSYM ../../../luathread/hs/_asm/luathread/luaskin/hs/json
+internal.so.dSYM -> ../../../luathread/hs/_asm/luathread/luaskin/hs/json/internal.so.dSYM
+internal.so.dSYM/Contents -> ../../../luathread/hs/_asm/luathread/luaskin/hs/json/internal.so.dSYM/Contents
+internal.so.dSYM/Contents/Info.plist -> ../../../luathread/hs/_asm/luathread/luaskin/hs/json/internal.so.dSYM/Contents/Info.plist
+internal.so.dSYM/Contents/Resources -> ../../../luathread/hs/_asm/luathread/luaskin/hs/json/internal.so.dSYM/Contents/Resources
+internal.so.dSYM/Contents/Resources/DWARF -> ../../../luathread/hs/_asm/luathread/luaskin/hs/json/internal.so.dSYM/Contents/Resources/DWARF
+internal.so.dSYM/Contents/Resources/DWARF/internal.so -> ../../../luathread/hs/_asm/luathread/luaskin/hs/json/internal.so.dSYM/Contents/Resources/DWARF/internal.so
+mkdir -p ../../../luathread/hs/_asm/luathread/luaskin/hs/json
+install -m 0644 init.lua ../../../luathread/hs/_asm/luathread/luaskin/hs/json
 -- keycodes --
 rm -rf internal.so *.dSYM tmp
 Lua Compile Verification Passed
@@ -849,17 +835,17 @@ internal.m:557:63: warning: cast from 'const void *' to 'struct __TISInputSource
                 TISInputSourceRef layout = (TISInputSourceRef)(CFArrayGetValueAtIndex(methodRefs, i));
                                                               ^
 8 warnings generated.
-mkdir -p ../../../luathread/hs/luathread/luaskin/hs/keycodes
-install -m 0644 internal.so ../../../luathread/hs/luathread/luaskin/hs/keycodes
-cp -vpR internal.so.dSYM ../../../luathread/hs/luathread/luaskin/hs/keycodes
-internal.so.dSYM -> ../../../luathread/hs/luathread/luaskin/hs/keycodes/internal.so.dSYM
-internal.so.dSYM/Contents -> ../../../luathread/hs/luathread/luaskin/hs/keycodes/internal.so.dSYM/Contents
-internal.so.dSYM/Contents/Info.plist -> ../../../luathread/hs/luathread/luaskin/hs/keycodes/internal.so.dSYM/Contents/Info.plist
-internal.so.dSYM/Contents/Resources -> ../../../luathread/hs/luathread/luaskin/hs/keycodes/internal.so.dSYM/Contents/Resources
-internal.so.dSYM/Contents/Resources/DWARF -> ../../../luathread/hs/luathread/luaskin/hs/keycodes/internal.so.dSYM/Contents/Resources/DWARF
-internal.so.dSYM/Contents/Resources/DWARF/internal.so -> ../../../luathread/hs/luathread/luaskin/hs/keycodes/internal.so.dSYM/Contents/Resources/DWARF/internal.so
-mkdir -p ../../../luathread/hs/luathread/luaskin/hs/keycodes
-install -m 0644 init.lua ../../../luathread/hs/luathread/luaskin/hs/keycodes
+mkdir -p ../../../luathread/hs/_asm/luathread/luaskin/hs/keycodes
+install -m 0644 internal.so ../../../luathread/hs/_asm/luathread/luaskin/hs/keycodes
+cp -vpR internal.so.dSYM ../../../luathread/hs/_asm/luathread/luaskin/hs/keycodes
+internal.so.dSYM -> ../../../luathread/hs/_asm/luathread/luaskin/hs/keycodes/internal.so.dSYM
+internal.so.dSYM/Contents -> ../../../luathread/hs/_asm/luathread/luaskin/hs/keycodes/internal.so.dSYM/Contents
+internal.so.dSYM/Contents/Info.plist -> ../../../luathread/hs/_asm/luathread/luaskin/hs/keycodes/internal.so.dSYM/Contents/Info.plist
+internal.so.dSYM/Contents/Resources -> ../../../luathread/hs/_asm/luathread/luaskin/hs/keycodes/internal.so.dSYM/Contents/Resources
+internal.so.dSYM/Contents/Resources/DWARF -> ../../../luathread/hs/_asm/luathread/luaskin/hs/keycodes/internal.so.dSYM/Contents/Resources/DWARF
+internal.so.dSYM/Contents/Resources/DWARF/internal.so -> ../../../luathread/hs/_asm/luathread/luaskin/hs/keycodes/internal.so.dSYM/Contents/Resources/DWARF/internal.so
+mkdir -p ../../../luathread/hs/_asm/luathread/luaskin/hs/keycodes
+install -m 0644 init.lua ../../../luathread/hs/_asm/luathread/luaskin/hs/keycodes
 -- pathwatcher --
 rm -rf internal.so *.dSYM tmp
 Lua Compile Verification Passed
@@ -875,17 +861,17 @@ internal.m:31:30: warning: implicit conversion changes signedness: 'unsigned lon
         lua_rawseti(L, -2, i + 1);
         ~~~~~~~~~~~        ~~^~~
 3 warnings generated.
-mkdir -p ../../../luathread/hs/luathread/luaskin/hs/pathwatcher
-install -m 0644 internal.so ../../../luathread/hs/luathread/luaskin/hs/pathwatcher
-cp -vpR internal.so.dSYM ../../../luathread/hs/luathread/luaskin/hs/pathwatcher
-internal.so.dSYM -> ../../../luathread/hs/luathread/luaskin/hs/pathwatcher/internal.so.dSYM
-internal.so.dSYM/Contents -> ../../../luathread/hs/luathread/luaskin/hs/pathwatcher/internal.so.dSYM/Contents
-internal.so.dSYM/Contents/Info.plist -> ../../../luathread/hs/luathread/luaskin/hs/pathwatcher/internal.so.dSYM/Contents/Info.plist
-internal.so.dSYM/Contents/Resources -> ../../../luathread/hs/luathread/luaskin/hs/pathwatcher/internal.so.dSYM/Contents/Resources
-internal.so.dSYM/Contents/Resources/DWARF -> ../../../luathread/hs/luathread/luaskin/hs/pathwatcher/internal.so.dSYM/Contents/Resources/DWARF
-internal.so.dSYM/Contents/Resources/DWARF/internal.so -> ../../../luathread/hs/luathread/luaskin/hs/pathwatcher/internal.so.dSYM/Contents/Resources/DWARF/internal.so
-mkdir -p ../../../luathread/hs/luathread/luaskin/hs/pathwatcher
-install -m 0644 init.lua ../../../luathread/hs/luathread/luaskin/hs/pathwatcher
+mkdir -p ../../../luathread/hs/_asm/luathread/luaskin/hs/pathwatcher
+install -m 0644 internal.so ../../../luathread/hs/_asm/luathread/luaskin/hs/pathwatcher
+cp -vpR internal.so.dSYM ../../../luathread/hs/_asm/luathread/luaskin/hs/pathwatcher
+internal.so.dSYM -> ../../../luathread/hs/_asm/luathread/luaskin/hs/pathwatcher/internal.so.dSYM
+internal.so.dSYM/Contents -> ../../../luathread/hs/_asm/luathread/luaskin/hs/pathwatcher/internal.so.dSYM/Contents
+internal.so.dSYM/Contents/Info.plist -> ../../../luathread/hs/_asm/luathread/luaskin/hs/pathwatcher/internal.so.dSYM/Contents/Info.plist
+internal.so.dSYM/Contents/Resources -> ../../../luathread/hs/_asm/luathread/luaskin/hs/pathwatcher/internal.so.dSYM/Contents/Resources
+internal.so.dSYM/Contents/Resources/DWARF -> ../../../luathread/hs/_asm/luathread/luaskin/hs/pathwatcher/internal.so.dSYM/Contents/Resources/DWARF
+internal.so.dSYM/Contents/Resources/DWARF/internal.so -> ../../../luathread/hs/_asm/luathread/luaskin/hs/pathwatcher/internal.so.dSYM/Contents/Resources/DWARF/internal.so
+mkdir -p ../../../luathread/hs/_asm/luathread/luaskin/hs/pathwatcher
+install -m 0644 init.lua ../../../luathread/hs/_asm/luathread/luaskin/hs/pathwatcher
 -- screen --
 rm -rf internal.so watcher.so *.dSYM tmp
 Lua Compile Verification Passed
@@ -1093,23 +1079,23 @@ watcher.m:3:1: warning: treating #import as an import of module 'LuaSkin' [-Waut
 ^~~~~~~~~~~~~~~~~~~~~~~~~~~
 @import LuaSkin;
 3 warnings generated.
-mkdir -p ../../../luathread/hs/luathread/luaskin/hs/screen
-install -m 0644 internal.so watcher.so ../../../luathread/hs/luathread/luaskin/hs/screen
-cp -vpR internal.so.dSYM watcher.so.dSYM ../../../luathread/hs/luathread/luaskin/hs/screen
-internal.so.dSYM -> ../../../luathread/hs/luathread/luaskin/hs/screen/internal.so.dSYM
-internal.so.dSYM/Contents -> ../../../luathread/hs/luathread/luaskin/hs/screen/internal.so.dSYM/Contents
-internal.so.dSYM/Contents/Info.plist -> ../../../luathread/hs/luathread/luaskin/hs/screen/internal.so.dSYM/Contents/Info.plist
-internal.so.dSYM/Contents/Resources -> ../../../luathread/hs/luathread/luaskin/hs/screen/internal.so.dSYM/Contents/Resources
-internal.so.dSYM/Contents/Resources/DWARF -> ../../../luathread/hs/luathread/luaskin/hs/screen/internal.so.dSYM/Contents/Resources/DWARF
-internal.so.dSYM/Contents/Resources/DWARF/internal.so -> ../../../luathread/hs/luathread/luaskin/hs/screen/internal.so.dSYM/Contents/Resources/DWARF/internal.so
-watcher.so.dSYM -> ../../../luathread/hs/luathread/luaskin/hs/screen/watcher.so.dSYM
-watcher.so.dSYM/Contents -> ../../../luathread/hs/luathread/luaskin/hs/screen/watcher.so.dSYM/Contents
-watcher.so.dSYM/Contents/Info.plist -> ../../../luathread/hs/luathread/luaskin/hs/screen/watcher.so.dSYM/Contents/Info.plist
-watcher.so.dSYM/Contents/Resources -> ../../../luathread/hs/luathread/luaskin/hs/screen/watcher.so.dSYM/Contents/Resources
-watcher.so.dSYM/Contents/Resources/DWARF -> ../../../luathread/hs/luathread/luaskin/hs/screen/watcher.so.dSYM/Contents/Resources/DWARF
-watcher.so.dSYM/Contents/Resources/DWARF/watcher.so -> ../../../luathread/hs/luathread/luaskin/hs/screen/watcher.so.dSYM/Contents/Resources/DWARF/watcher.so
-mkdir -p ../../../luathread/hs/luathread/luaskin/hs/screen
-install -m 0644 init.lua test_screen.lua ../../../luathread/hs/luathread/luaskin/hs/screen
+mkdir -p ../../../luathread/hs/_asm/luathread/luaskin/hs/screen
+install -m 0644 internal.so watcher.so ../../../luathread/hs/_asm/luathread/luaskin/hs/screen
+cp -vpR internal.so.dSYM watcher.so.dSYM ../../../luathread/hs/_asm/luathread/luaskin/hs/screen
+internal.so.dSYM -> ../../../luathread/hs/_asm/luathread/luaskin/hs/screen/internal.so.dSYM
+internal.so.dSYM/Contents -> ../../../luathread/hs/_asm/luathread/luaskin/hs/screen/internal.so.dSYM/Contents
+internal.so.dSYM/Contents/Info.plist -> ../../../luathread/hs/_asm/luathread/luaskin/hs/screen/internal.so.dSYM/Contents/Info.plist
+internal.so.dSYM/Contents/Resources -> ../../../luathread/hs/_asm/luathread/luaskin/hs/screen/internal.so.dSYM/Contents/Resources
+internal.so.dSYM/Contents/Resources/DWARF -> ../../../luathread/hs/_asm/luathread/luaskin/hs/screen/internal.so.dSYM/Contents/Resources/DWARF
+internal.so.dSYM/Contents/Resources/DWARF/internal.so -> ../../../luathread/hs/_asm/luathread/luaskin/hs/screen/internal.so.dSYM/Contents/Resources/DWARF/internal.so
+watcher.so.dSYM -> ../../../luathread/hs/_asm/luathread/luaskin/hs/screen/watcher.so.dSYM
+watcher.so.dSYM/Contents -> ../../../luathread/hs/_asm/luathread/luaskin/hs/screen/watcher.so.dSYM/Contents
+watcher.so.dSYM/Contents/Info.plist -> ../../../luathread/hs/_asm/luathread/luaskin/hs/screen/watcher.so.dSYM/Contents/Info.plist
+watcher.so.dSYM/Contents/Resources -> ../../../luathread/hs/_asm/luathread/luaskin/hs/screen/watcher.so.dSYM/Contents/Resources
+watcher.so.dSYM/Contents/Resources/DWARF -> ../../../luathread/hs/_asm/luathread/luaskin/hs/screen/watcher.so.dSYM/Contents/Resources/DWARF
+watcher.so.dSYM/Contents/Resources/DWARF/watcher.so -> ../../../luathread/hs/_asm/luathread/luaskin/hs/screen/watcher.so.dSYM/Contents/Resources/DWARF/watcher.so
+mkdir -p ../../../luathread/hs/_asm/luathread/luaskin/hs/screen
+install -m 0644 init.lua test_screen.lua ../../../luathread/hs/_asm/luathread/luaskin/hs/screen
 -- settings --
 rm -rf internal.so *.dSYM tmp
 Lua Compile Verification Passed
@@ -1125,17 +1111,17 @@ internal.m:172:86: warning: implicit conversion from nullable pointer 'NSString 
     NSArray *keys = [[[NSUserDefaults standardUserDefaults] persistentDomainForName: [[NSBundle mainBundle] bundleIdentifier]] allKeys];
                                                                                      ^
 3 warnings generated.
-mkdir -p ../../../luathread/hs/luathread/luaskin/hs/settings
-install -m 0644 internal.so ../../../luathread/hs/luathread/luaskin/hs/settings
-cp -vpR internal.so.dSYM ../../../luathread/hs/luathread/luaskin/hs/settings
-internal.so.dSYM -> ../../../luathread/hs/luathread/luaskin/hs/settings/internal.so.dSYM
-internal.so.dSYM/Contents -> ../../../luathread/hs/luathread/luaskin/hs/settings/internal.so.dSYM/Contents
-internal.so.dSYM/Contents/Info.plist -> ../../../luathread/hs/luathread/luaskin/hs/settings/internal.so.dSYM/Contents/Info.plist
-internal.so.dSYM/Contents/Resources -> ../../../luathread/hs/luathread/luaskin/hs/settings/internal.so.dSYM/Contents/Resources
-internal.so.dSYM/Contents/Resources/DWARF -> ../../../luathread/hs/luathread/luaskin/hs/settings/internal.so.dSYM/Contents/Resources/DWARF
-internal.so.dSYM/Contents/Resources/DWARF/internal.so -> ../../../luathread/hs/luathread/luaskin/hs/settings/internal.so.dSYM/Contents/Resources/DWARF/internal.so
-mkdir -p ../../../luathread/hs/luathread/luaskin/hs/settings
-install -m 0644 init.lua ../../../luathread/hs/luathread/luaskin/hs/settings
+mkdir -p ../../../luathread/hs/_asm/luathread/luaskin/hs/settings
+install -m 0644 internal.so ../../../luathread/hs/_asm/luathread/luaskin/hs/settings
+cp -vpR internal.so.dSYM ../../../luathread/hs/_asm/luathread/luaskin/hs/settings
+internal.so.dSYM -> ../../../luathread/hs/_asm/luathread/luaskin/hs/settings/internal.so.dSYM
+internal.so.dSYM/Contents -> ../../../luathread/hs/_asm/luathread/luaskin/hs/settings/internal.so.dSYM/Contents
+internal.so.dSYM/Contents/Info.plist -> ../../../luathread/hs/_asm/luathread/luaskin/hs/settings/internal.so.dSYM/Contents/Info.plist
+internal.so.dSYM/Contents/Resources -> ../../../luathread/hs/_asm/luathread/luaskin/hs/settings/internal.so.dSYM/Contents/Resources
+internal.so.dSYM/Contents/Resources/DWARF -> ../../../luathread/hs/_asm/luathread/luaskin/hs/settings/internal.so.dSYM/Contents/Resources/DWARF
+internal.so.dSYM/Contents/Resources/DWARF/internal.so -> ../../../luathread/hs/_asm/luathread/luaskin/hs/settings/internal.so.dSYM/Contents/Resources/DWARF/internal.so
+mkdir -p ../../../luathread/hs/_asm/luathread/luaskin/hs/settings
+install -m 0644 init.lua ../../../luathread/hs/_asm/luathread/luaskin/hs/settings
 -- styledtext --
 rm -rf internal.so *.dSYM tmp
 Lua Compile Verification Passed
@@ -1199,17 +1185,17 @@ internal.m:2342:18: warning: 'L' was marked unused but was used [-Wused-but-mark
     lua_setfield(L, -2, "lineAppliesTo");
                  ^
 18 warnings generated.
-mkdir -p ../../../luathread/hs/luathread/luaskin/hs/styledtext
-install -m 0644 internal.so ../../../luathread/hs/luathread/luaskin/hs/styledtext
-cp -vpR internal.so.dSYM ../../../luathread/hs/luathread/luaskin/hs/styledtext
-internal.so.dSYM -> ../../../luathread/hs/luathread/luaskin/hs/styledtext/internal.so.dSYM
-internal.so.dSYM/Contents -> ../../../luathread/hs/luathread/luaskin/hs/styledtext/internal.so.dSYM/Contents
-internal.so.dSYM/Contents/Info.plist -> ../../../luathread/hs/luathread/luaskin/hs/styledtext/internal.so.dSYM/Contents/Info.plist
-internal.so.dSYM/Contents/Resources -> ../../../luathread/hs/luathread/luaskin/hs/styledtext/internal.so.dSYM/Contents/Resources
-internal.so.dSYM/Contents/Resources/DWARF -> ../../../luathread/hs/luathread/luaskin/hs/styledtext/internal.so.dSYM/Contents/Resources/DWARF
-internal.so.dSYM/Contents/Resources/DWARF/internal.so -> ../../../luathread/hs/luathread/luaskin/hs/styledtext/internal.so.dSYM/Contents/Resources/DWARF/internal.so
-mkdir -p ../../../luathread/hs/luathread/luaskin/hs/styledtext
-install -m 0644 init.lua ../../../luathread/hs/luathread/luaskin/hs/styledtext
+mkdir -p ../../../luathread/hs/_asm/luathread/luaskin/hs/styledtext
+install -m 0644 internal.so ../../../luathread/hs/_asm/luathread/luaskin/hs/styledtext
+cp -vpR internal.so.dSYM ../../../luathread/hs/_asm/luathread/luaskin/hs/styledtext
+internal.so.dSYM -> ../../../luathread/hs/_asm/luathread/luaskin/hs/styledtext/internal.so.dSYM
+internal.so.dSYM/Contents -> ../../../luathread/hs/_asm/luathread/luaskin/hs/styledtext/internal.so.dSYM/Contents
+internal.so.dSYM/Contents/Info.plist -> ../../../luathread/hs/_asm/luathread/luaskin/hs/styledtext/internal.so.dSYM/Contents/Info.plist
+internal.so.dSYM/Contents/Resources -> ../../../luathread/hs/_asm/luathread/luaskin/hs/styledtext/internal.so.dSYM/Contents/Resources
+internal.so.dSYM/Contents/Resources/DWARF -> ../../../luathread/hs/_asm/luathread/luaskin/hs/styledtext/internal.so.dSYM/Contents/Resources/DWARF
+internal.so.dSYM/Contents/Resources/DWARF/internal.so -> ../../../luathread/hs/_asm/luathread/luaskin/hs/styledtext/internal.so.dSYM/Contents/Resources/DWARF/internal.so
+mkdir -p ../../../luathread/hs/_asm/luathread/luaskin/hs/styledtext
+install -m 0644 init.lua ../../../luathread/hs/_asm/luathread/luaskin/hs/styledtext
 -- timer --
 rm -rf internal.so *.dSYM tmp
 Lua Compile Verification Passed
@@ -1224,17 +1210,17 @@ internal.m:87:18: warning: implicit conversion turns floating-point number into 
     return (next - now);
     ~~~~~~  ~~~~~^~~~~
 3 warnings generated.
-mkdir -p ../../../luathread/hs/luathread/luaskin/hs/timer
-install -m 0644 internal.so ../../../luathread/hs/luathread/luaskin/hs/timer
-cp -vpR internal.so.dSYM ../../../luathread/hs/luathread/luaskin/hs/timer
-internal.so.dSYM -> ../../../luathread/hs/luathread/luaskin/hs/timer/internal.so.dSYM
-internal.so.dSYM/Contents -> ../../../luathread/hs/luathread/luaskin/hs/timer/internal.so.dSYM/Contents
-internal.so.dSYM/Contents/Info.plist -> ../../../luathread/hs/luathread/luaskin/hs/timer/internal.so.dSYM/Contents/Info.plist
-internal.so.dSYM/Contents/Resources -> ../../../luathread/hs/luathread/luaskin/hs/timer/internal.so.dSYM/Contents/Resources
-internal.so.dSYM/Contents/Resources/DWARF -> ../../../luathread/hs/luathread/luaskin/hs/timer/internal.so.dSYM/Contents/Resources/DWARF
-internal.so.dSYM/Contents/Resources/DWARF/internal.so -> ../../../luathread/hs/luathread/luaskin/hs/timer/internal.so.dSYM/Contents/Resources/DWARF/internal.so
-mkdir -p ../../../luathread/hs/luathread/luaskin/hs/timer
-install -m 0644 init.lua test_timer.lua ../../../luathread/hs/luathread/luaskin/hs/timer
+mkdir -p ../../../luathread/hs/_asm/luathread/luaskin/hs/timer
+install -m 0644 internal.so ../../../luathread/hs/_asm/luathread/luaskin/hs/timer
+cp -vpR internal.so.dSYM ../../../luathread/hs/_asm/luathread/luaskin/hs/timer
+internal.so.dSYM -> ../../../luathread/hs/_asm/luathread/luaskin/hs/timer/internal.so.dSYM
+internal.so.dSYM/Contents -> ../../../luathread/hs/_asm/luathread/luaskin/hs/timer/internal.so.dSYM/Contents
+internal.so.dSYM/Contents/Info.plist -> ../../../luathread/hs/_asm/luathread/luaskin/hs/timer/internal.so.dSYM/Contents/Info.plist
+internal.so.dSYM/Contents/Resources -> ../../../luathread/hs/_asm/luathread/luaskin/hs/timer/internal.so.dSYM/Contents/Resources
+internal.so.dSYM/Contents/Resources/DWARF -> ../../../luathread/hs/_asm/luathread/luaskin/hs/timer/internal.so.dSYM/Contents/Resources/DWARF
+internal.so.dSYM/Contents/Resources/DWARF/internal.so -> ../../../luathread/hs/_asm/luathread/luaskin/hs/timer/internal.so.dSYM/Contents/Resources/DWARF/internal.so
+mkdir -p ../../../luathread/hs/_asm/luathread/luaskin/hs/timer
+install -m 0644 init.lua test_timer.lua ../../../luathread/hs/_asm/luathread/luaskin/hs/timer
 -- usb --
 rm -rf internal.so watcher.so *.dSYM tmp
 Lua Compile Verification Passed
@@ -1325,23 +1311,23 @@ watcher.m:86:14: note: previous declaration is here
     LuaSkin *skin = [LuaSkin threaded];
              ^
 13 warnings generated.
-mkdir -p ../../../luathread/hs/luathread/luaskin/hs/usb
-install -m 0644 internal.so watcher.so ../../../luathread/hs/luathread/luaskin/hs/usb
-cp -vpR internal.so.dSYM watcher.so.dSYM ../../../luathread/hs/luathread/luaskin/hs/usb
-internal.so.dSYM -> ../../../luathread/hs/luathread/luaskin/hs/usb/internal.so.dSYM
-internal.so.dSYM/Contents -> ../../../luathread/hs/luathread/luaskin/hs/usb/internal.so.dSYM/Contents
-internal.so.dSYM/Contents/Info.plist -> ../../../luathread/hs/luathread/luaskin/hs/usb/internal.so.dSYM/Contents/Info.plist
-internal.so.dSYM/Contents/Resources -> ../../../luathread/hs/luathread/luaskin/hs/usb/internal.so.dSYM/Contents/Resources
-internal.so.dSYM/Contents/Resources/DWARF -> ../../../luathread/hs/luathread/luaskin/hs/usb/internal.so.dSYM/Contents/Resources/DWARF
-internal.so.dSYM/Contents/Resources/DWARF/internal.so -> ../../../luathread/hs/luathread/luaskin/hs/usb/internal.so.dSYM/Contents/Resources/DWARF/internal.so
-watcher.so.dSYM -> ../../../luathread/hs/luathread/luaskin/hs/usb/watcher.so.dSYM
-watcher.so.dSYM/Contents -> ../../../luathread/hs/luathread/luaskin/hs/usb/watcher.so.dSYM/Contents
-watcher.so.dSYM/Contents/Info.plist -> ../../../luathread/hs/luathread/luaskin/hs/usb/watcher.so.dSYM/Contents/Info.plist
-watcher.so.dSYM/Contents/Resources -> ../../../luathread/hs/luathread/luaskin/hs/usb/watcher.so.dSYM/Contents/Resources
-watcher.so.dSYM/Contents/Resources/DWARF -> ../../../luathread/hs/luathread/luaskin/hs/usb/watcher.so.dSYM/Contents/Resources/DWARF
-watcher.so.dSYM/Contents/Resources/DWARF/watcher.so -> ../../../luathread/hs/luathread/luaskin/hs/usb/watcher.so.dSYM/Contents/Resources/DWARF/watcher.so
-mkdir -p ../../../luathread/hs/luathread/luaskin/hs/usb
-install -m 0644 init.lua ../../../luathread/hs/luathread/luaskin/hs/usb
+mkdir -p ../../../luathread/hs/_asm/luathread/luaskin/hs/usb
+install -m 0644 internal.so watcher.so ../../../luathread/hs/_asm/luathread/luaskin/hs/usb
+cp -vpR internal.so.dSYM watcher.so.dSYM ../../../luathread/hs/_asm/luathread/luaskin/hs/usb
+internal.so.dSYM -> ../../../luathread/hs/_asm/luathread/luaskin/hs/usb/internal.so.dSYM
+internal.so.dSYM/Contents -> ../../../luathread/hs/_asm/luathread/luaskin/hs/usb/internal.so.dSYM/Contents
+internal.so.dSYM/Contents/Info.plist -> ../../../luathread/hs/_asm/luathread/luaskin/hs/usb/internal.so.dSYM/Contents/Info.plist
+internal.so.dSYM/Contents/Resources -> ../../../luathread/hs/_asm/luathread/luaskin/hs/usb/internal.so.dSYM/Contents/Resources
+internal.so.dSYM/Contents/Resources/DWARF -> ../../../luathread/hs/_asm/luathread/luaskin/hs/usb/internal.so.dSYM/Contents/Resources/DWARF
+internal.so.dSYM/Contents/Resources/DWARF/internal.so -> ../../../luathread/hs/_asm/luathread/luaskin/hs/usb/internal.so.dSYM/Contents/Resources/DWARF/internal.so
+watcher.so.dSYM -> ../../../luathread/hs/_asm/luathread/luaskin/hs/usb/watcher.so.dSYM
+watcher.so.dSYM/Contents -> ../../../luathread/hs/_asm/luathread/luaskin/hs/usb/watcher.so.dSYM/Contents
+watcher.so.dSYM/Contents/Info.plist -> ../../../luathread/hs/_asm/luathread/luaskin/hs/usb/watcher.so.dSYM/Contents/Info.plist
+watcher.so.dSYM/Contents/Resources -> ../../../luathread/hs/_asm/luathread/luaskin/hs/usb/watcher.so.dSYM/Contents/Resources
+watcher.so.dSYM/Contents/Resources/DWARF -> ../../../luathread/hs/_asm/luathread/luaskin/hs/usb/watcher.so.dSYM/Contents/Resources/DWARF
+watcher.so.dSYM/Contents/Resources/DWARF/watcher.so -> ../../../luathread/hs/_asm/luathread/luaskin/hs/usb/watcher.so.dSYM/Contents/Resources/DWARF/watcher.so
+mkdir -p ../../../luathread/hs/_asm/luathread/luaskin/hs/usb
+install -m 0644 init.lua ../../../luathread/hs/_asm/luathread/luaskin/hs/usb
 -- wifi --
 rm -rf internal.so watcher.so *.dSYM tmp
 Lua Compile Verification Passed
@@ -1455,23 +1441,23 @@ watcher.m:138:58: warning: 'CWSSIDDidChangeNotification' is deprecated: first de
 FOUNDATION_EXTERN NSString * const CWSSIDDidChangeNotification NS_DEPRECATED_MAC(10_6, 10_10, "Use -[CWWiFiClient startMonitoringEventWithType:error:] with the CWEventTypeSSIDDidChange event type");
                                    ^
 8 warnings generated.
-mkdir -p ../../../luathread/hs/luathread/luaskin/hs/wifi
-install -m 0644 internal.so watcher.so ../../../luathread/hs/luathread/luaskin/hs/wifi
-cp -vpR internal.so.dSYM watcher.so.dSYM ../../../luathread/hs/luathread/luaskin/hs/wifi
-internal.so.dSYM -> ../../../luathread/hs/luathread/luaskin/hs/wifi/internal.so.dSYM
-internal.so.dSYM/Contents -> ../../../luathread/hs/luathread/luaskin/hs/wifi/internal.so.dSYM/Contents
-internal.so.dSYM/Contents/Info.plist -> ../../../luathread/hs/luathread/luaskin/hs/wifi/internal.so.dSYM/Contents/Info.plist
-internal.so.dSYM/Contents/Resources -> ../../../luathread/hs/luathread/luaskin/hs/wifi/internal.so.dSYM/Contents/Resources
-internal.so.dSYM/Contents/Resources/DWARF -> ../../../luathread/hs/luathread/luaskin/hs/wifi/internal.so.dSYM/Contents/Resources/DWARF
-internal.so.dSYM/Contents/Resources/DWARF/internal.so -> ../../../luathread/hs/luathread/luaskin/hs/wifi/internal.so.dSYM/Contents/Resources/DWARF/internal.so
-watcher.so.dSYM -> ../../../luathread/hs/luathread/luaskin/hs/wifi/watcher.so.dSYM
-watcher.so.dSYM/Contents -> ../../../luathread/hs/luathread/luaskin/hs/wifi/watcher.so.dSYM/Contents
-watcher.so.dSYM/Contents/Info.plist -> ../../../luathread/hs/luathread/luaskin/hs/wifi/watcher.so.dSYM/Contents/Info.plist
-watcher.so.dSYM/Contents/Resources -> ../../../luathread/hs/luathread/luaskin/hs/wifi/watcher.so.dSYM/Contents/Resources
-watcher.so.dSYM/Contents/Resources/DWARF -> ../../../luathread/hs/luathread/luaskin/hs/wifi/watcher.so.dSYM/Contents/Resources/DWARF
-watcher.so.dSYM/Contents/Resources/DWARF/watcher.so -> ../../../luathread/hs/luathread/luaskin/hs/wifi/watcher.so.dSYM/Contents/Resources/DWARF/watcher.so
-mkdir -p ../../../luathread/hs/luathread/luaskin/hs/wifi
-install -m 0644 init.lua ../../../luathread/hs/luathread/luaskin/hs/wifi
+mkdir -p ../../../luathread/hs/_asm/luathread/luaskin/hs/wifi
+install -m 0644 internal.so watcher.so ../../../luathread/hs/_asm/luathread/luaskin/hs/wifi
+cp -vpR internal.so.dSYM watcher.so.dSYM ../../../luathread/hs/_asm/luathread/luaskin/hs/wifi
+internal.so.dSYM -> ../../../luathread/hs/_asm/luathread/luaskin/hs/wifi/internal.so.dSYM
+internal.so.dSYM/Contents -> ../../../luathread/hs/_asm/luathread/luaskin/hs/wifi/internal.so.dSYM/Contents
+internal.so.dSYM/Contents/Info.plist -> ../../../luathread/hs/_asm/luathread/luaskin/hs/wifi/internal.so.dSYM/Contents/Info.plist
+internal.so.dSYM/Contents/Resources -> ../../../luathread/hs/_asm/luathread/luaskin/hs/wifi/internal.so.dSYM/Contents/Resources
+internal.so.dSYM/Contents/Resources/DWARF -> ../../../luathread/hs/_asm/luathread/luaskin/hs/wifi/internal.so.dSYM/Contents/Resources/DWARF
+internal.so.dSYM/Contents/Resources/DWARF/internal.so -> ../../../luathread/hs/_asm/luathread/luaskin/hs/wifi/internal.so.dSYM/Contents/Resources/DWARF/internal.so
+watcher.so.dSYM -> ../../../luathread/hs/_asm/luathread/luaskin/hs/wifi/watcher.so.dSYM
+watcher.so.dSYM/Contents -> ../../../luathread/hs/_asm/luathread/luaskin/hs/wifi/watcher.so.dSYM/Contents
+watcher.so.dSYM/Contents/Info.plist -> ../../../luathread/hs/_asm/luathread/luaskin/hs/wifi/watcher.so.dSYM/Contents/Info.plist
+watcher.so.dSYM/Contents/Resources -> ../../../luathread/hs/_asm/luathread/luaskin/hs/wifi/watcher.so.dSYM/Contents/Resources
+watcher.so.dSYM/Contents/Resources/DWARF -> ../../../luathread/hs/_asm/luathread/luaskin/hs/wifi/watcher.so.dSYM/Contents/Resources/DWARF
+watcher.so.dSYM/Contents/Resources/DWARF/watcher.so -> ../../../luathread/hs/_asm/luathread/luaskin/hs/wifi/watcher.so.dSYM/Contents/Resources/DWARF/watcher.so
+mkdir -p ../../../luathread/hs/_asm/luathread/luaskin/hs/wifi
+install -m 0644 init.lua ../../../luathread/hs/_asm/luathread/luaskin/hs/wifi
 HS_APPLICATION=/Applications/Development PREFIX=../../../../luathread /Applications/Xcode.app/Contents/Developer/usr/bin/make -C drawing/color clean install
 rm -rf internal.so *.dSYM tmp
 Lua Compile Verification Passed
@@ -1492,17 +1478,17 @@ In file included from internal.m:1:
     lua_State *L;
                ^
 4 warnings generated.
-mkdir -p ../../../../luathread/hs/luathread/luaskin/hs/drawing/color
-install -m 0644 internal.so ../../../../luathread/hs/luathread/luaskin/hs/drawing/color
-cp -vpR internal.so.dSYM ../../../../luathread/hs/luathread/luaskin/hs/drawing/color
-internal.so.dSYM -> ../../../../luathread/hs/luathread/luaskin/hs/drawing/color/internal.so.dSYM
-internal.so.dSYM/Contents -> ../../../../luathread/hs/luathread/luaskin/hs/drawing/color/internal.so.dSYM/Contents
-internal.so.dSYM/Contents/Info.plist -> ../../../../luathread/hs/luathread/luaskin/hs/drawing/color/internal.so.dSYM/Contents/Info.plist
-internal.so.dSYM/Contents/Resources -> ../../../../luathread/hs/luathread/luaskin/hs/drawing/color/internal.so.dSYM/Contents/Resources
-internal.so.dSYM/Contents/Resources/DWARF -> ../../../../luathread/hs/luathread/luaskin/hs/drawing/color/internal.so.dSYM/Contents/Resources/DWARF
-internal.so.dSYM/Contents/Resources/DWARF/internal.so -> ../../../../luathread/hs/luathread/luaskin/hs/drawing/color/internal.so.dSYM/Contents/Resources/DWARF/internal.so
-mkdir -p ../../../../luathread/hs/luathread/luaskin/hs/drawing/color
-install -m 0644 init.lua ../../../../luathread/hs/luathread/luaskin/hs/drawing/color
-pushd ../../luathread ; tar -cf ../luathread-v0.1.tar hs ; gzip -9 ../luathread-v0.1.tar ; popd
+mkdir -p ../../../../luathread/hs/_asm/luathread/luaskin/hs/drawing/color
+install -m 0644 internal.so ../../../../luathread/hs/_asm/luathread/luaskin/hs/drawing/color
+cp -vpR internal.so.dSYM ../../../../luathread/hs/_asm/luathread/luaskin/hs/drawing/color
+internal.so.dSYM -> ../../../../luathread/hs/_asm/luathread/luaskin/hs/drawing/color/internal.so.dSYM
+internal.so.dSYM/Contents -> ../../../../luathread/hs/_asm/luathread/luaskin/hs/drawing/color/internal.so.dSYM/Contents
+internal.so.dSYM/Contents/Info.plist -> ../../../../luathread/hs/_asm/luathread/luaskin/hs/drawing/color/internal.so.dSYM/Contents/Info.plist
+internal.so.dSYM/Contents/Resources -> ../../../../luathread/hs/_asm/luathread/luaskin/hs/drawing/color/internal.so.dSYM/Contents/Resources
+internal.so.dSYM/Contents/Resources/DWARF -> ../../../../luathread/hs/_asm/luathread/luaskin/hs/drawing/color/internal.so.dSYM/Contents/Resources/DWARF
+internal.so.dSYM/Contents/Resources/DWARF/internal.so -> ../../../../luathread/hs/_asm/luathread/luaskin/hs/drawing/color/internal.so.dSYM/Contents/Resources/DWARF/internal.so
+mkdir -p ../../../../luathread/hs/_asm/luathread/luaskin/hs/drawing/color
+install -m 0644 init.lua ../../../../luathread/hs/_asm/luathread/luaskin/hs/drawing/color
+pushd ../../luathread ; tar -cf ../luathread-v0.2.tar hs ; gzip -9 ../luathread-v0.2.tar ; popd
 /opt/amagill/src/hammerspoon/_asm/wip/luathread/luathread /opt/amagill/src/hammerspoon/_asm/wip/luathread/luaskin/modules
-/opt/amagill/src/hammerspoon/_asm/wip/luathread/luaskin/modules
+../luathread-v0.2.tar.gz already exists -- do you wish to overwrite (y or n)? /opt/amagill/src/hammerspoon/_asm/wip/luathread/luaskin/modules

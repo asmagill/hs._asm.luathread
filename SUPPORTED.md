@@ -118,29 +118,29 @@ hs.window.tiling                      |   YES   | Lua Only
 
 Members of `hs`                 | Status  | Notes
 --------------------------------|---------|------
-hs.accessibilityState           |   YES   | included in hs.luathread.luaskin._coresupport
+hs.accessibilityState           |   YES   | included in hs._asm.luathread.luaskin._coresupport
 hs.assert                       |   YES   |
-hs.autoLaunch                   |   YES   | included in hs.luathread.luaskin._coresupport
-hs.automaticallyCheckForUpdates |   NO    | No-OP included in hs.luathread.luaskin._coresupport
-hs.canCheckForUpdates           |   NO    | No-OP included in hs.luathread.luaskin._coresupport
-hs.checkForUpdates              |   NO    | No-OP included in hs.luathread.luaskin._coresupport
-hs.cleanUTF8forConsole          |   YES   | included in hs.luathread.luaskin._coresupport
+hs.autoLaunch                   |   YES   | included in hs._asm.luathread.luaskin._coresupport
+hs.automaticallyCheckForUpdates |   NO    | No-OP included in hs._asm.luathread.luaskin._coresupport
+hs.canCheckForUpdates           |   NO    | No-OP included in hs._asm.luathread.luaskin._coresupport
+hs.checkForUpdates              |   NO    | No-OP included in hs._asm.luathread.luaskin._coresupport
+hs.cleanUTF8forConsole          |   YES   | included in hs._asm.luathread.luaskin._coresupport
 hs.completionsForInputString    |   NO    | No-OP included in module `_threadinit.lua`
 hs.configdir                    |   YES   |
-hs.consoleOnTop                 |   YES   | included in hs.luathread.luaskin._coresupport
+hs.consoleOnTop                 |   YES   | included in hs._asm.luathread.luaskin._coresupport
 hs.dockIcon                     |   YES   |
 hs.docstrings_json_file         |   YES   |
 hs.execute                      |   YES   |
-hs.focus                        |   YES   | included in hs.luathread.luaskin._coresupport
-hs.getObjectMetatable           |   YES   | included in hs.luathread.luaskin._coresupport
+hs.focus                        |   YES   | included in hs._asm.luathread.luaskin._coresupport
+hs.getObjectMetatable           |   YES   | included in hs._asm.luathread.luaskin._coresupport
 hs.handleLogMessage             |   YES   | override in module `_threadinit.lua`
 hs.help                         |   YES   |
 hs.hsdocs                       |   NO    | No-OP included in module `_threadinit.lua`
 hs.luaSkinLog                   |   YES   |
-hs.menuIcon                     |   YES   | included in hs.luathread.luaskin._coresupport
-hs.openAbout                    |   YES   | included in hs.luathread.luaskin._coresupport
-hs.openConsole                  |   YES   | included in hs.luathread.luaskin._coresupport
-hs.openPreferences              |   YES   | included in hs.luathread.luaskin._coresupport
+hs.menuIcon                     |   YES   | included in hs._asm.luathread.luaskin._coresupport
+hs.openAbout                    |   YES   | included in hs._asm.luathread.luaskin._coresupport
+hs.openConsole                  |   YES   | included in hs._asm.luathread.luaskin._coresupport
+hs.openPreferences              |   YES   | included in hs._asm.luathread.luaskin._coresupport
 hs.printf                       |   YES   |
 hs.processInfo                  |   YES   | included in module `_threadinit.lua`
 hs.rawprint                     |   YES   |
@@ -151,4 +151,4 @@ hs.toggleConsole                |   NO    | * Requires application, window
 hs._exit                        |   YES   | included in module `_threadinit.lua`
 hs._extensions                  |   YES   |
 hs._logmessage                  |   YES   | included in module `_threadinit.lua`
-hs._notify                      |   YES   | included in hs.luathread.luaskin._coresupport
+hs._notify                      |   YES   | included in hs._asm.luathread.luaskin._coresupport

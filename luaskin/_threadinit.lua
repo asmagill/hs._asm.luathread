@@ -19,7 +19,8 @@ if _instance then
     end
     if type(autoload_extensions) == "nil" then autoload_extensions = true end
 
-    hs = require("hs.luathread.luaskin._coresupport")
+    hs = require("hs._asm.luathread.luaskin._coresupport")
+    hs._threadPrintResults = true
     hs.processInfo = assignments.processInfo
     hs.reload      = function(...) _instance:reload(...) end
     hs._exit       = function(...) _instance:cancel(...) end
@@ -34,7 +35,7 @@ if _instance then
         end
     end
 
-    _sharedDictionary = require("hs.luathread._sharedDictionaryBuilder")("hs.luathread.luaskin")(_instance)
+    _sharedDictionary = require("hs._asm.luathread._sharedDictionaryBuilder")("hs._asm.luathread.luaskin")(_instance)
 
     hs._logmessage("-- ".._VERSION..", Hammerspoon instance "..instanceName)
     local retval = { require("hs._coresetup").setup(hs.processInfo.resourcePath .. "/extensions",
@@ -93,11 +94,14 @@ if _instance then
         --print("runstring")
         local fn, err = load("return " .. s)
         if not fn then fn, err = load(s) end
-        if not fn then return tostring(err) end
+        if not fn then
+            print(err)
+            return tostring(err)
+        end
 
         local str = ""
         local startTime = _instance:timestamp()
-        local results = table.pack(xpcall(fn,debug.traceback))
+        local results   = table.pack(xpcall(fn,debug.traceback))
         local endTime   = _instance:timestamp()
 
         local sharedResults = { n = results.n - 1 }
@@ -112,7 +116,7 @@ if _instance then
             _sharedDictionary._results = { start = startTime, stop = endTime, results = sharedResults }
         end)
         if not _ then logger.e(err) end
-        print(str)
+        if hs._threadPrintResults or not results[1] then print(str) end
         return table.unpack(sharedResults)
     end
 

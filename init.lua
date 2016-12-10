@@ -1,8 +1,8 @@
---- === hs.luathread ===
+--- === hs._asm.luathread ===
 ---
 --- Stuff about the module
 
-local USERDATA_TAG = "hs.luathread"
+local USERDATA_TAG = "hs._asm.luathread"
 
 local knownThreadTypes = {
     luaSkin = USERDATA_TAG..".luaskin",

@@ -188,7 +188,7 @@ static luaL_Reg moduleLib[] = {
 // };
 
 // NOTE: ** Make sure to change luaopen_..._internal **
-int luaopen_hs_luathread_luaskin__coresupport(lua_State* __unused L) {
+int luaopen_hs__asm_luathread_luaskin__coresupport(lua_State* __unused L) {
     LuaSkin *skin = [LuaSkin threaded] ;
     [skin registerLibrary:moduleLib metaFunctions:nil] ; // or module_metaLib
     return 1;

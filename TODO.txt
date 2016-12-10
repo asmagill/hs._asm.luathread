@@ -1,0 +1,34 @@
+-- for sharedDictionary, see canvas elementMT and generalize
+--                       no recursive tables
+
+
+-- Hold on to this... it's the right idea, but isn't enough because we're trying to use the
+-- shared dictionary too soon... need to ponder...
+-- possible options: wrap sharedDictionary so it can queue up updates as well
+--                   allow submission to take data as well, like push on the alt side
+--                   add proper serialization to Hammerspoon
+--
+-- submit to thread... queues submissions until the thread is actually executing...
+-- local submitToThread = function(submission)
+--     module.queue = module.queue or {}
+--     if module.luaskin and module.luaskin:isExecuting() and #module.queue == 0 then
+--         module.luaskin:submit(submission)
+--     else
+--         table.insert(module.queue, submission)
+--         module.queueTimer = doEvery(1, function()
+--             if module.luaskin and module.luaskin:isExecuting() then
+--                 while #module.queue > 0 do
+--                     module.luaskin:submit(table.remove(module.queue, 1))
+--                 end
+--                 module.queueTimer:stop()
+--                 module.queueTimer = nil
+--             end
+--         end)
+--     end
+-- end
+
+modify luaskin initial settings per thread rather than for all?
+
+offer minimal (i.e. no _coresetup)?
+
+lua51

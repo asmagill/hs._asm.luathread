@@ -3,7 +3,7 @@
 #import "../HSLuaThread.h"
 #import "../LuaSkin+threaded.h"
 
-static const char *USERDATA_TAG = "hs.luathread.luaskin" ;
+static const char *USERDATA_TAG = "hs._asm.luathread.luaskin" ;
 static NSDictionary *initialAssignmentsForThread ;
 
 #define get_objectFromUserdata(objType, L, idx, tag) (objType*)*((void**)luaL_checkudata(L, idx, tag))
@@ -422,7 +422,7 @@ static luaL_Reg moduleLib[] = {
     {NULL,          NULL}
 };
 
-int luaopen_hs_luathread_luaskin_internal(lua_State* __unused L) {
+int luaopen_hs__asm_luathread_luaskin_internal(lua_State* __unused L) {
     LuaSkin *skin = [LuaSkin threaded] ;
     [skin registerLibrary:moduleLib metaFunctions:nil] ;
 

@@ -1,8 +1,8 @@
---- === hs.luathread.luaskin ===
+--- === hs._asm.luathread.luaskin ===
 ---
 --- Stuff about the module
 
-local USERDATA_TAG = "hs.luathread.luaskin"
+local USERDATA_TAG = "hs._asm.luathread.luaskin"
 
 local module   = require(USERDATA_TAG..".internal")
 local objectMT = hs.getObjectMetatable(USERDATA_TAG)

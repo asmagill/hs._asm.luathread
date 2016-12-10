@@ -3,12 +3,10 @@
 #import "LuaSkin+threaded.h"
 #import "HSLuaThread.h"
 
-static const char *USERDATA_TAG    = "hs.luathread" ;
-static const char *THREAD_UD_TAG   = "hs.luathread.instance" ;
+static const char *USERDATA_TAG    = "hs._asm.luathread" ;
+static const char *THREAD_UD_TAG   = "hs._asm.luathread.instance" ;
 
-#ifdef VERBOSE_LOGGING
-#define PORTMESSAGE_LOGGING
-#endif
+// #define PORTMESSAGE_LOGGING
 
 // message id's for messages which can be passed between manager and thread
 #define MSGID_RESULT     100 // a result has been returned
@@ -27,6 +25,7 @@ static const char *THREAD_UD_TAG   = "hs.luathread.instance" ;
 @property (readonly) NSLock              *dictionaryLock ;
 @property (readonly) NSMutableDictionary *sharedDictionary ;
 @property (readonly) BOOL                idle ;
+@property (readonly) BOOL                hasTerminated ;
 @property (readonly) NSPort              *inPort ;
 @property (readonly) NSPort              *outPort ;
 @end
@@ -40,6 +39,7 @@ static const char *THREAD_UD_TAG   = "hs.luathread.instance" ;
         _performCleanClose = YES ;
         _idle              = NO ;
         _restartLuaState   = NO ;
+        _hasTerminated     = NO ;
         _dictionaryLock    = [[NSLock alloc] init] ;
         _lockTimeout       = 5.0 ;
         _sharedDictionary  = [[NSMutableDictionary alloc] init] ;
@@ -77,6 +77,7 @@ static const char *THREAD_UD_TAG   = "hs.luathread.instance" ;
 #endif
             [self instanceCancelled:_performCleanClose] ;
         }
+        _hasTerminated = YES ;
         [self removeCommunicationPorts] ;
     }
 }
@@ -88,6 +89,7 @@ static const char *THREAD_UD_TAG   = "hs.luathread.instance" ;
     _idle = NO ;
     switch(portMessage.msgid) {
         case MSGID_INPUT: {
+// [LuaSkin logVerbose:[NSString stringWithFormat:@"submission:%@", [[NSString alloc] initWithData:[portMessage.components firstObject] encoding:NSUTF8StringEncoding]]] ;
             NSData *input = [portMessage.components firstObject] ;
             [self handleIncomingData:input] ;
         }   break ;
@@ -96,6 +98,28 @@ static const char *THREAD_UD_TAG   = "hs.luathread.instance" ;
         default: {
             [self logAtLevel:LS_LOG_INFO withMessage:[NSString stringWithFormat:@"%s:handlePortMessage: - unhandled message %d for %@", THREAD_UD_TAG, portMessage.msgid, self.name]] ;
         }   break ;
+    }
+}
+
+- (BOOL)sendPortMessage:(uint32_t)msgid withData:(id)object {
+    if (!self.cancelled) {
+        if (_inPort.valid && _outPort.valid) {
+            NSPortMessage* messageObj = [[NSPortMessage alloc] initWithSendPort:_outPort
+                                                                    receivePort:_inPort
+                                                                     components:object];
+            [messageObj setMsgid:msgid];
+            [messageObj sendBeforeDate:[NSDate date]];
+    #ifdef PORTMESSAGE_LOGGING
+            [LuaSkin logDebug:[NSString stringWithFormat:@"%s:sendPortMessage:withData: <-- portMessage %d for %@", THREAD_UD_TAG, messageObj.msgid, self.name]] ;
+    #endif
+            return YES ;
+        } else {
+            [LuaSkin logInfo:[NSString stringWithFormat:@"%s:sendPortMessage:withData: <-- portMessage %d, for %@ - %@ port invalid, cancelling thread", THREAD_UD_TAG, msgid, self.name, (_inPort.valid ? @"input" : @"output")]] ;
+            [self cancel] ;
+            return NO ;
+        }
+    } else {
+        return NO ;
     }
 }
 
@@ -111,36 +135,15 @@ static const char *THREAD_UD_TAG   = "hs.luathread.instance" ;
         if (!encoded) encoded = [NSKeyedArchiver archivedDataWithRootObject:[NSNull null]];
         [encodedResults addObject:encoded] ;
     }
-    NSPortMessage* messageObj = [[NSPortMessage alloc] initWithSendPort:_outPort
-                                                            receivePort:_inPort
-                                                             components:encodedResults];
-    [messageObj setMsgid:MSGID_RESULT];
-    [messageObj sendBeforeDate:[NSDate date]];
-#ifdef PORTMESSAGE_LOGGING
-    [LuaSkin logDebug:[NSString stringWithFormat:@"%s:returnResults: <-- portMessage %d for %@ with %lu results", THREAD_UD_TAG, messageObj.msgid, self.name, [encodedResults count]]] ;
-#endif
+    [self sendPortMessage:MSGID_RESULT withData:encodedResults] ;
 }
 
 - (void)returnOutput:(NSData *)output {
-    NSPortMessage* messageObj = [[NSPortMessage alloc] initWithSendPort:_outPort
-                                                            receivePort:_inPort
-                                                             components:@[ output ]];
-    [messageObj setMsgid:MSGID_PRINT];
-    [messageObj sendBeforeDate:[NSDate date]];
-#ifdef PORTMESSAGE_LOGGING
-    [LuaSkin logDebug:[NSString stringWithFormat:@"%s:returnOutput: <-- portMessage %d for %@", THREAD_UD_TAG, messageObj.msgid, self.name]] ;
-#endif
+    [self sendPortMessage:MSGID_PRINT withData:@[ output ]] ;
 }
 
 - (void)flushOutput {
-    NSPortMessage* messageObj = [[NSPortMessage alloc] initWithSendPort:_outPort
-                                                            receivePort:_inPort
-                                                             components:nil];
-    [messageObj setMsgid:MSGID_PRINTFLUSH];
-    [messageObj sendBeforeDate:[NSDate date]];
-#ifdef PORTMESSAGE_LOGGING
-    [LuaSkin logDebug:[NSString stringWithFormat:@"%s:flushOutput <-- portMessage %d for %@", THREAD_UD_TAG, messageObj.msgid, self.name]] ;
-#endif
+    [self sendPortMessage:MSGID_PRINTFLUSH withData:nil] ;
 }
 
 - (NSArray *)sharedDictionaryGetKeys {
@@ -274,29 +277,29 @@ static const char *THREAD_UD_TAG   = "hs.luathread.instance" ;
 #endif
     switch(portMessage.msgid) {
         case MSGID_RESULT: {
-            NSArray *components = portMessage.components ;
-            if (components) {
+            if (_resultsCallbackRef != LUA_NOREF) {
+                NSArray *components = portMessage.components ;
                 NSMutableArray *results = [[NSMutableArray alloc] init] ;
-                for (NSData *item in components) {
-                    id realItem ;
-                    @try {
-                        realItem = [NSKeyedUnarchiver unarchiveObjectWithData:item] ;
-                    } @catch (NSException *exception) {
-                        [LuaSkin logWarn:[NSString stringWithFormat:@"%s:handlePortMessage: - exception unarchiving result:%@", USERDATA_TAG, exception]] ;
+                if (components) {
+                    for (NSData *item in components) {
+                        id realItem ;
+                        @try {
+                            realItem = [NSKeyedUnarchiver unarchiveObjectWithData:item] ;
+                        } @catch (NSException *exception) {
+                            [LuaSkin logWarn:[NSString stringWithFormat:@"%s:handlePortMessage: - exception unarchiving result:%@", USERDATA_TAG, exception]] ;
+                        }
+                        if (!realItem) realItem = [NSNull null] ;
+                        [results addObject:realItem] ;
                     }
-                    if (!realItem) realItem = [NSNull null] ;
-                    [results addObject:realItem] ;
                 }
-                if (_resultsCallbackRef != LUA_NOREF) {
-                    [self performSelector:@selector(performCallback:)
-                                 onThread:_creationThread
-                               withObject:@{
-                                  @"callbackRef" : @(_resultsCallbackRef),
-                                  @"message"     : @"results",
-                                  @"data"        : results,
-                               }
-                            waitUntilDone:YES] ;
-                }
+                [self performSelector:@selector(performCallback:)
+                             onThread:_creationThread
+                           withObject:@{
+                              @"callbackRef" : @(_resultsCallbackRef),
+                              @"message"     : @"results",
+                              @"data"        : results,
+                           }
+                        waitUntilDone:YES] ;
             }
         }  break ;
         case MSGID_PRINT: {
@@ -323,6 +326,24 @@ static const char *THREAD_UD_TAG   = "hs.luathread.instance" ;
         default:
             [skin logInfo:[NSString stringWithFormat:@"%s:handlePortMessage: - unhandled message %d for %@", USERDATA_TAG, portMessage.msgid, _name]] ;
             break ;
+    }
+}
+
+- (BOOL)sendPortMessage:(uint32_t)msgid withData:(id)object {
+    if (_inPort.valid && _outPort.valid) {
+        NSPortMessage* messageObj = [[NSPortMessage alloc] initWithSendPort:_outPort
+                                                                receivePort:_inPort
+                                                                 components:object];
+        [messageObj setMsgid:msgid];
+        [messageObj sendBeforeDate:[NSDate date]];
+#ifdef PORTMESSAGE_LOGGING
+        [LuaSkin logDebug:[NSString stringWithFormat:@"%s:sendPortMessage:withData: <-- portMessage %d for %@", USERDATA_TAG, messageObj.msgid, self.name]] ;
+#endif
+        return YES ;
+    } else {
+        [LuaSkin logInfo:[NSString stringWithFormat:@"%s:sendPortMessage:withData: <-- portMessage %d, for %@ - %@ port invalid, cancelling thread", USERDATA_TAG, msgid, self.name, (_inPort.valid ? @"input" : @"output")]] ;
+        [_threadObj cancel] ;
+        return NO ;
     }
 }
 
@@ -371,6 +392,14 @@ static int luathread_threadIsIdle(lua_State *L) {
     return 1 ;
 }
 
+static int luathread_threadhasTerminated(lua_State *L) {
+    LuaSkin *skin = [LuaSkin threaded] ;
+    [skin checkArgs:LS_TUSERDATA, USERDATA_TAG, LS_TBREAK] ;
+    HSLuaThreadManager *threadManager = [skin toNSObjectAtIndex:1] ;
+    lua_pushboolean(L, threadManager.threadObj.hasTerminated) ;
+    return 1 ;
+}
+
 static int luathread_printCallback(lua_State *L) {
     LuaSkin *skin = [LuaSkin threaded] ;
     [skin checkArgs:LS_TUSERDATA, USERDATA_TAG, LS_TFUNCTION | LS_TNIL, LS_TBREAK] ;
@@ -410,15 +439,11 @@ static int luathread_cancelThread(lua_State *L) {
             threadManager.threadObj.performCleanClose = (BOOL)lua_toboolean(L, 3) ;
         }
         [threadManager.threadObj cancel] ;
-        NSPortMessage* messageObj = [[NSPortMessage alloc] initWithSendPort:threadManager.outPort
-                                                                receivePort:threadManager.inPort
-                                                                 components:nil];
-        [messageObj setMsgid:MSGID_CANCEL];
-        [messageObj sendBeforeDate:[NSDate date]];
-#ifdef PORTMESSAGE_LOGGING
-        [skin logDebug:[NSString stringWithFormat:@"%s:cancel <-- portMessage %d for %@", USERDATA_TAG, messageObj.msgid, threadManager.threadObj.name]] ;
-#endif
-        lua_pushvalue(L, 1) ;
+        if ([threadManager sendPortMessage:MSGID_CANCEL withData:nil]) {
+            lua_pushvalue(L, 1) ;
+        } else {
+            lua_pushnil(L) ;
+        }
     } else {
         return luaL_error(L, "thread inactive") ;
     }
@@ -458,16 +483,11 @@ static int luathread_submitInput(lua_State *L) {
 
     if (threadManager.threadObj.executing) {
         NSData *input = [skin toNSObjectAtIndex:2 withOptions:LS_NSLuaStringAsDataOnly] ;
-
-        NSPortMessage* messageObj = [[NSPortMessage alloc] initWithSendPort:threadManager.outPort
-                                                                receivePort:threadManager.inPort
-                                                                 components:@[input]];
-        [messageObj setMsgid:MSGID_INPUT];
-        [messageObj sendBeforeDate:[NSDate date]];
-#ifdef PORTMESSAGE_LOGGING
-        [skin logDebug:[NSString stringWithFormat:@"%s:submit <-- portMessage %d for %@", USERDATA_TAG, messageObj.msgid, threadManager.threadObj.name]] ;
-#endif
-        lua_pushvalue(L, 1) ;
+        if ([threadManager sendPortMessage:MSGID_INPUT withData:@[ input ]]) {
+            lua_pushvalue(L, 1) ;
+        } else {
+            lua_pushnil(L) ;
+        }
     } else {
         return luaL_error(L, "thread inactive") ;
     }
@@ -496,14 +516,10 @@ static int luathread_setInDictionary(lua_State *L) {
                                                      LS_NSDescribeUnknownTypes         |
                                                      LS_NSPreserveLuaStringExactly     |
                                                      LS_NSAllowsSelfReference] ;
-    if (threadManager.threadObj.executing) {
-        if ([threadManager sharedDictionarySetObject:value forKey:key]) {
-            lua_pushvalue(L, 1) ;
-        } else {
-            lua_pushnil(L) ;
-        }
+    if ([threadManager sharedDictionarySetObject:value forKey:key]) {
+        lua_pushvalue(L, 1) ;
     } else {
-        return luaL_error(L, "thread inactive") ;
+        lua_pushnil(L) ;
     }
     return 1 ;
 }
@@ -601,6 +617,7 @@ static const luaL_Reg userdata_metaLib[] = {
     {"submit",            luathread_submitInput},
     {"isExecuting",       luathread_threadIsExecuting},
     {"isIdle",            luathread_threadIsIdle},
+    {"hasTerminated",     luathread_threadhasTerminated},
     {"getOutput",         luathread_getOutput},
     {"flushOutput",       luathread_flushOutput},
     {"printCallback",     luathread_printCallback},
@@ -628,7 +645,7 @@ static luaL_Reg moduleLib[] = {
 //     {NULL,   NULL}
 // };
 
-int luaopen_hs_luathread_internal(lua_State* __unused L) {
+int luaopen_hs__asm_luathread_internal(lua_State* __unused L) {
     LuaSkin *skin = [LuaSkin threaded] ;
     [skin registerLibraryWithObject:USERDATA_TAG
                           functions:moduleLib

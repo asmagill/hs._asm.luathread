@@ -3,10 +3,7 @@
 #import "LuaSkin+Properties.h"
 #import "../LuaSkin+threaded.h"
 
-static const char *USERDATA_TAG = "hs.luathread.luaskin.skin" ;
-
-extern NSMapTable *threadToSkinMap ;
-extern NSMapTable *threadToRefTableMap ;
+static const char *USERDATA_TAG = "hs._asm.luathread.luaskin.skin" ;
 
 #define get_objectFromUserdata(objType, L, idx, tag) (objType*)*((void**)luaL_checkudata(L, idx, tag))
 
@@ -197,7 +194,7 @@ static const luaL_Reg userdata_metaLib[] = {
 //     {NULL,   NULL}
 // };
 
-int luaopen_hs_luathread_luaskin_skin(lua_State *L) {
+int luaopen_hs__asm_luathread_luaskin_skin(lua_State *L) {
     LuaSkin *skin = [LuaSkin threaded] ;
     [skin registerObject:USERDATA_TAG objectFunctions:userdata_metaLib];
 
@@ -206,8 +203,8 @@ int luaopen_hs_luathread_luaskin_skin(lua_State *L) {
                                         withUserdataMapping:USERDATA_TAG];
 
     // we're returning only a function, since it's the only one... and this module can
-    // stand alone -- it's in hs.luathread.luaskin because it's conceptually most useful
-    // for debugging hs.luathread.luaskin, but it doesn't really require any of it.
+    // stand alone -- it's in hs._asm.luathread.luaskin because it's conceptually most useful
+    // for debugging hs._asm.luathread.luaskin, but it doesn't really require any of it.
     lua_pushcfunction(L, skin_currentLuaSkin) ;
     return 1;
 }

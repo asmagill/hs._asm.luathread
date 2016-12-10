@@ -1,5 +1,11 @@
 @import Cocoa ;
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wgnu-zero-variadic-macro-arguments"
 @import LuaSkin ;
+#pragma clang diagnostic pop
+
+#import "LuaSkin+threaded.h"
 @import ObjectiveC.runtime ;
 
 NSMapTable *threadToRefTableMap ;
@@ -84,7 +90,7 @@ NSMapTable *threadToSkinMap ;
     NSString *key = (tagName) ? @(tagName) : @"_non-unique_" ;
     NSMutableDictionary *refTableMap = [threadToRefTableMap objectForKey:[NSThread currentThread]] ;
     if (!refTableMap) { // LuaSkin's initialized before we're injected won't have this
-        [LuaSkin logDebug:[NSString stringWithFormat:@"-[LuaSkin refTableFor:%@] invoked on thread without an existing table", key]] ;
+//         [LuaSkin logDebug:[NSString stringWithFormat:@"-[LuaSkin refTableFor:%@] invoked on thread without an existing table", key]] ;
         refTableMap = [[NSMutableDictionary alloc] init] ;
         [threadToRefTableMap setObject:refTableMap forKey:[NSThread currentThread]] ;
     }
@@ -147,7 +153,7 @@ NSMapTable *threadToSkinMap ;
 
 @end
 
-int luaopen_hs_luathread_threadSupportInjection(lua_State* L) {
+int luaopen_hs__asm_luathread_threadSupportInjection(lua_State* L) {
     lua_newtable(L) ;
     lua_pushboolean(L, [NSThread isMainThread]) ; lua_setfield(L, -2, "onMainThread") ;
     if ([NSThread isMainThread]) {

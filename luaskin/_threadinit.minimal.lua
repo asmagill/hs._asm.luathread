@@ -20,12 +20,12 @@ if _instance then
         end
     end, "", 1000)
 
-    _sharedDictionary = require("hs.luathread._sharedDictionaryBuilder")("hs.luathread.luaskin")(_instance)
+    _sharedDictionary = require("hs._asm.luathread._sharedDictionaryBuilder")("hs._asm.luathread.luaskin")(_instance)
 
     package.path  = assignments.path
     package.cpath = assignments.cpath
 
-    hs = require("hs.luathread.luaskin._coresupport")
+    hs = require("hs._asm.luathread.luaskin._coresupport")
     hs.rawprint             = print -- save internal function, in case needed
     hs.configdir            = assignments.configdir
     hs.processInfo          = assignments.processInfo

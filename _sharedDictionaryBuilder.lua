@@ -1,3 +1,4 @@
+
 return function(tagName)
     return function(self)
         local name = self.name and self:name() or "<unnamed>"

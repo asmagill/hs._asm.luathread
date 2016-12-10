@@ -1,5 +1,9 @@
-hs.luathread
+hs._asm.luathread
 ============
+
+Well, got farther this time, and have some ideas, but I'm taking a break from this for now... it's not going as well as I had hoped and still causes Hammerspoon to beachball when *any* thread is too busy, so either I'm missing something or misunderstanding something or more likely, both.
+
+- - -
 
 An experiment to allow Hammerspoon to run LuaSkin code in alternate threads.  Very experimental.
 
@@ -11,4 +15,4 @@ In theory, it should also be possible to add threads which support alternate ver
 
 Additional documentation will follow.
 
-The release bundle includes the hs.luathread and hs.luaskin modules as well as some slightly modified core modules which are installed in a special location so that only the thread aware LuaSkin will load them.
+The release bundle includes the hs._asm.luathread and hs._asm.luathread.luaskin modules as well as some slightly modified core modules which are installed in a special location so that only the thread aware LuaSkin will load them.
