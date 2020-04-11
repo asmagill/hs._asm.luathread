@@ -1,3 +1,13 @@
+**This repository is being archived**
+
+Recent updates to Hammerspoon to properly support coroutines have made the need for this less interesting to me at this time.
+
+The current state of the Hammerspoon modules and LuaSkin are such that truly supporting multiple threads would essentially require a fundamental refactoring of LuaSkin and rewrite of almost all modules.
+
+If I do revisit the idea in the future, it will require a full fork of Hammerspoon. No further updates will occur within this repository.
+
+- - -
+
 hs._asm.luathread
 ============
 
